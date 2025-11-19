@@ -42,19 +42,19 @@ const Navbar: React.FC = () => {
       className={`
         fixed top-0 left-0 right-0 z-50 transition-all duration-300
         ${isScrolled 
-          ? 'bg-light-card/95 dark:bg-dark-card/95 backdrop-blur-lg border-b border-light-border dark:border-dark-border shadow-sm' 
+          ? 'bg-light-card/95 dark:bg-dark-card/95 backdrop-blur-lg border-b border-light-border dark:border-dark-border shadow-md' 
           : 'bg-light-card dark:bg-dark-card border-b border-light-border dark:border-dark-border'
         }
       `}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
+        <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
           <a 
             href="/#/" 
-            className="flex items-center gap-3 group"
+            className="flex items-center gap-3 group flex-shrink-0"
           >
-            <img src="/Logo.PNG" alt="DoFlow" className="h-36 object-contain" />
+            <img src="/Logo.PNG" alt="DoFlow" className="h-24 md:h-36 object-contain" />
           </a>
 
           {/* Desktop Navigation */}
@@ -74,7 +74,7 @@ const Navbar: React.FC = () => {
           </div>
 
           {/* Right Section */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 md:gap-4">
             {isAuthenticated ? (
               <>
                 {/* Cart & Wishlist */}
@@ -192,95 +192,146 @@ const Navbar: React.FC = () => {
             {/* Mobile Menu Button */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="md:hidden p-2 text-light-textMuted dark:text-dark-muted hover:bg-light-cardAlt dark:hover:bg-dark-cardAlt rounded-lg transition-all duration-200"
+              className="md:hidden p-3 text-light-textMuted dark:text-dark-muted hover:bg-light-cardAlt dark:hover:bg-dark-cardAlt rounded-lg transition-all duration-200 active:scale-95"
+              aria-label="Toggle menu"
             >
-              {isMobileMenuOpen ? <FiX className="w-6 h-6" /> : <FiMenu className="w-6 h-6" />}
+              {isMobileMenuOpen ? <FiX className="w-7 h-7" /> : <FiMenu className="w-7 h-7" />}
             </button>
           </div>
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile Menu Overlay */}
       {isMobileMenuOpen && (
-        <div className="md:hidden bg-light-card dark:bg-dark-card backdrop-blur-xl border-t border-light-border dark:border-dark-border animate-slide-down">
-          <div className="px-4 py-6 space-y-4">
+        <>
+          {/* Backdrop */}
+          <div 
+            className="fixed inset-0 bg-black/50 md:hidden z-40 animate-fade-in"
+            onClick={() => setIsMobileMenuOpen(false)}
+          />
+          
+          {/* Menu Panel */}
+          <div className="fixed inset-x-0 top-[64px] bottom-0 md:hidden bg-light-card dark:bg-dark-card z-50 overflow-y-auto animate-slide-down">
+            <div className="px-4 py-6 space-y-2">
             {navLinks.map((link) => (
               <a
                 key={link.path}
                 href={`/#${link.path}`}
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="flex items-center gap-3 px-4 py-3 text-light-textMuted dark:text-dark-muted hover:text-light-text dark:hover:text-dark-text hover:bg-light-cardAlt dark:hover:bg-dark-cardAlt rounded-lg transition-all duration-200"
+                className="flex items-center gap-4 px-5 py-4 text-light-text dark:text-dark-text hover:bg-brand-primary/10 dark:hover:bg-brand-primary/20 rounded-xl transition-all duration-200 active:scale-95 text-lg font-medium"
               >
-                {link.icon}
-                <span className="font-medium">{link.name}</span>
+                <span className="text-brand-primary">{link.icon}</span>
+                <span>{link.name}</span>
               </a>
             ))}
 
             {isAuthenticated ? (
               <>
+                <div className="border-t border-light-border dark:border-dark-border my-3"></div>
                 <a
                   href="/#/wishlist"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:text-white hover:bg-white/10 rounded-xl transition-all duration-300"
+                  className="flex items-center gap-4 px-5 py-4 text-light-text dark:text-dark-text hover:bg-light-cardAlt dark:hover:bg-dark-cardAlt rounded-xl transition-all duration-200 active:scale-95 text-lg"
                 >
-                  <FiHeart className="w-5 h-5" />
-                  <span>Wishlist ({wishlistItems.length})</span>
+                  <FiHeart className="w-6 h-6 text-brand-primary" />
+                  <span>Wishlist</span>
+                  {wishlistItems.length > 0 && (
+                    <span className="ml-auto bg-brand-primary text-white px-2.5 py-0.5 rounded-full text-sm font-semibold">
+                      {wishlistItems.length}
+                    </span>
+                  )}
                 </a>
                 <a
                   href="/#/cart"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:text-white hover:bg-white/10 rounded-xl transition-all duration-300"
+                  className="flex items-center gap-4 px-5 py-4 text-light-text dark:text-dark-text hover:bg-light-cardAlt dark:hover:bg-dark-cardAlt rounded-xl transition-all duration-200 active:scale-95 text-lg"
                 >
-                  <FiShoppingCart className="w-5 h-5" />
-                  <span>Cart ({cartItems.length})</span>
+                  <FiShoppingCart className="w-6 h-6 text-brand-primary" />
+                  <span>Cart</span>
+                  {cartItems.length > 0 && (
+                    <span className="ml-auto bg-brand-accent text-white px-2.5 py-0.5 rounded-full text-sm font-semibold">
+                      {cartItems.length}
+                    </span>
+                  )}
                 </a>
+                <div className="border-t border-light-border dark:border-dark-border my-3"></div>
                 <a
                   href={`/#${user?.role === 'admin' ? '/admin' : '/dashboard'}`}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:text-white hover:bg-white/10 rounded-xl transition-all duration-300"
+                  className="flex items-center gap-4 px-5 py-4 text-light-text dark:text-dark-text hover:bg-light-cardAlt dark:hover:bg-dark-cardAlt rounded-xl transition-all duration-200 active:scale-95 text-lg"
                 >
-                  <FiGrid className="w-5 h-5" />
+                  <FiGrid className="w-6 h-6 text-brand-primary" />
                   <span>Dashboard</span>
                 </a>
+                <a
+                  href="/#/profile"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="flex items-center gap-4 px-5 py-4 text-light-text dark:text-dark-text hover:bg-light-cardAlt dark:hover:bg-dark-cardAlt rounded-xl transition-all duration-200 active:scale-95 text-lg"
+                >
+                  <FiUser className="w-6 h-6 text-brand-primary" />
+                  <span>Profile</span>
+                </a>
+                <div className="border-t border-light-border dark:border-dark-border my-3"></div>
+                <button
+                  onClick={toggleTheme}
+                  className="w-full flex items-center gap-4 px-5 py-4 text-light-text dark:text-dark-text hover:bg-light-cardAlt dark:hover:bg-dark-cardAlt rounded-xl transition-all duration-200 active:scale-95 text-lg"
+                >
+                  {theme === 'dark' ? <FiSun className="w-6 h-6 text-brand-primary" /> : <FiMoon className="w-6 h-6 text-brand-primary" />}
+                  <span>Theme</span>
+                  <span className="ml-auto text-sm text-light-textMuted dark:text-dark-muted capitalize">{theme}</span>
+                </button>
                 <button
                   onClick={() => {
                     handleLogout();
                     setIsMobileMenuOpen(false);
                   }}
-                  className="w-full flex items-center gap-3 px-4 py-3 text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-xl transition-all duration-300"
+                  className="w-full flex items-center gap-4 px-5 py-4 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-all duration-200 active:scale-95 text-lg font-medium"
                 >
-                  <FiLogOut className="w-5 h-5" />
+                  <FiLogOut className="w-6 h-6" />
                   <span>Logout</span>
                 </button>
               </>
             ) : (
-              <div className="flex flex-col gap-3 pt-4">
-                <Button
-                  variant="outline"
-                  size="md"
-                  onClick={() => {
-                    window.location.hash = '/auth';
-                    setIsMobileMenuOpen(false);
-                  }}
-                  className="w-full"
+              <>
+                <div className="border-t border-light-border dark:border-dark-border my-3"></div>
+                <button
+                  onClick={toggleTheme}
+                  className="w-full flex items-center gap-4 px-5 py-4 text-light-text dark:text-dark-text hover:bg-light-cardAlt dark:hover:bg-dark-cardAlt rounded-xl transition-all duration-200 active:scale-95 text-lg"
                 >
-                  Login
-                </Button>
-                <Button
-                  variant="primary"
-                  size="md"
-                  onClick={() => {
-                    window.location.hash = '/auth';
-                    setIsMobileMenuOpen(false);
-                  }}
-                  className="w-full"
-                >
-                  Sign Up
-                </Button>
-              </div>
+                  {theme === 'dark' ? <FiSun className="w-6 h-6 text-brand-primary" /> : <FiMoon className="w-6 h-6 text-brand-primary" />}
+                  <span>Theme</span>
+                  <span className="ml-auto text-sm text-light-textMuted dark:text-dark-muted capitalize">{theme}</span>
+                </button>
+                <div className="border-t border-light-border dark:border-dark-border my-3"></div>
+                <div className="flex flex-col gap-3 px-2">
+                  <Button
+                    variant="outline"
+                    size="lg"
+                    onClick={() => {
+                      window.location.hash = '/auth';
+                      setIsMobileMenuOpen(false);
+                    }}
+                    className="w-full text-lg py-4"
+                  >
+                    Login
+                  </Button>
+                  <Button
+                    variant="primary"
+                    size="lg"
+                    onClick={() => {
+                      window.location.hash = '/auth';
+                      setIsMobileMenuOpen(false);
+                    }}
+                    className="w-full text-lg py-4"
+                  >
+                    Sign Up
+                  </Button>
+                </div>
+              </>
             )}
           </div>
         </div>
+        </>
       )}
     </nav>
   );
