@@ -15,8 +15,9 @@ const Footer: React.FC = () => {
   const supportLinks = [
     { name: 'Help Center', path: '/help' },
     { name: 'FAQs', path: '/faq' },
-    { name: 'Terms of Service', path: '/terms' },
-    { name: 'Privacy Policy', path: '/privacy' },
+    { name: 'Terms & Conditions', path: '/terms-conditions' },
+    { name: 'Privacy Policy', path: '/privacy-policy' },
+    { name: 'Refund Policy', path: '/refund-policy' },
   ];
 
   const categories = [

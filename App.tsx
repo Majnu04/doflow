@@ -19,6 +19,9 @@ import DSACourseLandingPage from './pages/DSACourseLandingPage';
 import DSARoadmapPage from './pages/DSARoadmapPage';
 import ProblemEditorPage from './pages/ProblemEditorPage';
 import CheckoutPage from './pages/CheckoutPage';
+import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
+import TermsConditionsPage from './pages/TermsConditionsPage';
+import RefundPolicyPage from './pages/RefundPolicyPage';
 
 const NotFound: React.FC = () => (
     <div className="min-h-screen flex items-center justify-center text-light-text text-center">
@@ -141,6 +144,12 @@ const App: React.FC = () => {
                         <AdminDashboard />
                     </ProtectedRoute>
                 );
+            case '/privacy-policy':
+                return <PrivacyPolicyPage />;
+            case '/terms-conditions':
+                return <TermsConditionsPage />;
+            case '/refund-policy':
+                return <RefundPolicyPage />;
             default:
                 return <NotFound />;
         }
