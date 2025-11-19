@@ -132,7 +132,7 @@ const HomePage: React.FC = () => {
             </button>
             <button
               onClick={() => window.location.hash = isAuthenticated ? '/dashboard' : '/auth'}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-light-card dark:bg-dark-card hover:bg-light-cardAlt dark:hover:bg-dark-cardAlt text-light-text dark:text-dark-text font-semibold rounded-xl border-2 border-light-border dark:border-dark-border transition-all duration-200 active:scale-95 text-base md:text-lg">
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-light-card dark:bg-dark-card hover:bg-light-cardAlt dark:hover:bg-dark-cardAlt text-light-text dark:text-dark-text font-semibold rounded-xl border-2 border-light-border dark:border-dark-border transition-all duration-200 active:scale-95 text-base md:text-lg"
             >
               {isAuthenticated ? 'My Dashboard' : 'Start Free Trial'}
               <FiArrowRight className="w-4 h-4" />
