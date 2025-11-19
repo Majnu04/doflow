@@ -131,9 +131,21 @@ const Footer: React.FC = () => {
         <div className="py-6 md:py-8 border-t border-light-border dark:border-dark-border transition-colors duration-300">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4 md:gap-6">
             {/* Copyright */}
-            <p className="text-light-textMuted dark:text-dark-muted text-sm transition-colors duration-300">
-              © {currentYear} DoFlow. All rights reserved.
-            </p>
+            <div className="text-center md:text-left">
+              <p className="text-light-textMuted dark:text-dark-muted text-sm transition-colors duration-300">
+                © {currentYear} DoFlow. All rights reserved.
+              </p>
+              <p className="text-light-textMuted dark:text-dark-muted text-xs mt-1 transition-colors duration-300">
+                Developed by <a 
+                  href="https://elitedigitalsolutions.tech" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-brand-primary hover:text-brand-primaryHover transition-colors duration-200 font-medium"
+                >
+                  Elite Digital Solutions
+                </a>
+              </p>
+            </div>
 
             {/* Social Links */}
             <div className="flex items-center gap-3 md:gap-4">

@@ -75,6 +75,15 @@ const Navbar: React.FC = () => {
 
           {/* Right Section */}
           <div className="flex items-center gap-2 md:gap-4">
+            {/* Mobile Theme Toggle - shown only on mobile before hamburger */}
+            <button
+              onClick={toggleTheme}
+              className="md:hidden p-3 text-light-textMuted hover:text-brand-primary dark:text-dark-muted dark:hover:text-brand-primary transition-colors duration-300 rounded-lg hover:bg-light-cardAlt dark:hover:bg-dark-cardAlt active:scale-95"
+              aria-label="Toggle theme"
+            >
+              {theme === 'dark' ? <FiSun className="w-6 h-6" /> : <FiMoon className="w-6 h-6" />}
+            </button>
+
             {isAuthenticated ? (
               <>
                 {/* Cart & Wishlist */}
@@ -271,15 +280,6 @@ const Navbar: React.FC = () => {
                   <FiUser className="w-6 h-6 text-brand-primary" />
                   <span>Profile</span>
                 </a>
-                <div className="border-t border-light-border dark:border-dark-border my-3"></div>
-                <button
-                  onClick={toggleTheme}
-                  className="w-full flex items-center gap-4 px-5 py-4 text-light-text dark:text-dark-text hover:bg-light-cardAlt dark:hover:bg-dark-cardAlt rounded-xl transition-all duration-200 active:scale-95 text-lg"
-                >
-                  {theme === 'dark' ? <FiSun className="w-6 h-6 text-brand-primary" /> : <FiMoon className="w-6 h-6 text-brand-primary" />}
-                  <span>Theme</span>
-                  <span className="ml-auto text-sm text-light-textMuted dark:text-dark-muted capitalize">{theme}</span>
-                </button>
                 <button
                   onClick={() => {
                     handleLogout();
@@ -293,15 +293,6 @@ const Navbar: React.FC = () => {
               </>
             ) : (
               <>
-                <div className="border-t border-light-border dark:border-dark-border my-3"></div>
-                <button
-                  onClick={toggleTheme}
-                  className="w-full flex items-center gap-4 px-5 py-4 text-light-text dark:text-dark-text hover:bg-light-cardAlt dark:hover:bg-dark-cardAlt rounded-xl transition-all duration-200 active:scale-95 text-lg"
-                >
-                  {theme === 'dark' ? <FiSun className="w-6 h-6 text-brand-primary" /> : <FiMoon className="w-6 h-6 text-brand-primary" />}
-                  <span>Theme</span>
-                  <span className="ml-auto text-sm text-light-textMuted dark:text-dark-muted capitalize">{theme}</span>
-                </button>
                 <div className="border-t border-light-border dark:border-dark-border my-3"></div>
                 <div className="flex flex-col gap-3 px-2">
                   <Button
