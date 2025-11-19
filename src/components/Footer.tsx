@@ -38,10 +38,10 @@ const Footer: React.FC = () => {
     <footer className="relative bg-light-card dark:bg-dark-card border-t border-light-border dark:border-dark-border overflow-hidden transition-colors duration-300">
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Main Footer Content */}
-        <div className="py-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12">
+        <div className="py-12 md:py-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 md:gap-12">
           {/* Company Info */}
           <div className="lg:col-span-2">
-            <a href="/#/" className="flex items-center gap-3 mb-6 group">
+            <a href="/#/" className="flex items-center gap-3 mb-4 md:mb-6 group">
               <div className="bg-brand-primary p-3 rounded-lg group-hover:bg-brand-primaryHover transition-colors duration-300">
                 <FiBookOpen className="w-8 h-8 text-white" />
               </div>
@@ -51,34 +51,34 @@ const Footer: React.FC = () => {
                 </h2>
               </div>
             </a>
-            <p className="text-light-textSecondary dark:text-dark-muted mb-6 leading-relaxed transition-colors duration-300">
+            <p className="text-sm md:text-base text-light-textSecondary dark:text-dark-muted mb-4 md:mb-6 leading-relaxed transition-colors duration-300">
               Empowering learners worldwide with premium online courses. 
               Join thousands of students achieving their dreams through quality education.
             </p>
-            <div className="space-y-3">
-              <div className="flex items-center gap-3 text-light-textSecondary dark:text-dark-muted hover:text-brand-primary dark:hover:text-brand-primary transition-colors duration-300">
-                <FiMail className="w-5 h-5" />
+            <div className="space-y-2 md:space-y-3">
+              <a href="mailto:doflow004@gmail.com" className="flex items-center gap-3 py-1.5 text-sm md:text-base text-light-textSecondary dark:text-dark-muted hover:text-brand-primary dark:hover:text-brand-primary transition-colors duration-300">
+                <FiMail className="w-4 h-4 md:w-5 md:h-5 flex-shrink-0" />
                 <span>doflow004@gmail.com</span>
-              </div>
-              <div className="flex items-center gap-3 text-light-textSecondary dark:text-dark-muted hover:text-brand-primary dark:hover:text-brand-primary transition-colors duration-300">
-                <FiPhone className="w-5 h-5" />
+              </a>
+              <a href="tel:+917893804498" className="flex items-center gap-3 py-1.5 text-sm md:text-base text-light-textSecondary dark:text-dark-muted hover:text-brand-primary dark:hover:text-brand-primary transition-colors duration-300">
+                <FiPhone className="w-4 h-4 md:w-5 md:h-5 flex-shrink-0" />
                 <span>+91 7893804498</span>
-              </div>
+              </a>
               
             </div>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h3 className="text-lg font-display font-bold text-light-text dark:text-dark-text mb-6 transition-colors duration-300">
+            <h3 className="text-base md:text-lg font-display font-bold text-light-text dark:text-dark-text mb-4 md:mb-6 transition-colors duration-300">
               Quick Links
             </h3>
-            <ul className="space-y-3">
+            <ul className="space-y-2 md:space-y-3">
               {quickLinks.map((link) => (
                 <li key={link.path}>
                   <a
                     href={`/#${link.path}`}
-                    className="text-light-textSecondary dark:text-dark-muted hover:text-brand-primary dark:hover:text-brand-primary inline-block transition-colors duration-300"
+                    className="text-sm md:text-base text-light-textSecondary dark:text-dark-muted hover:text-brand-primary dark:hover:text-brand-primary inline-block py-1 transition-colors duration-300"
                   >
                     {link.name}
                   </a>
@@ -89,15 +89,15 @@ const Footer: React.FC = () => {
 
           {/* Support */}
           <div>
-            <h3 className="text-lg font-display font-bold text-light-text dark:text-dark-text mb-6 transition-colors duration-300">
+            <h3 className="text-base md:text-lg font-display font-bold text-light-text dark:text-dark-text mb-4 md:mb-6 transition-colors duration-300">
               Support
             </h3>
-            <ul className="space-y-3">
+            <ul className="space-y-2 md:space-y-3">
               {supportLinks.map((link) => (
                 <li key={link.path}>
                   <a
                     href={`/#${link.path}`}
-                    className="text-light-textSecondary dark:text-dark-muted hover:text-brand-primary dark:hover:text-brand-primary inline-block transition-colors duration-300"
+                    className="text-sm md:text-base text-light-textSecondary dark:text-dark-muted hover:text-brand-primary dark:hover:text-brand-primary inline-block py-1 transition-colors duration-300"
                   >
                     {link.name}
                   </a>
@@ -108,15 +108,15 @@ const Footer: React.FC = () => {
 
           {/* Categories */}
           <div>
-            <h3 className="text-lg font-display font-bold text-light-text dark:text-dark-text mb-6 transition-colors duration-300">
+            <h3 className="text-base md:text-lg font-display font-bold text-light-text dark:text-dark-text mb-4 md:mb-6 transition-colors duration-300">
               Popular Categories
             </h3>
-            <ul className="space-y-3">
+            <ul className="space-y-2 md:space-y-3">
               {categories.map((category) => (
                 <li key={category.path}>
                   <a
                     href={`/#${category.path}`}
-                    className="text-light-textSecondary dark:text-dark-muted hover:text-brand-primary dark:hover:text-brand-primary inline-block transition-colors duration-300"
+                    className="text-sm md:text-base text-light-textSecondary dark:text-dark-muted hover:text-brand-primary dark:hover:text-brand-primary inline-block py-1 transition-colors duration-300"
                   >
                     {category.name}
                   </a>
@@ -127,15 +127,15 @@ const Footer: React.FC = () => {
         </div>
 
         {/* Bottom Bar */}
-        <div className="py-8 border-t border-light-border dark:border-dark-border transition-colors duration-300">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+        <div className="py-6 md:py-8 border-t border-light-border dark:border-dark-border transition-colors duration-300">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4 md:gap-6">
             {/* Copyright */}
             <p className="text-light-textMuted dark:text-dark-muted text-sm transition-colors duration-300">
               © {currentYear} DoFlow. All rights reserved.
             </p>
 
             {/* Social Links */}
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3 md:gap-4">
               {socialLinks.map((social) => (
                 <a
                   key={social.label}
@@ -143,9 +143,9 @@ const Footer: React.FC = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={social.label}
-                  className="w-10 h-10 rounded-full bg-light-cardAlt dark:bg-dark-cardAlt hover:bg-brand-primary dark:hover:bg-brand-primary flex items-center justify-center text-light-textMuted dark:text-dark-muted hover:text-white dark:hover:text-white transition-all duration-300"
+                  className="w-11 h-11 md:w-10 md:h-10 rounded-full bg-light-cardAlt dark:bg-dark-cardAlt hover:bg-brand-primary dark:hover:bg-brand-primary flex items-center justify-center text-light-textMuted dark:text-dark-muted hover:text-white dark:hover:text-white transition-all duration-300 active:scale-95"
                 >
-                  {social.icon}
+                  <span className="text-lg md:text-base">{social.icon}</span>
                 </a>
               ))}
             </div>
