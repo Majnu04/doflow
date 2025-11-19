@@ -15,10 +15,9 @@
 2. Create a free cluster (M0 Sandbox)
 3. Create a database user
 4. Whitelist all IPs: `0.0.0.0/0` (for Render access)
-5. Get your connection string (looks like):
-   ```
-   mongodb+srv://username:password@cluster.mongodb.net/doflow?retryWrites=true&w=majority
-   ```
+5. Get your connection string from MongoDB Atlas
+   - Click "Connect" → "Connect your application"
+   - Copy the connection string and replace `<password>` with your database password
 
 ---
 
@@ -83,15 +82,15 @@ git push -u origin main
    ```bash
    NODE_ENV=production
    PORT=10000
-   MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/doflow
-   JWT_SECRET=your-super-secret-jwt-key-min-32-chars
-   RAZORPAY_KEY_ID=your_razorpay_key_id
-   RAZORPAY_KEY_SECRET=your_razorpay_key_secret
+   MONGODB_URI=<your-mongodb-atlas-connection-string>
+   JWT_SECRET=<generate-random-32-character-string>
+   RAZORPAY_KEY_ID=<your-razorpay-key-id>
+   RAZORPAY_KEY_SECRET=<your-razorpay-key-secret>
    FRONTEND_URL=https://doflow-ebon.vercel.app
-   AWS_ACCESS_KEY_ID=your_aws_key (optional)
-   AWS_SECRET_ACCESS_KEY=your_aws_secret (optional)
+   AWS_ACCESS_KEY_ID=<your-aws-key> (optional)
+   AWS_SECRET_ACCESS_KEY=<your-aws-secret> (optional)
    AWS_REGION=us-east-1 (optional)
-   AWS_S3_BUCKET=your-bucket-name (optional)
+   AWS_S3_BUCKET=<your-bucket-name> (optional)
    ```
 
 6. **Deploy**
@@ -240,7 +239,7 @@ Set up monitoring with:
 |----------|----------|---------|-------------|
 | `NODE_ENV` | Yes | `production` | Environment mode |
 | `PORT` | Yes | `10000` | Server port (Render uses 10000) |
-| `MONGODB_URI` | Yes | `mongodb+srv://...` | MongoDB connection string |
+| `MONGODB_URI` | Yes | `<from-atlas>` | MongoDB Atlas connection string |
 | `JWT_SECRET` | Yes | `your-secret-key` | JWT signing key (32+ chars) |
 | `RAZORPAY_KEY_ID` | Yes | `rzp_test_...` | Razorpay public key |
 | `RAZORPAY_KEY_SECRET` | Yes | `secret123` | Razorpay secret key |
