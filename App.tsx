@@ -147,7 +147,7 @@ const App: React.FC = () => {
     const hideHeaderFooter = route.includes('/learn/');
 
     return (
-        <div className="min-h-screen bg-light-bg font-sans">
+        <div className="min-h-screen bg-light-bg dark:bg-dark-bg font-sans transition-colors duration-300">
             {!hideHeaderFooter && <Navbar />}
             <main className={hideHeaderFooter ? '' : 'min-h-[calc(100vh-80px)]'}>
                  {renderRoute()}

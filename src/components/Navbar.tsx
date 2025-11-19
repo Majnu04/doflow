@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../store';
 import { logout } from '../store/slices/authSlice';
-import { FiMenu, FiX, FiUser, FiLogOut, FiBookOpen, FiShoppingCart, FiHeart, FiHome, FiGrid } from 'react-icons/fi';
+import { useTheme } from '../contexts/ThemeContext';
+import { FiMenu, FiX, FiUser, FiLogOut, FiBookOpen, FiShoppingCart, FiHeart, FiHome, FiGrid, FiMoon, FiSun } from 'react-icons/fi';
 import { Button } from './ui';
 
 const Navbar: React.FC = () => {
@@ -13,6 +14,7 @@ const Navbar: React.FC = () => {
   const { user, isAuthenticated } = useSelector((state: RootState) => state.auth);
   const { items: cartItems } = useSelector((state: RootState) => state.cart);
   const { items: wishlistItems } = useSelector((state: RootState) => state.wishlist);
+  const { theme, toggleTheme } = useTheme();
   
   const dispatch = useDispatch();
 
@@ -40,8 +42,8 @@ const Navbar: React.FC = () => {
       className={`
         fixed top-0 left-0 right-0 z-50 transition-all duration-300
         ${isScrolled 
-          ? 'bg-light-card/95 backdrop-blur-lg border-b border-light-border shadow-sm' 
-          : 'bg-light-card border-b border-light-border'
+          ? 'bg-light-card/95 dark:bg-dark-card/95 backdrop-blur-lg border-b border-light-border dark:border-dark-border shadow-sm' 
+          : 'bg-light-card dark:bg-dark-card border-b border-light-border dark:border-dark-border'
         }
       `}
     >
@@ -52,16 +54,7 @@ const Navbar: React.FC = () => {
             href="/#/" 
             className="flex items-center gap-3 group"
           >
-            <div className="relative">
-              <div className="bg-brand-primary p-2 rounded-lg group-hover:bg-indigo-600 transition-colors">
-                <FiBookOpen className="w-6 h-6 text-white" />
-              </div>
-            </div>
-            <div className="flex items-baseline gap-2">
-              <h1 className="text-xl font-display font-bold text-light-text whitespace-nowrap">
-                DoFlow
-              </h1>
-            </div>
+            <img src="/Logo.PNG" alt="DoFlow" className="h-36 object-contain" />
           </a>
 
           {/* Desktop Navigation */}
@@ -70,7 +63,7 @@ const Navbar: React.FC = () => {
               <a
                 key={link.path}
                 href={`/#${link.path}`}
-                className="flex items-center gap-2 text-light-textMuted hover:text-brand-primary transition-colors duration-200 group"
+                className="flex items-center gap-2 text-light-textMuted dark:text-dark-muted hover:text-brand-primary dark:hover:text-brand-primary transition-colors duration-200 group"
               >
                 <span className="group-hover:text-brand-primary transition-colors">
                   {link.icon}
@@ -86,9 +79,18 @@ const Navbar: React.FC = () => {
               <>
                 {/* Cart & Wishlist */}
                 <div className="hidden md:flex items-center gap-3">
+                  {/* Theme Toggle */}
+                  <button
+                    onClick={toggleTheme}
+                    className="p-2 text-light-textMuted hover:text-brand-primary dark:text-dark-muted dark:hover:text-brand-primary transition-colors duration-300 rounded-lg hover:bg-light-cardAlt dark:hover:bg-dark-cardAlt"
+                    aria-label="Toggle theme"
+                  >
+                    {theme === 'dark' ? <FiSun className="w-6 h-6" /> : <FiMoon className="w-6 h-6" />}
+                  </button>
+                  
                   <a
                     href="/#/wishlist"
-                    className="relative p-2 text-light-textMuted hover:text-brand-primary transition-colors"
+                    className="relative p-2 text-light-textMuted dark:text-dark-muted hover:text-brand-primary dark:hover:text-brand-primary transition-colors"
                   >
                     <FiHeart className="w-6 h-6" />
                     {wishlistItems.length > 0 && (
@@ -99,7 +101,7 @@ const Navbar: React.FC = () => {
                   </a>
                   <a
                     href="/#/cart"
-                    className="relative p-2 text-light-textMuted hover:text-brand-primary transition-colors"
+                    className="relative p-2 text-light-textMuted dark:text-dark-muted hover:text-brand-primary dark:hover:text-brand-primary transition-colors"
                   >
                     <FiShoppingCart className="w-6 h-6" />
                     {cartItems.length > 0 && (
@@ -114,28 +116,28 @@ const Navbar: React.FC = () => {
                 <div className="relative">
                   <button
                     onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                    className="flex items-center gap-3 p-2 rounded-lg hover:bg-light-cardAlt transition-colors"
+                    className="flex items-center gap-3 p-2 rounded-lg hover:bg-light-cardAlt dark:hover:bg-dark-cardAlt transition-colors"
                   >
                     <div className="w-10 h-10 rounded-full bg-brand-primary flex items-center justify-center text-white font-semibold">
                       {user?.name?.charAt(0).toUpperCase() || 'U'}
                     </div>
-                    <span className="hidden lg:block text-sm font-medium text-light-text">
+                    <span className="hidden lg:block text-sm font-medium text-light-text dark:text-dark-text">
                       {user?.name}
                     </span>
                   </button>
 
                   {/* Dropdown Menu */}
                   {isUserMenuOpen && (
-                    <div className="absolute right-0 mt-2 w-64 bg-light-card border border-light-border rounded-lg shadow-lg animate-slide-up overflow-hidden">
-                      <div className="p-4 border-b border-light-border">
-                        <p className="text-sm text-light-textMuted">Signed in as</p>
-                        <p className="text-light-text font-semibold">{user?.email}</p>
+                    <div className="absolute right-0 mt-2 w-64 bg-light-card dark:bg-dark-card border border-light-border dark:border-dark-border rounded-lg shadow-lg animate-slide-up overflow-hidden">
+                      <div className="p-4 border-b border-light-border dark:border-dark-border">
+                        <p className="text-sm text-light-textMuted dark:text-dark-muted">Signed in as</p>
+                        <p className="text-light-text dark:text-dark-text font-semibold">{user?.email}</p>
                       </div>
                       <div className="p-2">
                         <a
                           href={`/#${user?.role === 'admin' ? '/admin' : '/dashboard'}`}
                           onClick={() => setIsUserMenuOpen(false)}
-                          className="flex items-center gap-3 px-4 py-3 text-light-textMuted hover:text-brand-primary hover:bg-light-cardAlt rounded-lg transition-colors"
+                          className="flex items-center gap-3 px-4 py-3 text-light-textMuted dark:text-dark-muted hover:text-brand-primary dark:hover:text-brand-primary hover:bg-light-cardAlt dark:hover:bg-dark-cardAlt rounded-lg transition-colors"
                         >
                           <FiGrid className="w-5 h-5" />
                           <span>Dashboard</span>
@@ -143,14 +145,14 @@ const Navbar: React.FC = () => {
                         <a
                           href="/#/profile"
                           onClick={() => setIsUserMenuOpen(false)}
-                          className="flex items-center gap-3 px-4 py-3 text-light-textMuted hover:text-brand-primary hover:bg-light-cardAlt rounded-lg transition-colors"
+                          className="flex items-center gap-3 px-4 py-3 text-light-textMuted dark:text-dark-muted hover:text-brand-primary dark:hover:text-brand-primary hover:bg-light-cardAlt dark:hover:bg-dark-cardAlt rounded-lg transition-colors"
                         >
                           <FiUser className="w-5 h-5" />
                           <span>Profile</span>
                         </a>
                         <button
                           onClick={handleLogout}
-                          className="w-full flex items-center gap-3 px-4 py-3 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
+                          className="w-full flex items-center gap-3 px-4 py-3 text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
                         >
                           <FiLogOut className="w-5 h-5" />
                           <span>Logout</span>
@@ -162,6 +164,14 @@ const Navbar: React.FC = () => {
               </>
             ) : (
               <div className="hidden md:flex items-center gap-3">
+                {/* Theme Toggle for non-authenticated users */}
+                <button
+                  onClick={toggleTheme}
+                  className="p-2 text-light-textMuted hover:text-brand-primary dark:text-dark-muted dark:hover:text-brand-primary transition-colors duration-300 rounded-lg hover:bg-light-cardAlt dark:hover:bg-dark-cardAlt"
+                  aria-label="Toggle theme"
+                >
+                  {theme === 'dark' ? <FiSun className="w-6 h-6" /> : <FiMoon className="w-6 h-6" />}
+                </button>
                 <Button
                   variant="ghost"
                   size="sm"
@@ -182,7 +192,7 @@ const Navbar: React.FC = () => {
             {/* Mobile Menu Button */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="md:hidden p-2 text-light-textMuted hover:bg-light-cardAlt rounded-lg transition-all duration-200"
+              className="md:hidden p-2 text-light-textMuted dark:text-dark-muted hover:bg-light-cardAlt dark:hover:bg-dark-cardAlt rounded-lg transition-all duration-200"
             >
               {isMobileMenuOpen ? <FiX className="w-6 h-6" /> : <FiMenu className="w-6 h-6" />}
             </button>
@@ -192,14 +202,14 @@ const Navbar: React.FC = () => {
 
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
-        <div className="md:hidden bg-light-card backdrop-blur-xl border-t border-light-border animate-slide-down">
+        <div className="md:hidden bg-light-card dark:bg-dark-card backdrop-blur-xl border-t border-light-border dark:border-dark-border animate-slide-down">
           <div className="px-4 py-6 space-y-4">
             {navLinks.map((link) => (
               <a
                 key={link.path}
                 href={`/#${link.path}`}
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="flex items-center gap-3 px-4 py-3 text-light-textMuted hover:text-light-text hover:bg-light-cardAlt rounded-lg transition-all duration-200"
+                className="flex items-center gap-3 px-4 py-3 text-light-textMuted dark:text-dark-muted hover:text-light-text dark:hover:text-dark-text hover:bg-light-cardAlt dark:hover:bg-dark-cardAlt rounded-lg transition-all duration-200"
               >
                 {link.icon}
                 <span className="font-medium">{link.name}</span>
