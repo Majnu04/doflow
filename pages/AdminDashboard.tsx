@@ -1,7 +1,6 @@
 
 import React, { useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } from 'recharts';
-import { generateCourseOutline } from '../services/geminiService';
 
 const salesData = [
   { name: 'Jan', sales: 4000 },
@@ -32,76 +31,6 @@ const Card: React.FC<{ title: string; value: string; icon: React.ReactNode }> = 
         </div>
     </div>
 );
-
-const CourseOutlineGenerator: React.FC = () => {
-    const [topic, setTopic] = useState('');
-    const [outline, setOutline] = useState<any>(null);
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
-
-    const handleGenerate = async () => {
-        if (!topic) {
-            setError('Please enter a topic.');
-            return;
-        }
-        setIsLoading(true);
-        setError(null);
-        setOutline(null);
-        try {
-            const result = await generateCourseOutline(topic);
-            setOutline(result);
-        } catch (err) {
-            setError(err instanceof Error ? err.message : 'An unknown error occurred.');
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
-    return (
-        <div className="mt-8 bg-brand-dark/50 p-6 rounded-lg shadow-lg border border-gray-700">
-            <h3 className="text-xl font-bold text-brand-accent mb-4">Course Outline Generator (AI-Powered)</h3>
-            <div className="flex flex-col sm:flex-row gap-4 mb-4">
-                <input
-                    type="text"
-                    value={topic}
-                    onChange={(e) => setTopic(e.target.value)}
-                    placeholder="Enter course topic (e.g., 'React for Beginners')"
-                    className="flex-grow bg-gray-800 text-white border border-gray-600 rounded-lg px-4 py-2 focus:ring-brand-primary focus:border-brand-primary"
-                />
-                <button
-                    onClick={handleGenerate}
-                    disabled={isLoading}
-                    className="bg-brand-accent hover:bg-brand-accent/80 text-brand-dark font-bold py-2 px-6 rounded-lg transition duration-300 disabled:bg-gray-500 disabled:cursor-not-allowed flex items-center justify-center"
-                >
-                    {isLoading ? (
-                        <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-brand-dark" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
-                    ) : 'Generate'}
-                </button>
-            </div>
-            {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
-            {outline && (
-                <div className="mt-6 p-4 bg-gray-800 rounded-lg max-h-96 overflow-y-auto">
-                    <h4 className="text-lg font-bold text-brand-primary">{outline.courseTitle}</h4>
-                    <p className="text-gray-300 mt-1 mb-4">{outline.courseDescription}</p>
-                    {outline.modules.map((module: any, index: number) => (
-                        <div key={index} className="mb-4">
-                            <h5 className="font-semibold text-white">{`Module ${index + 1}: ${module.moduleTitle}`}</h5>
-                            <ul className="list-disc list-inside ml-4 text-gray-400">
-                                {module.lessons.map((lesson: string, lessonIndex: number) => (
-                                    <li key={lessonIndex}>{lesson}</li>
-                                ))}
-                            </ul>
-                        </div>
-                    ))}
-                </div>
-            )}
-        </div>
-    );
-};
-
 
 const AdminDashboard: React.FC = () => {
     return (
@@ -143,8 +72,6 @@ const AdminDashboard: React.FC = () => {
                     </ResponsiveContainer>
                 </div>
             </div>
-
-            <CourseOutlineGenerator />
 
         </div>
     );
