@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import type { RootState } from './src/store';
+import { AnimatePresence } from 'framer-motion';
 import Navbar from './src/components/Navbar';
 import Footer from './src/components/Footer';
+import PageTransition from './src/components/PageTransition';
 import HomePage from './pages/HomePage';
 import AdminDashboard from './pages/AdminDashboard';
 import CourseDetailsPage from './pages/CourseDetailsPage';
@@ -150,7 +152,11 @@ const App: React.FC = () => {
         <div className="min-h-screen bg-light-bg dark:bg-dark-bg font-sans transition-colors duration-300">
             {!hideHeaderFooter && <Navbar />}
             <main className={hideHeaderFooter ? '' : 'min-h-[calc(100vh-80px)]'}>
-                 {renderRoute()}
+                <AnimatePresence mode="wait" initial={false}>
+                    <PageTransition key={route}>
+                        {renderRoute()}
+                    </PageTransition>
+                </AnimatePresence>
             </main>
             {!hideHeaderFooter && <Footer />}
         </div>
