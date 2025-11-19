@@ -332,35 +332,6 @@ const HomePage: React.FC = () => {
           </div>
         </div>
       </section>
-
-      {/* CTA Section */}
-      <section className="py-20 md:py-32 bg-light-cardAlt">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-brand-primary rounded-2xl p-12 md:p-16 text-center shadow-sm">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              Ready to Start Learning?
-            </h2>
-            <p className="text-lg text-white/90 mb-8 max-w-xl mx-auto">
-              Join thousands of students already learning on DoFlow
-            </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <button
-                onClick={() => window.location.hash = isAuthenticated ? '/courses' : '/auth'}
-                className="inline-flex items-center gap-2 px-6 py-3 bg-white hover:bg-gray-50 text-brand-primary font-medium rounded-lg transition-colors shadow-sm"
-              >
-                <FiPlay className="w-4 h-4" />
-                Get Started Now
-              </button>
-              <button
-                onClick={() => window.location.hash = '/about'}
-                className="inline-flex items-center gap-2 px-6 py-3 bg-transparent hover:bg-white/10 text-white font-medium rounded-lg border border-white/30 transition-colors"
-              >
-                Learn More
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
     </div>
   );
 };
