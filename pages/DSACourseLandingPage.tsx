@@ -93,7 +93,7 @@ const DSACourseLandingPage: React.FC = () => {
       name: 'Free',
       title: 'Free',
       price: '0',
-      courseId: '691ecb7a6ee4a56d59c403a9', // DSA Free Course ID from database
+      courseId: '691f2a5939d894f3099a1dfa', // DSA Free Course ID from MongoDB Atlas
       features: [
         'Access to Basic DSA section',
         '45 Problems',
@@ -107,7 +107,7 @@ const DSACourseLandingPage: React.FC = () => {
       title: 'Pro',
       price: '2,999',
       originalPrice: '4,999',
-      courseId: '691ecb7a6ee4a56d59c403a9', // Using same course ID (will be paid in future)
+      courseId: '691f2a5939d894f3099a1dfa', // Using same course ID (will be paid in future)
       features: [
         'All 180+ Problems',
         'All DSA Sections',
@@ -123,7 +123,7 @@ const DSACourseLandingPage: React.FC = () => {
       name: 'Enterprise',
       title: 'Enterprise',
       price: '9,999',
-      courseId: '691ecb7a6ee4a56d59c403a9', // Using same course ID (will be paid in future)
+      courseId: '691f2a5939d894f3099a1dfa', // Using same course ID (will be paid in future)
       features: [
         'Everything in Pro',
         '1-on-1 Mentorship',

@@ -33,7 +33,7 @@ const HomePage: React.FC = () => {
         console.error('Error fetching courses:', error);
         // Fallback to DSA course only
         setFeaturedCourses([{
-          _id: '691ecb7a6ee4a56d59c403a9',
+          _id: '691f2a5939d894f3099a1dfa',
           title: 'Data Structures & Algorithms Mastery',
           instructor: { name: 'DoFlow Academy' },
           ratings: { average: 4.9 },
@@ -279,7 +279,7 @@ const HomePage: React.FC = () => {
                 key={course._id}
                 onClick={() => {
                   // Redirect to DSA landing page for DSA course, otherwise to generic course details
-                  if (course._id === '691ecb7a6ee4a56d59c403a9') {
+                  if (course._id === '691f2a5939d894f3099a1dfa') {
                     window.location.hash = '/dsa-course';
                   } else {
                     window.location.hash = `/course/${course._id}`;
