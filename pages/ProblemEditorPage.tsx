@@ -134,42 +134,42 @@ function solution(input) {
   };
 
   return (
-    <div className="h-screen bg-light-bg flex flex-col pt-20">
+    <div className="h-screen bg-light-bg flex flex-col pt-16 md:pt-20">
       {/* Header */}
       <div className="border-b border-light-border bg-light-card">
-        <div className="flex items-center justify-between px-6 py-3">
-          <div className="flex items-center gap-4 flex-1 min-w-0">
+        <div className="flex items-center justify-between px-3 md:px-6 py-2 md:py-3">
+          <div className="flex items-center gap-2 md:gap-4 flex-1 min-w-0">
             <button
               onClick={() => window.history.back()}
-              className="p-2 text-light-textMuted hover:text-light-text hover:bg-light-cardAlt rounded-lg transition-colors flex-shrink-0"
+              className="p-1.5 md:p-2 text-light-textMuted hover:text-light-text hover:bg-light-cardAlt rounded-lg transition-colors flex-shrink-0"
             >
-              <FiChevronLeft className="w-5 h-5" />
+              <FiChevronLeft className="w-4 h-4 md:w-5 md:h-5" />
             </button>
-            <h1 className="text-lg font-bold text-light-text truncate">Second Largest Element</h1>
-            <Badge variant="warning" className="flex-shrink-0">Medium</Badge>
+            <h1 className="text-sm md:text-lg font-bold text-light-text truncate">Second Largest Element</h1>
+            <Badge variant="warning" className="flex-shrink-0 text-xs md:text-sm">Medium</Badge>
           </div>
-          <div className="flex items-center gap-2 flex-shrink-0">
-            <button className="p-2 text-light-textMuted hover:text-brand-gold hover:bg-yellow-50 rounded-lg transition-colors">
-              <FiBookmark className="w-5 h-5" />
+          <div className="flex items-center gap-1 md:gap-2 flex-shrink-0">
+            <button className="p-1.5 md:p-2 text-light-textMuted hover:text-brand-gold hover:bg-yellow-50 rounded-lg transition-colors">
+              <FiBookmark className="w-4 h-4 md:w-5 md:h-5" />
             </button>
-            <button className="p-2 text-light-textMuted hover:text-brand-primary hover:bg-indigo-50 rounded-lg transition-colors">
-              <FiStar className="w-5 h-5" />
+            <button className="p-1.5 md:p-2 text-light-textMuted hover:text-brand-primary hover:bg-indigo-50 rounded-lg transition-colors">
+              <FiStar className="w-4 h-4 md:w-5 md:h-5" />
             </button>
           </div>
         </div>
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 flex overflow-hidden">
+      <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
         {/* Left Panel - Problem Description */}
-        <div className="w-1/2 border-r border-light-border flex flex-col">
+        <div className="w-full md:w-1/2 border-b md:border-b-0 md:border-r border-light-border flex flex-col max-h-[50vh] md:max-h-none">
           {/* Tabs */}
-          <div className="flex border-b border-light-border bg-light-card">
+          <div className="flex border-b border-light-border bg-light-card overflow-x-auto">
             {(['description', 'submissions', 'discussions', 'notes'] as const).map(tab => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`px-6 py-3 capitalize ${
+                className={`px-3 md:px-6 py-2 md:py-3 capitalize text-xs md:text-sm whitespace-nowrap ${
                   activeTab === tab
                     ? 'text-brand-primary border-b-2 border-brand-primary bg-indigo-50'
                     : 'text-light-textMuted hover:text-light-text hover:bg-light-cardAlt'
@@ -181,18 +181,18 @@ function solution(input) {
           </div>
 
           {/* Content */}
-          <div className="flex-1 overflow-y-auto p-6 bg-light-bg">
+          <div className="flex-1 overflow-y-auto p-3 md:p-6 bg-light-bg">
             {activeTab === 'description' && (
               <div className="prose max-w-none">
-                <div className="mb-6">
-                  <h2 className="text-2xl font-bold text-light-text mb-4">Problem Statement</h2>
-                  <p className="text-light-textSecondary leading-relaxed">
+                <div className="mb-4 md:mb-6">
+                  <h2 className="text-lg md:text-2xl font-bold text-light-text mb-2 md:mb-4">Problem Statement</h2>
+                  <p className="text-sm md:text-base text-light-textSecondary leading-relaxed">
                     Given an array of integers, find the second largest element in the array.
                     If there is no second largest element, return -1.
                   </p>
                 </div>
 
-                <div className="mb-6">
+                <div className="mb-4 md:mb-6">
                   <h3 className="text-xl font-bold text-light-text mb-3">Examples</h3>
                   <div className="bg-light-card border border-light-border rounded-lg p-4 mb-4">
                     <div className="text-light-textSecondary">
@@ -262,36 +262,39 @@ function solution(input) {
         </div>
 
         {/* Right Panel - Code Editor */}
-        <div className="w-1/2 flex flex-col">
+        <div className="w-full md:w-1/2 flex flex-col min-h-[50vh] md:min-h-0">
           {/* Editor Header */}
-          <div className="flex items-center justify-between px-6 py-3 border-b border-light-border bg-light-card">
+          <div className="flex items-center justify-between px-3 md:px-6 py-2 md:py-3 border-b border-light-border bg-light-card">
             <select
               value={language}
               onChange={(e) => setLanguage(e.target.value)}
-              className="bg-light-card border border-light-border text-light-text px-4 py-2 rounded-lg focus:outline-none focus:border-brand-primary"
+              className="bg-light-card border border-light-border text-light-text px-2 md:px-4 py-1.5 md:py-2 text-xs md:text-sm rounded-lg focus:outline-none focus:border-brand-primary"
             >
               <option value="javascript">JavaScript</option>
               <option value="python" disabled>Python (Coming Soon)</option>
               <option value="java" disabled>Java (Coming Soon)</option>
             </select>
-            <div className="flex gap-2">
+            <div className="flex gap-1 md:gap-2">
               <Button
                 variant="outline"
                 size="sm"
                 onClick={handleRunCode}
                 disabled={isRunning}
+                className="text-xs md:text-sm px-2 md:px-4 py-1 md:py-2"
               >
-                <FiPlay className="mr-2" />
-                {isRunning ? 'Running...' : 'Run Code'}
+                <FiPlay className="mr-1 md:mr-2 w-3 h-3 md:w-4 md:h-4" />
+                {isRunning ? 'Running...' : 'Run'}
               </Button>
               <Button
                 variant="primary"
                 size="sm"
                 onClick={handleSubmit}
                 disabled={isRunning}
+                className="text-xs md:text-sm px-2 md:px-4 py-1 md:py-2"
               >
-                <FiCheck className="mr-2" />
-                Submit
+                <FiCheck className="mr-1 md:mr-2 w-3 h-3 md:w-4 md:h-4" />
+                <span className="hidden md:inline">Submit</span>
+                <span className="md:hidden">✓</span>
               </Button>
             </div>
           </div>
