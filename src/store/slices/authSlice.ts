@@ -45,9 +45,14 @@ export const login = createAsyncThunk(
   'auth/login',
   async (credentials: { email: string; password: string }, { rejectWithValue }) => {
     try {
+      console.log('Attempting login with:', credentials.email);
+      console.log('API URL:', import.meta.env.VITE_API_URL);
       const response = await api.post('/auth/login', credentials);
+      console.log('Login response:', response.data);
       return response.data;
     } catch (error: any) {
+      console.error('Login error:', error);
+      console.error('Error response:', error.response?.data);
       return rejectWithValue(error.response?.data?.message || 'Login failed');
     }
   }
