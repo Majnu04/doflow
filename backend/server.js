@@ -44,9 +44,26 @@ const limiter = rateLimit({
 });
 app.use('/api', limiter);
 
-// CORS
+// CORS - Allow multiple origins
+const allowedOrigins = [
+  process.env.FRONTEND_URL,
+  'https://doflow-ebon.vercel.app',
+  'https://doflow.vercel.app',
+  'http://localhost:5173',
+  'http://localhost:5174'
+].filter(Boolean);
+
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+  origin: function(origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.some(allowed => origin.startsWith(allowed.replace(/\/$/, '')))) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true
 }));
 
