@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../src/store';
 import api from '../src/utils/api';
 import { FaBook, FaCertificate, FaChartLine, FaClock, FaHeart, FaTrophy } from 'react-icons/fa';
+import { FiAward, FiDownload } from 'react-icons/fi';
 
 const StudentDashboard: React.FC = () => {
   const { user } = useSelector((state: RootState) => state.auth);
@@ -28,15 +29,26 @@ const StudentDashboard: React.FC = () => {
       // Calculate stats
       const completed = response.data.filter((e: any) => e.progress === 100).length;
       const inProgress = response.data.filter((e: any) => e.progress > 0 && e.progress < 100).length;
-      const certificates = response.data.filter((e: any) => e.certificateIssued).length;
       
-      setStats({
-        totalCourses: response.data.length,
-        completedCourses: completed,
-        inProgressCourses: inProgress,
-        certificatesEarned: certificates,
-        totalHoursLearned: Math.floor(response.data.reduce((acc: number, e: any) => acc + (e.course?.totalDuration || 0), 0) / 60)
-      });
+      // Get actual certificate count from backend
+      try {
+        const certResponse = await api.get('/certificates/my-certificates');
+        setStats({
+          totalCourses: response.data.length,
+          completedCourses: completed,
+          inProgressCourses: inProgress,
+          certificatesEarned: certResponse.data.certificates.length,
+          totalHoursLearned: Math.floor(response.data.reduce((acc: number, e: any) => acc + (e.course?.totalDuration || 0), 0) / 60)
+        });
+      } catch {
+        setStats({
+          totalCourses: response.data.length,
+          completedCourses: completed,
+          inProgressCourses: inProgress,
+          certificatesEarned: 0,
+          totalHoursLearned: Math.floor(response.data.reduce((acc: number, e: any) => acc + (e.course?.totalDuration || 0), 0) / 60)
+        });
+      }
       
       setIsLoading(false);
     } catch (error) {
@@ -45,15 +57,27 @@ const StudentDashboard: React.FC = () => {
     }
   };
 
+  const handleGetCertificate = async (courseId: string) => {
+    try {
+      const response = await api.post('/certificates/generate', { courseId });
+      if (response.data.certificate) {
+        alert('🎉 Certificate generated successfully!');
+        window.location.hash = '/certificates';
+      }
+    } catch (error: any) {
+      alert(error.response?.data?.message || 'Error generating certificate');
+    }
+  };
+
   const StatCard: React.FC<{ icon: any; title: string; value: string | number; color: string }> = ({ icon: Icon, title, value, color }) => (
-    <div className="card">
+    <div className="bg-light-card dark:bg-dark-card border border-light-border dark:border-dark-border rounded-xl p-6 hover:border-brand-primary transition-all duration-300">
       <div className="flex items-center gap-4">
-        <div className={`p-4 rounded-full bg-${color}-500 bg-opacity-20`}>
+        <div className={`p-4 rounded-full bg-${color}-500/20`}>
           <Icon className={`text-3xl text-${color}-400`} />
         </div>
         <div>
-          <p className="text-gray-400 text-sm">{title}</p>
-          <p className="text-3xl font-bold">{value}</p>
+          <p className="text-light-textMuted dark:text-dark-muted text-sm">{title}</p>
+          <p className="text-3xl font-bold text-light-text dark:text-dark-text">{value}</p>
         </div>
       </div>
     </div>
@@ -71,12 +95,12 @@ const StudentDashboard: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen pt-24 pb-12 px-4">
+    <div className="min-h-screen pt-24 pb-12 px-4 bg-light-bg dark:bg-dark-bg">
       <div className="max-w-7xl mx-auto">
         {/* Welcome Section */}
         <div className="mb-12">
-          <h1 className="text-4xl font-bold mb-2">Welcome back, {user.name}! 👋</h1>
-          <p className="text-gray-400">Continue your learning journey</p>
+          <h1 className="text-4xl font-bold mb-2 text-light-text dark:text-dark-text">Welcome back, {user.name}! 👋</h1>
+          <p className="text-light-textSecondary dark:text-dark-muted">Continue your learning journey</p>
         </div>
 
         {/* Stats Grid */}
@@ -91,8 +115,8 @@ const StudentDashboard: React.FC = () => {
         {/* My Courses */}
         <div className="mb-12">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-3xl font-bold">My Courses</h2>
-            <a href="/#/courses" className="btn-secondary">Browse More Courses</a>
+            <h2 className="text-3xl font-bold text-light-text dark:text-dark-text">My Courses</h2>
+            <a href="/#/courses" className="px-6 py-3 bg-light-card dark:bg-dark-card hover:bg-light-cardAlt dark:hover:bg-dark-cardAlt text-light-text dark:text-dark-text font-semibold rounded-lg border-2 border-light-border dark:border-dark-border transition-all duration-200">Browse More Courses</a>
           </div>
 
           {isLoading ? (
@@ -106,48 +130,64 @@ const StudentDashboard: React.FC = () => {
               ))}
             </div>
           ) : enrollments.length === 0 ? (
-            <div className="card text-center py-12">
-              <FaBook className="text-6xl text-gray-600 mx-auto mb-4" />
-              <p className="text-gray-400 text-lg mb-4">You haven't enrolled in any courses yet</p>
-              <a href="/#/courses" className="btn-primary">Explore Courses</a>
+            <div className="bg-light-card dark:bg-dark-card border border-light-border dark:border-dark-border rounded-xl p-12 text-center">
+              <FaBook className="text-6xl text-light-textMuted dark:text-dark-muted mx-auto mb-4" />
+              <p className="text-light-textSecondary dark:text-dark-muted text-lg mb-4">You haven't enrolled in any courses yet</p>
+              <a href="/#/courses" className="inline-flex items-center gap-2 px-6 py-3 bg-brand-primary hover:bg-brand-primaryHover text-white font-semibold rounded-lg transition-all duration-200">Explore Courses</a>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {enrollments.map(enrollment => (
-                <div key={enrollment._id} className="card hover:scale-105 transform transition-all duration-300">
+                <div key={enrollment._id} className="bg-light-card dark:bg-dark-card border border-light-border dark:border-dark-border rounded-xl overflow-hidden hover:border-brand-primary hover:shadow-lg transition-all duration-300 group">
                   <img
                     src={enrollment.course?.thumbnail || 'https://via.placeholder.com/400x225'}
                     alt={enrollment.course?.title}
-                    className="w-full h-48 object-cover rounded-lg mb-4"
+                    className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
                   />
                   
-                  <h3 className="text-xl font-bold mb-2 line-clamp-2">{enrollment.course?.title}</h3>
-                  
-                  <div className="mb-4">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm text-gray-400">Progress</span>
-                      <span className="text-sm font-bold text-brand-primary">{enrollment.progress}%</span>
+                  <div className="p-6">
+                    <h3 className="text-xl font-bold mb-2 line-clamp-2 text-light-text dark:text-dark-text">{enrollment.course?.title}</h3>
+                    
+                    <div className="mb-4">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-sm text-light-textMuted dark:text-dark-muted">Progress</span>
+                        <span className="text-sm font-bold text-brand-primary">{enrollment.progress}%</span>
+                      </div>
+                      <div className="w-full bg-light-cardAlt dark:bg-dark-cardAlt rounded-full h-2">
+                        <div
+                          className="bg-gradient-to-r from-brand-primary to-purple-600 h-2 rounded-full transition-all duration-300"
+                          style={{ width: `${enrollment.progress}%` }}
+                        ></div>
+                      </div>
                     </div>
-                    <div className="w-full bg-gray-700 rounded-full h-2">
-                      <div
-                        className="bg-gradient-to-r from-brand-primary to-brand-blue h-2 rounded-full transition-all duration-300"
-                        style={{ width: `${enrollment.progress}%` }}
-                      ></div>
-                    </div>
-                  </div>
 
-                  <div className="flex gap-2">
-                    <a
-                      href={`/#/learn/${enrollment.course?._id}`}
-                      className="flex-1 btn-primary text-center text-sm py-2"
-                    >
-                      {enrollment.progress === 0 ? 'Start Learning' : 'Continue'}
-                    </a>
-                    {enrollment.certificateIssued && (
-                      <button className="px-4 py-2 bg-green-600 rounded-lg hover:bg-green-700">
-                        <FaCertificate />
-                      </button>
+                    <div className="flex gap-2">
+                    {enrollment.progress === 100 ? (
+                      <>
+                        <button
+                          onClick={() => handleGetCertificate(enrollment.course?._id)}
+                          className="flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-200"
+                        >
+                          <FiAward className="w-4 h-4" />
+                          Get Certificate
+                        </button>
+                        <a
+                          href={`/#/learn/${enrollment.course?._id}`}
+                          className="px-4 py-2 bg-light-card dark:bg-dark-card border-2 border-light-border dark:border-dark-border rounded-lg hover:border-brand-primary transition-colors"
+                          title="Review Course"
+                        >
+                          <FaBook />
+                        </a>
+                      </>
+                    ) : (
+                      <a
+                        href={`/#/learn/${enrollment.course?._id}`}
+                        className="flex-1 bg-brand-primary hover:bg-brand-primaryHover text-white font-semibold py-2 px-4 rounded-lg text-center transition-all duration-200"
+                      >
+                        {enrollment.progress === 0 ? 'Start Learning' : 'Continue'}
+                      </a>
                     )}
+                    </div>
                   </div>
                 </div>
               ))}
@@ -157,22 +197,22 @@ const StudentDashboard: React.FC = () => {
 
         {/* Quick Actions */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <a href="/#/wishlist" className="card text-center hover:scale-105 transform transition-all">
-            <FaHeart className="text-5xl text-red-400 mx-auto mb-4" />
-            <h3 className="text-xl font-bold mb-2">My Wishlist</h3>
-            <p className="text-gray-400">Courses you want to take</p>
+          <a href="/#/wishlist" className="bg-light-card dark:bg-dark-card border border-light-border dark:border-dark-border rounded-xl p-8 text-center hover:border-brand-primary hover:shadow-lg transition-all duration-300 group">
+            <FaHeart className="text-5xl text-red-400 mx-auto mb-4 group-hover:scale-110 transition-transform" />
+            <h3 className="text-xl font-bold mb-2 text-light-text dark:text-dark-text">My Wishlist</h3>
+            <p className="text-light-textSecondary dark:text-dark-muted">Courses you want to take</p>
           </a>
 
-          <a href="/#/certificates" className="card text-center hover:scale-105 transform transition-all">
-            <FaCertificate className="text-5xl text-purple-400 mx-auto mb-4" />
-            <h3 className="text-xl font-bold mb-2">My Certificates</h3>
-            <p className="text-gray-400">View your achievements</p>
+          <a href="/#/certificates" className="bg-light-card dark:bg-dark-card border border-light-border dark:border-dark-border rounded-xl p-8 text-center hover:border-brand-primary hover:shadow-lg transition-all duration-300 group">
+            <FaCertificate className="text-5xl text-purple-400 mx-auto mb-4 group-hover:scale-110 transition-transform" />
+            <h3 className="text-xl font-bold mb-2 text-light-text dark:text-dark-text">My Certificates</h3>
+            <p className="text-light-textSecondary dark:text-dark-muted">View your achievements</p>
           </a>
 
-          <a href="/#/profile" className="card text-center hover:scale-105 transform transition-all">
-            <FaChartLine className="text-5xl text-blue-400 mx-auto mb-4" />
-            <h3 className="text-xl font-bold mb-2">Learning Analytics</h3>
-            <p className="text-gray-400">Track your progress</p>
+          <a href="/#/profile" className="bg-light-card dark:bg-dark-card border border-light-border dark:border-dark-border rounded-xl p-8 text-center hover:border-brand-primary hover:shadow-lg transition-all duration-300 group">
+            <FaChartLine className="text-5xl text-blue-400 mx-auto mb-4 group-hover:scale-110 transition-transform" />
+            <h3 className="text-xl font-bold mb-2 text-light-text dark:text-dark-text">Learning Analytics</h3>
+            <p className="text-light-textSecondary dark:text-dark-muted">Track your progress</p>
           </a>
         </div>
       </div>

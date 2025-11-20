@@ -1,8 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import { FiCheck, FiStar, FiClock, FiUsers, FiAward, FiTrendingUp, FiCode, FiZap, FiTarget, FiMessageCircle } from 'react-icons/fi';
 import { Button, Card, Badge } from '../src/components/ui';
+import { RootState } from '../src/store';
+import { paymentService } from '../src/services/paymentService';
+import toast from '../src/utils/toast';
 
 const DSACourseLandingPage: React.FC = () => {
+  const { isAuthenticated } = useSelector((state: RootState) => state.auth);
+  const [processingPlan, setProcessingPlan] = useState<string | null>(null);
+
   const features = [
     {
       icon: <FiCode className="w-6 h-6" />,
@@ -84,7 +91,9 @@ const DSACourseLandingPage: React.FC = () => {
   const pricingPlans = [
     {
       name: 'Free',
+      title: 'Free',
       price: '0',
+      courseId: '691ecb7a6ee4a56d59c403a9', // DSA Free Course ID from database
       features: [
         'Access to Basic DSA section',
         '45 Problems',
@@ -95,8 +104,10 @@ const DSACourseLandingPage: React.FC = () => {
     },
     {
       name: 'Pro',
+      title: 'Pro',
       price: '2,999',
       originalPrice: '4,999',
+      courseId: 'dsa-pro-course', // This should match actual course ID in database
       features: [
         'All 180+ Problems',
         'All DSA Sections',
@@ -110,7 +121,9 @@ const DSACourseLandingPage: React.FC = () => {
     },
     {
       name: 'Enterprise',
+      title: 'Enterprise',
       price: '9,999',
+      courseId: 'dsa-enterprise-course', // This should match actual course ID in database
       features: [
         'Everything in Pro',
         '1-on-1 Mentorship',
@@ -122,6 +135,107 @@ const DSACourseLandingPage: React.FC = () => {
       isPopular: false
     }
   ];
+
+  const loadRazorpayScript = () => {
+    return new Promise((resolve) => {
+      const script = document.createElement('script');
+      script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
+      document.body.appendChild(script);
+    });
+  };
+
+  const handleEnrollClick = async (plan: any) => {
+    // Check authentication
+    if (!isAuthenticated) {
+      toast.error('Please login to enroll in this course');
+      window.location.hash = '/auth';
+      return;
+    }
+
+    setProcessingPlan(plan.title);
+
+    try {
+      const priceNum = parseInt(plan.price.replace(/,/g, ''));
+
+      // Handle free plan
+      if (priceNum === 0) {
+        try {
+          // Enroll in free course
+          await paymentService.enrollInFreeCourse(plan.courseId);
+          toast.success('Successfully enrolled in the DSA course!');
+          window.location.hash = '/dsa-roadmap';
+        } catch (error: any) {
+          toast.error(error.response?.data?.message || 'Failed to enroll. Please try again.');
+        } finally {
+          setProcessingPlan(null);
+        }
+        return;
+      }
+
+      // Handle paid plans with Razorpay
+      const scriptLoaded = await loadRazorpayScript();
+      if (!scriptLoaded) {
+        toast.error('Failed to load payment gateway. Please try again.');
+        setProcessingPlan(null);
+        return;
+      }
+
+      // Create order - use the courseId from plan
+      const orderData = await paymentService.createOrder(plan.courseId);
+
+      // Configure Razorpay options
+      const options = {
+        key: orderData.keyId,
+        amount: orderData.amount,
+        currency: orderData.currency,
+        name: 'DoFlow Academy',
+        description: `DSA Course - ${plan.title} Plan`,
+        order_id: orderData.orderId,
+        handler: async (response: any) => {
+          try {
+            // Verify payment
+            await paymentService.verifyPayment({
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+              enrollmentId: orderData.enrollmentId
+            });
+
+            toast.success('Payment successful! Welcome to DSA ' + plan.title + ' plan!');
+            window.location.hash = '/dsa-roadmap';
+          } catch (error: any) {
+            toast.error(error.response?.data?.message || 'Payment verification failed');
+          } finally {
+            setProcessingPlan(null);
+          }
+        },
+        prefill: {
+          name: '',
+          email: '',
+          contact: ''
+        },
+        theme: {
+          color: '#7C3AED'
+        },
+        modal: {
+          ondismiss: () => {
+            setProcessingPlan(null);
+            toast.info('Payment cancelled');
+          }
+        }
+      };
+
+      // Open Razorpay checkout
+      const razorpay = new (window as any).Razorpay(options);
+      razorpay.open();
+    } catch (error: any) {
+      console.error('Enrollment error:', error);
+      toast.error(error.response?.data?.message || 'Failed to enroll. Please try again.');
+      setProcessingPlan(null);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-light-bg">
@@ -266,15 +380,20 @@ const DSACourseLandingPage: React.FC = () => {
                   variant={plan.isPopular ? "primary" : "outline"}
                   size="lg"
                   className={`w-full ${plan.isPopular ? 'bg-brand-primary hover:bg-brand-primaryHover' : 'border-light-border hover:bg-light-cardAlt'}`}
-                  onClick={() => {
-                    if (plan.price === '0') {
-                      window.location.hash = '/dsa-roadmap';
-                    } else {
-                      window.location.hash = '/auth';
-                    }
-                  }}
+                  disabled={processingPlan === plan.title}
+                  onClick={() => handleEnrollClick(plan)}
                 >
-                  {plan.price === '0' ? 'Get Started Free' : 'Enroll Now'}
+                  {processingPlan === plan.title ? (
+                    <span className="flex items-center justify-center">
+                      <svg className="animate-spin -ml-1 mr-3 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      Processing...
+                    </span>
+                  ) : (
+                    plan.price === '0' ? 'Get Started Free' : 'Enroll Now'
+                  )}
                 </Button>
               </div>
             ))}

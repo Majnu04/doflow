@@ -27,6 +27,8 @@ import BlogPage from './pages/BlogPage';
 import BecomeInstructorPage from './pages/BecomeInstructorPage';
 import HelpCenterPage from './pages/HelpCenterPage';
 import FAQPage from './pages/FAQPage';
+import CertificatesPage from './pages/CertificatesPage';
+import CertificateVerificationPage from './pages/CertificateVerificationPage';
 
 const NotFound: React.FC = () => (
     <div className="min-h-screen flex items-center justify-center text-light-text text-center">
@@ -103,6 +105,12 @@ const App: React.FC = () => {
             return <ProblemEditorPage problemId={problemId} />;
         }
 
+        // Certificate verification route
+        const certVerifyMatch = path.match(/^\/certificate\/verify\/([\w-]+)$/);
+        if (certVerifyMatch) {
+            return <CertificateVerificationPage />;
+        }
+
         switch (path) {
             case '':
             case '/':
@@ -165,6 +173,12 @@ const App: React.FC = () => {
                 return <HelpCenterPage />;
             case '/faq':
                 return <FAQPage />;
+            case '/certificates':
+                return (
+                    <ProtectedRoute>
+                        <CertificatesPage />
+                    </ProtectedRoute>
+                );
             default:
                 return <NotFound />;
         }

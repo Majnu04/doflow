@@ -1,5 +1,9 @@
 
 import React, { useState, useRef, useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from '../src/store';
+import { paymentService } from '../src/services/paymentService';
+import toast from '../src/utils/toast';
 import { Course } from '../types';
 
 // MOCK DATA - In a real app, you would fetch this based on the courseId prop
@@ -91,21 +95,133 @@ const CourseCurriculum: React.FC<{ modules: Course['modules'] }> = ({ modules })
 
 
 const CourseDetailsPage: React.FC<{ courseId: string }> = ({ courseId }) => {
-    // For now, we use mock data. In a real app, you'd fetch based on courseId.
-    const course = mockCourse;
+    // State
+    const [course, setCourse] = useState<Course>(mockCourse);
+    const [isEnrolled, setIsEnrolled] = useState(false);
     const [isProcessingPayment, setIsProcessingPayment] = useState(false);
     const [isPlaying, setIsPlaying] = useState(false);
     const videoRef = useRef<HTMLVideoElement>(null);
+    const { isAuthenticated } = useSelector((state: RootState) => state.auth);
 
-    const handleBuyNow = () => {
+    // Fetch course data and enrollment status
+    useEffect(() => {
+        const fetchCourseData = async () => {
+            try {
+                // Try to fetch real course data from API
+                // If it fails, fall back to mock data
+                // const courseData = await courseService.getCourseById(courseId);
+                // setCourse(courseData);
+
+                // Check enrollment status if authenticated
+                if (isAuthenticated) {
+                    // const enrollmentData = await courseService.checkEnrollment(courseId);
+                    // setIsEnrolled(enrollmentData.isEnrolled);
+                }
+            } catch (error) {
+                console.log('Using mock data for course:', courseId);
+                // Already using mockCourse by default
+            }
+        };
+
+        fetchCourseData();
+    }, [courseId, isAuthenticated]);
+
+    const loadRazorpayScript = () => {
+        return new Promise((resolve) => {
+            const script = document.createElement('script');
+            script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+            script.onload = () => resolve(true);
+            script.onerror = () => resolve(false);
+            document.body.appendChild(script);
+        });
+    };
+
+    const handleBuyNow = async () => {
+        // Check if user is authenticated
+        if (!isAuthenticated) {
+            toast.error('Please login to enroll in this course');
+            window.location.hash = '/auth';
+            return;
+        }
+
         setIsProcessingPayment(true);
-        console.log(`Initiating purchase for course: ${course.title} (ID: ${course.id}) for $${course.price}`);
 
-        setTimeout(() => {
+        try {
+            const coursePrice = course.discountPrice || course.price;
+
+            // Handle free course enrollment
+            if (coursePrice === 0) {
+                await paymentService.enrollInFreeCourse(courseId);
+                toast.success('Successfully enrolled in the course!');
+                setIsEnrolled(true);
+                window.location.hash = '/dashboard';
+                setIsProcessingPayment(false);
+                return;
+            }
+
+            // Handle paid course enrollment with Razorpay
+            // Load Razorpay script
+            const scriptLoaded = await loadRazorpayScript();
+            if (!scriptLoaded) {
+                toast.error('Failed to load payment gateway. Please try again.');
+                setIsProcessingPayment(false);
+                return;
+            }
+
+            // Create order
+            const orderData = await paymentService.createOrder(courseId);
+
+            // Configure Razorpay options
+            const options = {
+                key: orderData.keyId,
+                amount: orderData.amount,
+                currency: orderData.currency,
+                name: 'DoFlow Academy',
+                description: course.title,
+                order_id: orderData.orderId,
+                handler: async (response: any) => {
+                    try {
+                        // Verify payment
+                        await paymentService.verifyPayment({
+                            razorpay_order_id: response.razorpay_order_id,
+                            razorpay_payment_id: response.razorpay_payment_id,
+                            razorpay_signature: response.razorpay_signature,
+                            enrollmentId: orderData.enrollmentId
+                        });
+
+                        toast.success('Payment successful! You are now enrolled in the course.');
+                        setIsEnrolled(true);
+                        window.location.hash = '/dashboard';
+                    } catch (error: any) {
+                        toast.error(error.response?.data?.message || 'Payment verification failed');
+                    } finally {
+                        setIsProcessingPayment(false);
+                    }
+                },
+                prefill: {
+                    name: '',
+                    email: '',
+                    contact: ''
+                },
+                theme: {
+                    color: '#7C3AED' // brand-primary color
+                },
+                modal: {
+                    ondismiss: () => {
+                        setIsProcessingPayment(false);
+                        toast.info('Payment cancelled');
+                    }
+                }
+            };
+
+            // Open Razorpay checkout
+            const razorpay = new (window as any).Razorpay(options);
+            razorpay.open();
+        } catch (error: any) {
+            console.error('Enrollment error:', error);
+            toast.error(error.response?.data?.message || 'Failed to enroll. Please try again.');
             setIsProcessingPayment(false);
-            alert(`Successfully purchased "${course.title}"! You now have lifetime access.`);
-            console.log("Payment successful!");
-        }, 2000);
+        }
     };
 
     const togglePlayPause = () => {
@@ -268,12 +384,20 @@ const CourseDetailsPage: React.FC<{ courseId: string }> = ({ courseId }) => {
                                     )}
                                     <div className="p-6">
                                         <div className="flex items-center space-x-2">
-                                            <span className="text-3xl font-bold text-brand-primary">${course.price}</span>
-                                            <span className="text-gray-500 line-through">${course.originalPrice}</span>
+                                            {(course.discountPrice || course.price) === 0 ? (
+                                                <span className="text-3xl font-bold text-green-500">FREE</span>
+                                            ) : (
+                                                <>
+                                                    <span className="text-3xl font-bold text-brand-primary">${course.discountPrice || course.price}</span>
+                                                    {course.originalPrice && course.originalPrice > (course.discountPrice || course.price) && (
+                                                        <span className="text-gray-500 line-through">${course.originalPrice}</span>
+                                                    )}
+                                                </>
+                                            )}
                                         </div>
                                         <div className="mt-4 space-y-3">
                                             <button 
-                                                onClick={handleBuyNow}
+                                                onClick={isEnrolled ? () => { window.location.hash = `/learning/${courseId}`; } : handleBuyNow}
                                                 disabled={isProcessingPayment}
                                                 className="w-full bg-brand-accent hover:bg-brand-accent/80 text-brand-dark font-bold py-3 rounded-lg transition disabled:bg-gray-500 disabled:cursor-not-allowed flex items-center justify-center"
                                             >
@@ -285,7 +409,7 @@ const CourseDetailsPage: React.FC<{ courseId: string }> = ({ courseId }) => {
                                                         </svg>
                                                         Processing...
                                                     </>
-                                                ) : 'Buy Now'}
+                                                ) : isEnrolled ? 'Access Course' : (course.discountPrice || course.price) === 0 ? 'Enroll Free' : 'Buy Now'}
                                             </button>
                                             <button className="w-full bg-transparent border-2 border-brand-primary hover:bg-brand-primary text-white font-bold py-3 rounded-lg transition">Add to Wishlist</button>
                                         </div>

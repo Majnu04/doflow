@@ -142,6 +142,68 @@ export const verifyPayment = async (req, res) => {
   }
 };
 
+// @desc    Enroll in free course
+// @route   POST /api/payment/enroll-free
+// @access  Private
+export const enrollInFreeCourse = async (req, res) => {
+  try {
+    const { courseId } = req.body;
+
+    const course = await Course.findById(courseId);
+
+    if (!course) {
+      return res.status(404).json({ message: 'Course not found' });
+    }
+
+    // Check if course is actually free
+    const coursePrice = course.discountPrice || course.price;
+    if (coursePrice > 0) {
+      return res.status(400).json({ message: 'This course is not free. Please use the payment flow.' });
+    }
+
+    // Check if already enrolled
+    const existingEnrollment = await Enrollment.findOne({
+      user: req.user._id,
+      course: courseId,
+      'paymentInfo.status': 'completed'
+    });
+
+    if (existingEnrollment) {
+      return res.status(400).json({ message: 'Already enrolled in this course' });
+    }
+
+    // Create enrollment with completed status for free course
+    const enrollment = await Enrollment.create({
+      user: req.user._id,
+      course: courseId,
+      paymentInfo: {
+        amount: 0,
+        currency: 'INR',
+        status: 'completed'
+      }
+    });
+
+    // Update user's enrolled courses
+    await User.findByIdAndUpdate(req.user._id, {
+      $push: {
+        enrolledCourses: {
+          course: courseId,
+          enrolledAt: new Date()
+        }
+      }
+    });
+
+    res.json({
+      success: true,
+      message: 'Successfully enrolled in free course',
+      enrollment
+    });
+  } catch (error) {
+    console.error('Free enrollment error:', error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
 // @desc    Get user enrollments
 // @route   GET /api/payment/enrollments
 // @access  Private

@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../store';
 import { logout } from '../store/slices/authSlice';
 import { useTheme } from '../contexts/ThemeContext';
-import { FiMenu, FiX, FiUser, FiLogOut, FiBookOpen, FiShoppingCart, FiHeart, FiHome, FiGrid, FiMoon, FiSun } from 'react-icons/fi';
+import { FiMenu, FiX, FiUser, FiLogOut, FiBookOpen, FiShoppingCart, FiHeart, FiHome, FiGrid, FiMoon, FiSun, FiAward } from 'react-icons/fi';
 import { Button } from './ui';
 
 const Navbar: React.FC = () => {
@@ -159,6 +159,14 @@ const Navbar: React.FC = () => {
                           <FiUser className="w-5 h-5" />
                           <span>Profile</span>
                         </a>
+                        <a
+                          href="/#/certificates"
+                          onClick={() => setIsUserMenuOpen(false)}
+                          className="flex items-center gap-3 px-4 py-3 text-light-textMuted dark:text-dark-muted hover:text-brand-primary dark:hover:text-brand-primary hover:bg-light-cardAlt dark:hover:bg-dark-cardAlt rounded-lg transition-colors"
+                        >
+                          <FiAward className="w-5 h-5" />
+                          <span>My Certificates</span>
+                        </a>
                         <button
                           onClick={handleLogout}
                           className="w-full flex items-center gap-3 px-4 py-3 text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
@@ -279,6 +287,14 @@ const Navbar: React.FC = () => {
                 >
                   <FiUser className="w-6 h-6 text-brand-primary" />
                   <span>Profile</span>
+                </a>
+                <a
+                  href="/#/certificates"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="flex items-center gap-4 px-5 py-4 text-light-text dark:text-dark-text hover:bg-light-cardAlt dark:hover:bg-dark-cardAlt rounded-xl transition-all duration-200 active:scale-95 text-lg"
+                >
+                  <FiAward className="w-6 h-6 text-brand-primary" />
+                  <span>My Certificates</span>
                 </a>
                 <button
                   onClick={() => {

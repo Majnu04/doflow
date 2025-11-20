@@ -8,3 +8,8 @@ interface ImportMetaEnv {
 interface ImportMeta {
   readonly env: ImportMetaEnv;
 }
+
+// Razorpay type declaration
+interface Window {
+  Razorpay: any;
+}

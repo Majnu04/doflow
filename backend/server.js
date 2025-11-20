@@ -1,5 +1,9 @@
-import express from 'express';
 import dotenv from 'dotenv';
+
+// Load env vars FIRST - before any other imports that might need them
+dotenv.config();
+
+import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import compression from 'compression';
@@ -8,7 +12,7 @@ import rateLimit from 'express-rate-limit';
 import connectDB from './config/db.js';
 import { errorHandler } from './middleware/error.js';
 
-// Import routes
+// Import routes (after env vars are loaded)
 import authRoutes from './routes/authRoutes.js';
 import courseRoutes from './routes/courseRoutes.js';
 import paymentRoutes from './routes/paymentRoutes.js';
@@ -23,9 +27,7 @@ import discussionRoutes from './routes/discussionRoutes.js';
 import noteRoutes from './routes/noteRoutes.js';
 import bookmarkRoutes from './routes/bookmarkRoutes.js';
 import roadmapProgressRoutes from './routes/roadmapProgressRoutes.js';
-
-// Load env vars
-dotenv.config();
+import certificateRoutes from './routes/certificateRoutes.js';
 
 // Connect to database
 connectDB();
@@ -73,6 +75,7 @@ app.use('/api/discussions', discussionRoutes);
 app.use('/api/notes', noteRoutes);
 app.use('/api/bookmarks', bookmarkRoutes);
 app.use('/api/roadmap-progress', roadmapProgressRoutes);
+app.use('/api/certificates', certificateRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
