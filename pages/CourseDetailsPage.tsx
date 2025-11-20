@@ -3,6 +3,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../src/store';
 import { paymentService } from '../src/services/paymentService';
+import { courseService } from '../src/services/courseService';
 import toast from '../src/utils/toast';
 import { Course } from '../types';
 
@@ -107,19 +108,19 @@ const CourseDetailsPage: React.FC<{ courseId: string }> = ({ courseId }) => {
     useEffect(() => {
         const fetchCourseData = async () => {
             try {
-                // Try to fetch real course data from API
-                // If it fails, fall back to mock data
-                // const courseData = await courseService.getCourseById(courseId);
-                // setCourse(courseData);
+                // Fetch real course data from API
+                const courseData = await courseService.getCourseById(courseId);
+                setCourse(courseData);
 
                 // Check enrollment status if authenticated
                 if (isAuthenticated) {
-                    // const enrollmentData = await courseService.checkEnrollment(courseId);
-                    // setIsEnrolled(enrollmentData.isEnrolled);
+                    const enrollmentData = await courseService.checkEnrollment(courseId);
+                    setIsEnrolled(enrollmentData.isEnrolled);
                 }
             } catch (error) {
-                console.log('Using mock data for course:', courseId);
-                // Already using mockCourse by default
+                console.error('Error fetching course data:', error);
+                toast.error('Failed to load course details');
+                // Fall back to mock data if API fails
             }
         };
 

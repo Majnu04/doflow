@@ -277,7 +277,14 @@ const HomePage: React.FC = () => {
             {featuredCourses.map((course) => (
               <button
                 key={course._id}
-                onClick={() => window.location.hash = `/course/${course._id}`}
+                onClick={() => {
+                  // Redirect to DSA landing page for DSA course, otherwise to generic course details
+                  if (course._id === '691ecb7a6ee4a56d59c403a9') {
+                    window.location.hash = '/dsa-course';
+                  } else {
+                    window.location.hash = `/course/${course._id}`;
+                  }
+                }}
                 className="bg-light-card border border-light-border dark:bg-dark-card dark:border-dark-border rounded-xl overflow-hidden hover:border-brand-primary hover:shadow-md transition-all duration-300 group text-left active:scale-95"
               >
                 <div className="relative h-48 overflow-hidden">
