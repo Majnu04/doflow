@@ -22,6 +22,11 @@ import CheckoutPage from './pages/CheckoutPage';
 import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
 import TermsConditionsPage from './pages/TermsConditionsPage';
 import RefundPolicyPage from './pages/RefundPolicyPage';
+import AboutPage from './pages/AboutPage';
+import BlogPage from './pages/BlogPage';
+import BecomeInstructorPage from './pages/BecomeInstructorPage';
+import HelpCenterPage from './pages/HelpCenterPage';
+import FAQPage from './pages/FAQPage';
 
 const NotFound: React.FC = () => (
     <div className="min-h-screen flex items-center justify-center text-light-text text-center">
@@ -150,6 +155,16 @@ const App: React.FC = () => {
                 return <TermsConditionsPage />;
             case '/refund-policy':
                 return <RefundPolicyPage />;
+            case '/about':
+                return <AboutPage />;
+            case '/blog':
+                return <BlogPage />;
+            case '/become-instructor':
+                return <BecomeInstructorPage />;
+            case '/help':
+                return <HelpCenterPage />;
+            case '/faq':
+                return <FAQPage />;
             default:
                 return <NotFound />;
         }

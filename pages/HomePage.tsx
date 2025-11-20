@@ -7,16 +7,59 @@ import { Button, Card, Badge } from '../src/components/ui';
 const HomePage: React.FC = () => {
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
   const [isVisible, setIsVisible] = useState(false);
+  const [activeStudents, setActiveStudents] = useState(0);
+  const [videoCourses, setVideoCourses] = useState(0);
+  const [expertInstructors, setExpertInstructors] = useState(0);
+  const [successRate, setSuccessRate] = useState(0);
+  const [dsaCourses, setDsaCourses] = useState(0);
+  const [webCourses, setWebCourses] = useState(0);
+  const [dataCourses, setDataCourses] = useState(0);
+  const [mobileCourses, setMobileCourses] = useState(0);
+  const [uiuxCourses, setUiuxCourses] = useState(0);
+  const [businessCourses, setBusinessCourses] = useState(0);
 
   useEffect(() => {
     setIsVisible(true);
+    
+    // Counter animation for stats
+    const animateCounter = (target: number, setter: (value: number) => void, duration: number = 2000, suffix: string = '') => {
+      const start = 0;
+      const increment = target / (duration / 16); // 60fps
+      let current = start;
+      
+      const timer = setInterval(() => {
+        current += increment;
+        if (current >= target) {
+          setter(target);
+          clearInterval(timer);
+        } else {
+          setter(Math.floor(current));
+        }
+      }, 16);
+    };
+
+    // Start animations after component mounts
+    setTimeout(() => {
+      animateCounter(2500, setActiveStudents);
+      animateCounter(25, setVideoCourses);
+      animateCounter(8, setExpertInstructors);
+      animateCounter(92, setSuccessRate);
+      
+      // Category counters
+      animateCounter(3, setDsaCourses, 1500);
+      animateCounter(8, setWebCourses, 1500);
+      animateCounter(5, setDataCourses, 1500);
+      animateCounter(4, setMobileCourses, 1500);
+      animateCounter(3, setUiuxCourses, 1500);
+      animateCounter(2, setBusinessCourses, 1500);
+    }, 300);
   }, []);
 
   const stats = [
-    { icon: <FiUsers />, value: '50K+', label: 'Active Students' },
-    { icon: <FiPlay />, value: '500+', label: 'Video Courses' },
-    { icon: <FiAward />, value: '100+', label: 'Expert Instructors' },
-    { icon: <FiTrendingUp />, value: '95%', label: 'Success Rate' },
+    { icon: <FiUsers />, value: `${(activeStudents / 1000).toFixed(1)}K+`, label: 'Active Students' },
+    { icon: <FiPlay />, value: `${videoCourses}+`, label: 'Video Courses' },
+    { icon: <FiAward />, value: `${expertInstructors}+`, label: 'Expert Instructors' },
+    { icon: <FiTrendingUp />, value: `${successRate}%`, label: 'Success Rate' },
   ];
 
   const features = [
@@ -43,12 +86,12 @@ const HomePage: React.FC = () => {
   ];
 
   const categories = [
-    { name: 'DSA & Coding', count: 1, icon: <FiCode className="w-6 h-6" /> },
-    { name: 'Web Development', count: 120, icon: <FiMonitor className="w-6 h-6" /> },
-    { name: 'Data Science', count: 85, icon: <FiBarChart2 className="w-6 h-6" /> },
-    { name: 'Mobile Development', count: 65, icon: <FiSmartphone className="w-6 h-6" /> },
-    { name: 'UI/UX Design', count: 90, icon: <FiLayout className="w-6 h-6" /> },
-    { name: 'Business', count: 110, icon: <FiBriefcase className="w-6 h-6" /> },
+    { name: 'DSA & Coding', count: dsaCourses, icon: <FiCode className="w-6 h-6" /> },
+    { name: 'Web Development', count: webCourses, icon: <FiMonitor className="w-6 h-6" /> },
+    { name: 'Data Science', count: dataCourses, icon: <FiBarChart2 className="w-6 h-6" /> },
+    { name: 'Mobile Development', count: mobileCourses, icon: <FiSmartphone className="w-6 h-6" /> },
+    { name: 'UI/UX Design', count: uiuxCourses, icon: <FiLayout className="w-6 h-6" /> },
+    { name: 'Business', count: businessCourses, icon: <FiBriefcase className="w-6 h-6" /> },
   ];
 
   const featuredCourses = [
@@ -225,7 +268,7 @@ const HomePage: React.FC = () => {
                   {category.name}
                 </h3>
                 <p className="text-xs text-light-textMuted dark:text-dark-muted transition-colors duration-300">
-                  {category.count} Courses
+                  {category.count} {category.count === 1 ? 'Course' : 'Courses'}
                 </p>
               </button>
             ))}
