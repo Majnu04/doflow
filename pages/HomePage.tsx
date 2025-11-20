@@ -17,9 +17,37 @@ const HomePage: React.FC = () => {
   const [mobileCourses, setMobileCourses] = useState(0);
   const [uiuxCourses, setUiuxCourses] = useState(0);
   const [businessCourses, setBusinessCourses] = useState(0);
+  const [featuredCourses, setFeaturedCourses] = useState<any[]>([]);
 
   useEffect(() => {
     setIsVisible(true);
+    
+    // Fetch real courses from API
+    const fetchCourses = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/api/courses');
+        const data = await response.json();
+        // Ensure data is an array
+        setFeaturedCourses(Array.isArray(data) ? data : []);
+      } catch (error) {
+        console.error('Error fetching courses:', error);
+        // Fallback to DSA course only
+        setFeaturedCourses([{
+          _id: '691ecb7a6ee4a56d59c403a9',
+          title: 'Data Structures & Algorithms Mastery',
+          instructor: { name: 'DoFlow Academy' },
+          ratings: { average: 4.9 },
+          enrollmentCount: 0,
+          price: 0,
+          discountPrice: 0,
+          thumbnail: 'https://images.unsplash.com/photo-1516116216624-53e697fedbea?w=800',
+          level: 'Beginner',
+          totalLessons: 15,
+        }]);
+      }
+    };
+    
+    fetchCourses();
     
     // Counter animation for stats
     const animateCounter = (target: number, setter: (value: number) => void, duration: number = 2000, suffix: string = '') => {
@@ -92,58 +120,6 @@ const HomePage: React.FC = () => {
     { name: 'Mobile Development', count: mobileCourses, icon: <FiSmartphone className="w-6 h-6" /> },
     { name: 'UI/UX Design', count: uiuxCourses, icon: <FiLayout className="w-6 h-6" /> },
     { name: 'Business', count: businessCourses, icon: <FiBriefcase className="w-6 h-6" /> },
-  ];
-
-  const featuredCourses = [
-    {
-      id: 'dsa-roadmap',
-      title: 'Master Data Structures & Algorithms - Complete Roadmap',
-      instructor: 'DoFlow Academy',
-      rating: 4.9,
-      students: 12500,
-      price: 0,
-      originalPrice: 0,
-      thumbnail: 'https://picsum.photos/seed/dsa/600/400',
-      level: 'All Levels',
-      duration: '180+ Problems',
-      isDSA: true,
-    },
-    {
-      id: '1',
-      title: 'Complete Web Development Bootcamp 2024',
-      instructor: 'Sarah Johnson',
-      rating: 4.9,
-      students: 45000,
-      price: 49.99,
-      originalPrice: 199.99,
-      thumbnail: 'https://picsum.photos/seed/web/600/400',
-      level: 'Beginner',
-      duration: '40 hours',
-    },
-    {
-      id: '2',
-      title: 'Advanced React & Next.js Masterclass',
-      instructor: 'Michael Chen',
-      rating: 4.8,
-      students: 32000,
-      price: 59.99,
-      originalPrice: 249.99,
-      thumbnail: 'https://picsum.photos/seed/react/600/400',
-      level: 'Advanced',
-      duration: '35 hours',
-    },
-    {
-      id: '3',
-      title: 'Python for Data Science & Machine Learning',
-      instructor: 'Dr. Emily Rodriguez',
-      rating: 4.9,
-      students: 38000,
-      price: 54.99,
-      originalPrice: 229.99,
-      thumbnail: 'https://picsum.photos/seed/python/600/400',
-      level: 'Intermediate',
-      duration: '50 hours',
-    },
   ];
 
   return (
@@ -300,8 +276,8 @@ const HomePage: React.FC = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
             {featuredCourses.map((course) => (
               <button
-                key={course.id}
-                onClick={() => window.location.hash = course.isDSA ? '/dsa-course' : `/course/${course.id}`}
+                key={course._id}
+                onClick={() => window.location.hash = `/course/${course._id}`}
                 className="bg-light-card border border-light-border dark:bg-dark-card dark:border-dark-border rounded-xl overflow-hidden hover:border-brand-primary hover:shadow-md transition-all duration-300 group text-left active:scale-95"
               >
                 <div className="relative h-48 overflow-hidden">
@@ -321,37 +297,41 @@ const HomePage: React.FC = () => {
                   <h3 className="text-lg font-bold text-light-text mb-2 line-clamp-2 group-hover:text-brand-primary transition-colors">
                     {course.title}
                   </h3>
-                  <p className="text-sm text-light-textSecondary mb-4">by {course.instructor}</p>
+                  <p className="text-sm text-light-textSecondary mb-4">
+                    by {typeof course.instructor === 'object' ? course.instructor.name : 'DoFlow Academy'}
+                  </p>
 
                   <div className="flex items-center gap-4 mb-4 text-xs text-light-textMuted">
                     <div className="flex items-center gap-1">
                       <FiStar className="text-brand-accent w-3.5 h-3.5" />
-                      <span className="font-semibold text-light-text">{course.rating}</span>
+                      <span className="font-semibold text-light-text">{course.ratings?.average || 4.9}</span>
                     </div>
                     <div className="flex items-center gap-1">
                       <FiUsers className="w-3.5 h-3.5" />
-                      <span>{(course.students / 1000).toFixed(0)}K</span>
+                      <span>{course.enrollmentCount || 0}</span>
                     </div>
                     <div className="flex items-center gap-1">
                       <FiClock className="w-3.5 h-3.5" />
-                      <span>{course.duration}</span>
+                      <span>{course.totalLessons || 0} lessons</span>
                     </div>
                   </div>
 
                   <div className="flex items-center justify-between pt-4 border-t border-light-border">
                     <div>
-                      {course.price === 0 ? (
+                      {(course.discountPrice || course.price) === 0 ? (
                         <span className="text-2xl font-bold text-brand-accent">
                           FREE
                         </span>
                       ) : (
                         <div className="flex items-baseline gap-2">
                           <span className="text-2xl font-bold text-brand-primary">
-                            ${course.price}
+                            ₹{course.discountPrice || course.price}
                           </span>
-                          <span className="text-sm text-light-textMuted line-through">
-                            ${course.originalPrice}
-                          </span>
+                          {course.discountPrice && course.price > course.discountPrice && (
+                            <span className="text-sm text-light-textMuted line-through">
+                              ₹{course.price}
+                            </span>
+                          )}
                         </div>
                       )}
                     </div>
