@@ -107,7 +107,7 @@ const DSACourseLandingPage: React.FC = () => {
       title: 'Pro',
       price: '2,999',
       originalPrice: '4,999',
-      courseId: 'dsa-pro-course', // This should match actual course ID in database
+      courseId: '691ecb7a6ee4a56d59c403a9', // Using same course ID (will be paid in future)
       features: [
         'All 180+ Problems',
         'All DSA Sections',
@@ -123,7 +123,7 @@ const DSACourseLandingPage: React.FC = () => {
       name: 'Enterprise',
       title: 'Enterprise',
       price: '9,999',
-      courseId: 'dsa-enterprise-course', // This should match actual course ID in database
+      courseId: '691ecb7a6ee4a56d59c403a9', // Using same course ID (will be paid in future)
       features: [
         'Everything in Pro',
         '1-on-1 Mentorship',
