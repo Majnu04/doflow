@@ -203,63 +203,63 @@ const CheckoutPage: React.FC = () => {
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Payment Info */}
           <div className="lg:col-span-2">
-            <Card variant="default" className="p-8">
-              <div className="flex items-center gap-2 mb-6">
-                <FiLock className="text-green-400" />
-                <span className="text-sm text-gray-400">Secure Payment with Razorpay</span>
+            <Card variant="default" className="p-8 bg-gray-800/90 backdrop-blur-sm border border-gray-700">
+              <div className="flex items-center gap-3 mb-6 bg-green-500/20 border border-green-500/50 px-5 py-3 rounded-lg inline-flex">
+                <FiLock className="text-green-400 text-lg" />
+                <span className="text-base text-white font-semibold">Secure Payment with Razorpay</span>
               </div>
 
               {/* Payment Info */}
               <div className="mb-8">
-                <h3 className="text-xl font-bold mb-4">Payment Details</h3>
-                <p className="text-gray-400 mb-4">
+                <h3 className="text-xl font-bold text-white mb-4">Payment Details</h3>
+                <p className="text-white mb-6 leading-relaxed text-base font-medium">
                   Complete your purchase securely with Razorpay. All payment methods including Credit/Debit Cards, Net Banking, UPI, and Wallets are supported.
                 </p>
                 <div className="flex flex-wrap gap-3 mb-6">
-                  <div className="flex items-center gap-2 px-3 py-2 bg-gray-800 rounded">
-                    <FiCreditCard className="text-elite-purple" />
-                    <span className="text-sm">Cards</span>
+                  <div className="flex items-center gap-3 px-5 py-3 bg-purple-600/30 border-2 border-purple-500/60 rounded-lg hover:bg-purple-600/40 hover:border-purple-400 transition-all shadow-lg">
+                    <FiCreditCard className="text-purple-300 text-xl" />
+                    <span className="text-base font-semibold text-white">Cards</span>
                   </div>
-                  <div className="flex items-center gap-2 px-3 py-2 bg-gray-800 rounded">
-                    <span className="text-lg">📱</span>
-                    <span className="text-sm">UPI</span>
+                  <div className="flex items-center gap-3 px-5 py-3 bg-blue-600/30 border-2 border-blue-500/60 rounded-lg hover:bg-blue-600/40 hover:border-blue-400 transition-all shadow-lg">
+                    <span className="text-xl">📱</span>
+                    <span className="text-base font-semibold text-white">UPI</span>
                   </div>
-                  <div className="flex items-center gap-2 px-3 py-2 bg-gray-800 rounded">
-                    <span className="text-lg">🏦</span>
-                    <span className="text-sm">Net Banking</span>
+                  <div className="flex items-center gap-3 px-5 py-3 bg-green-600/30 border-2 border-green-500/60 rounded-lg hover:bg-green-600/40 hover:border-green-400 transition-all shadow-lg">
+                    <span className="text-xl">🏦</span>
+                    <span className="text-base font-semibold text-white">Net Banking</span>
                   </div>
-                  <div className="flex items-center gap-2 px-3 py-2 bg-gray-800 rounded">
-                    <span className="text-lg">�</span>
-                    <span className="text-sm">Wallets</span>
+                  <div className="flex items-center gap-3 px-5 py-3 bg-yellow-600/30 border-2 border-yellow-500/60 rounded-lg hover:bg-yellow-600/40 hover:border-yellow-400 transition-all shadow-lg">
+                    <span className="text-xl">💳</span>
+                    <span className="text-base font-semibold text-white">Wallets</span>
                   </div>
                 </div>
               </div>
 
               {/* Courses List */}
               <div className="mb-8">
-                <h3 className="text-xl font-bold mb-4">Courses in Cart</h3>
+                <h3 className="text-xl font-bold text-white mb-4">Courses in Cart</h3>
                 <div className="space-y-3">
                   {items.map((course) => {
                     const coursePrice = resolveCoursePrice(course);
                     const hasDiscount = typeof course.discountPrice === 'number' && course.discountPrice < course.price;
 
                     return (
-                      <div key={course._id} className="flex items-center gap-3 p-3 bg-gray-800 rounded-lg">
+                      <div key={course._id} className="flex items-center gap-4 p-4 bg-gradient-to-br from-gray-800/80 to-gray-900/80 border border-gray-700 rounded-lg hover:border-purple-500/50 transition-all">
                       <img
                         src={course.thumbnail || COURSE_PLACEHOLDER}
                         alt={course.title}
-                        className="w-20 h-14 object-cover rounded"
+                        className="w-24 h-16 object-cover rounded-lg shadow-lg"
                       />
-                      <div className="flex-1">
-                        <h4 className="font-semibold text-sm line-clamp-1">{course.title}</h4>
-                        <p className="text-xs text-gray-400">
-                          By {typeof course.instructor === 'object' ? course.instructor?.name : course.instructor}
+                      <div className="flex-1 min-w-0">
+                        <h4 className="font-semibold text-base text-white line-clamp-1 mb-1">{course.title}</h4>
+                        <p className="text-sm text-gray-300">
+                          By Gowri Shankar
                         </p>
                       </div>
                       <div className="text-right">
-                        <div className="font-bold text-elite-gold">₹{coursePrice}</div>
+                        <div className="font-bold text-lg text-yellow-400">₹{coursePrice}</div>
                         {hasDiscount && (
-                          <div className="text-xs text-gray-500 line-through">₹{course.price}</div>
+                          <div className="text-xs text-gray-400 line-through">₹{course.price}</div>
                         )}
                       </div>
                       </div>
@@ -299,16 +299,16 @@ const CheckoutPage: React.FC = () => {
 
           {/* Order Summary */}
           <div className="lg:col-span-1">
-            <Card variant="default" className="p-6 sticky top-24 bg-gradient-to-br from-elite-purple/20 to-elite-gold/20">
-              <h3 className="text-2xl font-bold mb-6">Order Summary</h3>
+            <Card variant="default" className="p-6 sticky top-24 bg-gray-900/95 border border-purple-500/40 backdrop-blur-sm shadow-xl shadow-purple-500/10">
+              <h3 className="text-2xl font-bold text-white mb-6">Order Summary</h3>
               
               <div className="space-y-3 mb-6">
                 {items.map((course) => {
                   const coursePrice = resolveCoursePrice(course);
                   return (
-                    <div key={course._id} className="flex justify-between text-sm">
-                      <span className="text-gray-300 flex-1 line-clamp-1">{course.title}</span>
-                      <span className="text-white ml-2">
+                    <div key={course._id} className="flex justify-between items-start text-sm bg-gray-800/60 border border-gray-700/50 p-3 rounded-lg">
+                      <span className="text-white flex-1 line-clamp-2 font-medium pr-2">{course.title}</span>
+                      <span className="text-yellow-400 font-bold text-base whitespace-nowrap">
                         ₹{coursePrice}
                       </span>
                     </div>
@@ -316,48 +316,56 @@ const CheckoutPage: React.FC = () => {
                 })}
               </div>
 
-              <div className="border-t border-white/10 pt-4 space-y-3">
-                <div className="flex justify-between text-gray-300">
-                  <span>Subtotal:</span>
-                  <span>₹{originalTotal}</span>
+              <div className="border-t border-gray-700 pt-4 space-y-3">
+                <div className="flex justify-between text-white">
+                  <span className="font-medium">Subtotal:</span>
+                  <span className="font-semibold">₹{originalTotal}</span>
                 </div>
                 
                 {savings > 0 && (
                   <div className="flex justify-between text-green-400">
-                    <span>Discount:</span>
-                    <span>-₹{savings}</span>
+                    <span className="font-medium">Discount:</span>
+                    <span className="font-semibold">-₹{savings}</span>
                   </div>
                 )}
                 
-                <div className="flex justify-between text-gray-300">
-                  <span>Tax:</span>
-                  <span>₹0</span>
+                <div className="flex justify-between text-white">
+                  <span className="font-medium">Tax:</span>
+                  <span className="font-semibold">₹0</span>
                 </div>
 
-                <div className="border-t border-white/10 pt-3">
-                  <div className="flex justify-between text-xl font-bold">
-                    <span>Total:</span>
-                    <span className="gradient-text">₹{total}</span>
+                <div className="border-t border-gray-700 pt-3 mt-3">
+                  <div className="flex justify-between text-2xl font-bold">
+                    <span className="text-white">Total:</span>
+                    <span className="text-yellow-400">₹{total}</span>
                   </div>
                 </div>
               </div>
 
-              <div className="mt-6 space-y-2">
-                <div className="flex items-center gap-2 text-sm text-gray-300">
-                  <FiCheck className="text-green-400" />
-                  <span>Lifetime access</span>
+              <div className="mt-6 space-y-3 bg-gray-800/40 border border-gray-700/50 rounded-lg p-4">
+                <div className="flex items-center gap-3 text-sm text-white">
+                  <div className="flex-shrink-0 w-5 h-5 rounded-full bg-green-500/20 flex items-center justify-center">
+                    <FiCheck className="text-green-400 text-xs" />
+                  </div>
+                  <span className="font-medium">Lifetime access</span>
                 </div>
-                <div className="flex items-center gap-2 text-sm text-gray-300">
-                  <FiCheck className="text-green-400" />
-                  <span>All future updates</span>
+                <div className="flex items-center gap-3 text-sm text-white">
+                  <div className="flex-shrink-0 w-5 h-5 rounded-full bg-green-500/20 flex items-center justify-center">
+                    <FiCheck className="text-green-400 text-xs" />
+                  </div>
+                  <span className="font-medium">All future updates</span>
                 </div>
-                <div className="flex items-center gap-2 text-sm text-gray-300">
-                  <FiCheck className="text-green-400" />
-                  <span>Certificate of completion</span>
+                <div className="flex items-center gap-3 text-sm text-white">
+                  <div className="flex-shrink-0 w-5 h-5 rounded-full bg-green-500/20 flex items-center justify-center">
+                    <FiCheck className="text-green-400 text-xs" />
+                  </div>
+                  <span className="font-medium">Certificate of completion</span>
                 </div>
-                <div className="flex items-center gap-2 text-sm text-gray-300">
-                  <FiCheck className="text-green-400" />
-                  <span>30-day money-back guarantee</span>
+                <div className="flex items-center gap-3 text-sm text-white">
+                  <div className="flex-shrink-0 w-5 h-5 rounded-full bg-green-500/20 flex items-center justify-center">
+                    <FiCheck className="text-green-400 text-xs" />
+                  </div>
+                  <span className="font-medium">30-day money-back guarantee</span>
                 </div>
               </div>
             </Card>

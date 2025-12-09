@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../src/store';
 import api from '../src/utils/api';
 import ReactPlayer from 'react-player';
-import { FaCheck, FaLock, FaPlay, FaDownload, FaChevronDown, FaChevronUp } from 'react-icons/fa';
+import { FaCheck, FaLock, FaPlay, FaDownload, FaChevronDown, FaChevronUp, FaTimes, FaCheckCircle } from 'react-icons/fa';
 import toast from 'react-hot-toast';
 
 interface LearningPageProps {
@@ -18,6 +18,8 @@ const LearningPage: React.FC<LearningPageProps> = ({ courseId }) => {
   const [videoUrl, setVideoUrl] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [expandedSections, setExpandedSections] = useState<Set<number>>(new Set([0]));
+  const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
+  const [showAnswer, setShowAnswer] = useState(false);
 
   useEffect(() => {
     fetchCourseData();
@@ -48,6 +50,8 @@ const LearningPage: React.FC<LearningPageProps> = ({ courseId }) => {
 
   const selectLesson = async (lesson: any) => {
     setCurrentLesson(lesson);
+    setSelectedAnswer(null);
+    setShowAnswer(false);
 
     if (!lesson?.videoUrl) {
       toast.error('This lesson does not have a video yet.');
@@ -131,36 +135,224 @@ const LearningPage: React.FC<LearningPageProps> = ({ courseId }) => {
   return (
     <div className="min-h-screen bg-gray-950">
       <div className="flex flex-col lg:flex-row">
-        {/* Video Player */}
-        <div className="flex-1 bg-black">
-          <div className="sticky top-0">
+        {/* Main Content Area */}
+        <div className="flex-1 bg-gray-950">
+          <div className="max-h-screen overflow-y-auto">
             {currentLesson && (
               <div>
-                <div className="aspect-video bg-black">
-                  <ReactPlayer
-                    url={videoUrl}
-                    width="100%"
-                    height="100%"
-                    controls
-                    playing
-                    config={{
-                      file: {
-                        attributes: {
-                          controlsList: 'nodownload'
-                        }
+                {/* Optional Video Player - Minimized for text courses */}
+                {videoUrl && (
+                  <div className="bg-black">
+                    <div className="aspect-video bg-black max-h-[300px]">
+                      <ReactPlayer
+                        url={videoUrl}
+                        width="100%"
+                        height="100%"
+                        controls
+                        config={{
+                          file: {
+                            attributes: {
+                              controlsList: 'nodownload'
+                            }
+                          }
+                        }}
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {/* Lesson Content */}
+                <div className="bg-gray-900 p-8 border-t border-gray-800">
+                  <h1 className="text-3xl font-bold text-white mb-6">{currentLesson.title}</h1>
+                  
+                  {/* Render Interactive Content */}
+                  <div className="space-y-8">
+                    {(() => {
+                      const description = currentLesson.description;
+                      const sections = description.split('\n\n');
+                      
+                      // Check if this is an MCQ lesson
+                      const isMCQ = description.includes('**QUESTION:**');
+                      
+                      if (isMCQ) {
+                        // Parse MCQ content
+                        const questionMatch = description.match(/\*\*QUESTION:\*\*\s*([\s\S]*?)(?=A\))/);
+                        const optionsMatch = description.match(/(A\)[\s\S]*?B\)[\s\S]*?C\)[\s\S]*?D\)[\s\S]*?)(?=---|\*\*ANSWER)/);
+                        const answerMatch = description.match(/\*\*ANSWER:\s*(.*?)\*\*/);
+                        const explanationMatch = description.match(/\*\*EXPLANATION:\*\*\s*([\s\S]*?)$/);
+                        
+                        const question = questionMatch ? questionMatch[1].trim() : '';
+                        const optionsText = optionsMatch ? optionsMatch[1] : '';
+                        const correctAnswer = answerMatch ? answerMatch[1].trim() : '';
+                        const explanation = explanationMatch ? explanationMatch[1].trim() : '';
+                        
+                        // Parse options
+                        const options = optionsText.split(/(?=[A-D]\))/).filter(o => o.trim()).map(opt => {
+                          const match = opt.match(/([A-D])\)\s*(.*)/);
+                          return match ? { letter: match[1], text: match[2].trim() } : null;
+                        }).filter(Boolean);
+                        
+                        return (
+                          <div className="max-w-4xl">
+                            {/* Question Card */}
+                            <div className="bg-gradient-to-br from-purple-900/30 to-blue-900/30 border-2 border-purple-500/50 rounded-xl p-8 mb-6">
+                              <div className="flex items-start gap-4 mb-6">
+                                <span className="text-4xl">🧠</span>
+                                <div className="flex-1">
+                                  <h2 className="text-2xl font-bold text-white mb-4">Interactive MCQ</h2>
+                                  <div className="text-lg text-gray-200 leading-relaxed whitespace-pre-wrap">{question}</div>
+                                </div>
+                              </div>
+                              
+                              {/* Options */}
+                              <div className="space-y-3 mt-6">
+                                {options.map((option: any) => {
+                                  const isSelected = selectedAnswer === option.letter;
+                                  const isCorrect = option.letter === correctAnswer.charAt(0);
+                                  const showResult = showAnswer;
+                                  
+                                  return (
+                                    <button
+                                      key={option.letter}
+                                      onClick={() => !showAnswer && setSelectedAnswer(option.letter)}
+                                      disabled={showAnswer}
+                                      className={`w-full text-left p-4 rounded-lg border-2 transition-all duration-200 ${
+                                        showResult
+                                          ? isCorrect
+                                            ? 'bg-green-900/40 border-green-500 text-white'
+                                            : isSelected
+                                            ? 'bg-red-900/40 border-red-500 text-white'
+                                            : 'bg-gray-800/50 border-gray-700 text-gray-400'
+                                          : isSelected
+                                          ? 'bg-purple-600/30 border-purple-400 text-white shadow-lg'
+                                          : 'bg-gray-800/50 border-gray-700 text-gray-300 hover:bg-gray-700/50 hover:border-gray-600'
+                                      }`}
+                                    >
+                                      <div className="flex items-center gap-3">
+                                        <span className={`font-bold text-xl ${
+                                          showResult && isCorrect ? 'text-green-400' : 
+                                          showResult && isSelected && !isCorrect ? 'text-red-400' :
+                                          isSelected ? 'text-purple-400' : 'text-gray-500'
+                                        }`}>
+                                          {option.letter})
+                                        </span>
+                                        <span className="flex-1">{option.text}</span>
+                                        {showResult && isCorrect && (
+                                          <FaCheckCircle className="text-green-400 text-xl" />
+                                        )}
+                                        {showResult && isSelected && !isCorrect && (
+                                          <FaTimes className="text-red-400 text-xl" />
+                                        )}
+                                      </div>
+                                    </button>
+                                  );
+                                })}
+                              </div>
+                              
+                              {/* Submit Button */}
+                              {!showAnswer && selectedAnswer && (
+                                <button
+                                  onClick={() => setShowAnswer(true)}
+                                  className="mt-6 w-full py-3 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-semibold rounded-lg transition-all duration-200 shadow-lg"
+                                >
+                                  Check Answer
+                                </button>
+                              )}
+                              
+                              {/* Answer Explanation */}
+                              {showAnswer && (
+                                <div className={`mt-6 p-6 rounded-lg border-2 ${
+                                  selectedAnswer === correctAnswer.charAt(0)
+                                    ? 'bg-green-900/20 border-green-500/50'
+                                    : 'bg-blue-900/20 border-blue-500/50'
+                                }`}>
+                                  <div className="flex items-start gap-3 mb-3">
+                                    {selectedAnswer === correctAnswer.charAt(0) ? (
+                                      <>
+                                        <FaCheckCircle className="text-green-400 text-2xl mt-1" />
+                                        <div>
+                                          <h3 className="text-xl font-bold text-green-400 mb-2">Correct! 🎉</h3>
+                                          <p className="text-gray-200">{explanation}</p>
+                                        </div>
+                                      </>
+                                    ) : (
+                                      <>
+                                        <FaTimes className="text-yellow-400 text-2xl mt-1" />
+                                        <div>
+                                          <h3 className="text-xl font-bold text-yellow-400 mb-2">Not quite!</h3>
+                                          <p className="text-gray-200 mb-2">The correct answer is: <strong className="text-white">{correctAnswer}</strong></p>
+                                          <p className="text-gray-300">{explanation}</p>
+                                        </div>
+                                      </>
+                                    )}
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        );
                       }
-                    }}
-                  />
-                </div>
+                      
+                      // Regular content (not MCQ)
+                      return (
+                        <div className="prose prose-invert prose-lg max-w-none">
+                          {description.split('\n').map((line: string, index: number) => {
+                            // Handle headers
+                            if (line.startsWith('**') && line.endsWith('**')) {
+                              const text = line.replace(/\*\*/g, '');
+                              return <h2 key={index} className="text-2xl font-bold text-yellow-400 mt-8 mb-4">{text}</h2>;
+                            }
+                            
+                            // Handle code blocks markers
+                            if (line.startsWith('```')) {
+                              return <div key={index} className="my-2"></div>;
+                            }
+                            
+                            // Handle bullet points
+                            if (line.trim().startsWith('•') || line.trim().startsWith('-')) {
+                              return <li key={index} className="text-gray-300 ml-6 mb-2">{line.trim().substring(1).trim()}</li>;
+                            }
+                            
+                            // Handle inline code
+                            if (line.includes('`') && !line.startsWith('```')) {
+                              const parts = line.split('`');
+                              return (
+                                <p key={index} className="text-gray-300 mb-3 leading-relaxed">
+                                  {parts.map((part: string, i: number) => 
+                                    i % 2 === 0 ? part : <code key={i} className="bg-gray-800 text-yellow-300 px-2 py-1 rounded font-mono text-sm">{part}</code>
+                                  )}
+                                </p>
+                              );
+                            }
+                            
+                            // Handle bold text
+                            if (line.includes('**')) {
+                              const parts = line.split('**');
+                              return (
+                                <p key={index} className="text-gray-300 mb-3 leading-relaxed">
+                                  {parts.map((part: string, i: number) => 
+                                    i % 2 === 0 ? part : <strong key={i} className="text-white font-semibold">{part}</strong>
+                                  )}
+                                </p>
+                              );
+                            }
+                            
+                            // Regular text
+                            if (line.trim()) {
+                              return <p key={index} className="text-gray-300 mb-3 leading-relaxed">{line}</p>;
+                            }
+                            
+                            return <br key={index} />;
+                          })}
+                        </div>
+                      );
+                    })()}
+                  </div>
 
-                <div className="bg-gray-900 p-6 border-t border-gray-800">
-                  <h1 className="text-2xl font-bold text-white mb-3">{currentLesson.title}</h1>
-                  <p className="text-gray-300 mb-6 leading-relaxed">{currentLesson.description}</p>
-
-                  <div className="flex flex-wrap gap-4">
+                  <div className="flex flex-wrap gap-4 mt-8 pt-6 border-t border-gray-800">
                     <button
                       onClick={markLessonComplete}
-                      className="inline-flex items-center px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition-all duration-200"
+                      className="inline-flex items-center px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition-all duration-200 shadow-lg"
                     >
                       <FaCheck className="mr-2" />
                       Mark as Complete
