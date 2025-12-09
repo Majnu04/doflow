@@ -42,14 +42,7 @@ const Footer: React.FC = () => {
           {/* Company Info */}
           <div className="lg:col-span-2">
             <a href="/#/" className="flex items-center gap-3 mb-6 group">
-              <div className="bg-brand-primary p-3 rounded-lg group-hover:bg-brand-primaryHover transition-colors duration-300">
-                <FiBookOpen className="w-8 h-8 text-white" />
-              </div>
-              <div>
-                <h2 className="text-xl font-display font-bold text-light-text transition-colors duration-300">
-                  DoFlow
-                </h2>
-              </div>
+              <img src="/logo.png" alt="DoFlow" className="h-12 w-auto object-contain drop-shadow-sm" />
             </a>
             <p className="text-light-textSecondary mb-6 leading-relaxed transition-colors duration-300">
               Empowering learners worldwide with premium online courses. 
