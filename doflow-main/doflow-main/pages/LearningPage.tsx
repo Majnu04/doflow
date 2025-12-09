@@ -133,10 +133,10 @@ const LearningPage: React.FC<LearningPageProps> = ({ courseId }) => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-950">
+    <div className="min-h-screen bg-white">
       <div className="flex flex-col lg:flex-row">
         {/* Main Content Area */}
-        <div className="flex-1 bg-gray-950">
+        <div className="flex-1 bg-white">
           <div className="max-h-screen overflow-y-auto">
             {currentLesson && (
               <div>
@@ -161,9 +161,9 @@ const LearningPage: React.FC<LearningPageProps> = ({ courseId }) => {
                   </div>
                 )}
 
-                {/* Lesson Content */}
-                <div className="bg-gray-900 p-8 border-t border-gray-800">
-                  <h1 className="text-3xl font-bold text-white mb-6">{currentLesson.title}</h1>
+                {/* Lesson Content - CodeChef Clean White Style */}
+                <div className="bg-white p-8 border-t border-gray-200">
+                  <h1 className="text-3xl font-bold text-black mb-6">{currentLesson.title}</h1>
                   
                   {/* Render Interactive Content */}
                   <div className="space-y-8">
@@ -174,131 +174,136 @@ const LearningPage: React.FC<LearningPageProps> = ({ courseId }) => {
                       const mainSections = description.split(/\n---\n/);
                       
                       return mainSections.map((section, sectionIndex) => {
-                        // Check if this section contains an MCQ
-                        if (section.includes('## 📝 Interactive MCQ Quiz')) {
-                          // Parse CodeChef-style MCQ
-                          const questionMatch = section.match(/\*\*Question:\*\*\s*([\s\S]*?)(?=A\))/);
-                          const optionsMatch = section.match(/(A\)[\s\S]*?B\)[\s\S]*?C\)[\s\S]*?D\)[\s\S]*?)(?=\|\|ANSWER)/);
-                          const answerMatch = section.match(/\|\|ANSWER:([A-D])\|\|/);
-                          const explanationMatch = section.match(/\|\|EXPLANATION:([\s\S]*?)\|\|/);
+                        // Check if this section contains an MCQ Checkpoint
+                        if (section.includes('## MCQ Checkpoint')) {
+                          // Parse new CodeChef-style MCQ with <details>
+                          const questions = section.split(/\nQ\d+\./).filter(q => q.trim());
                           
-                          if (questionMatch && optionsMatch && answerMatch) {
-                            const question = questionMatch[1].trim();
-                            const optionsText = optionsMatch[1];
-                            const correctAnswer = answerMatch[1].trim();
-                            const explanation = explanationMatch ? explanationMatch[1].trim() : '';
-                            
-                            // Parse options
-                            const options = optionsText.split(/(?=[A-D]\))/).filter(o => o.trim()).map(opt => {
-                              const match = opt.match(/([A-D])\)\s*(.*)/);
-                              return match ? { letter: match[1], text: match[2].trim() } : null;
-                            }).filter(Boolean);
-                            
-                            return (
-                              <div key={sectionIndex} className="max-w-4xl">
-                                {/* Question Card */}
-                                <div className="bg-gradient-to-br from-purple-900/30 to-blue-900/30 border-2 border-purple-500/50 rounded-xl p-8 mb-6">
-                                  <div className="flex items-start gap-4 mb-6">
-                                    <span className="text-4xl">🧠</span>
-                                    <div className="flex-1">
-                                      <h2 className="text-2xl font-bold text-white mb-4">Interactive MCQ Quiz</h2>
-                                      <div className="text-lg text-gray-200 leading-relaxed whitespace-pre-wrap">{question}</div>
-                                    </div>
-                                  </div>
-                                  
-                                  {/* Options */}
-                                  <div className="space-y-3 mt-6">
-                                    {options.map((option: any) => {
-                                      const isSelected = selectedAnswer === option.letter;
-                                      const isCorrect = option.letter === correctAnswer;
-                                      const showResult = showAnswer;
-                                      
-                                      return (
-                                        <button
-                                          key={option.letter}
-                                          onClick={() => !showAnswer && setSelectedAnswer(option.letter)}
-                                          disabled={showAnswer}
-                                          className={`w-full text-left p-4 rounded-lg border-2 transition-all duration-200 ${
-                                            showResult
-                                              ? isCorrect
-                                                ? 'bg-green-900/40 border-green-500 text-white'
+                          return (
+                            <div key={sectionIndex} className="my-8">
+                              <h2 className="text-2xl font-bold text-black mb-6">MCQ Checkpoint</h2>
+                              {questions.slice(1).map((q, qIndex) => {
+                                const questionText = q.substring(0, q.indexOf('\n\nA.')).trim();
+                                const optionsStart = q.indexOf('\nA.');
+                                const detailsStart = q.indexOf('<details>');
+                                const optionsText = q.substring(optionsStart, detailsStart).trim();
+                                const answerMatch = q.match(/<summary>Correct Answer<\/summary>([\s\S]*?)<\/details>/);
+                                const correctAnswer = answerMatch ? answerMatch[1].trim() : '';
+                                
+                                // Parse options
+                                const optionLines = optionsText.split('\n').filter(l => l.trim());
+                                const options = optionLines.map(opt => {
+                                  const match = opt.match(/^([A-D])\.\s*(.*)/);
+                                  return match ? { letter: match[1], text: match[2].trim() } : null;
+                                }).filter(Boolean);
+                                
+                                return (
+                                  <div key={qIndex} className="bg-white border border-gray-300 rounded-lg p-6 mb-6">
+                                    <p className="text-lg text-gray-800 mb-4 font-medium">Q{qIndex + 1}. {questionText}</p>
+                                    
+                                    <div className="space-y-2">
+                                      {options.map((option: any) => {
+                                        const isSelected = selectedAnswer === `${qIndex}-${option.letter}`;
+                                        const isCorrect = correctAnswer.startsWith(option.letter);
+                                        const showResult = showAnswer && selectedAnswer?.startsWith(`${qIndex}-`);
+                                        
+                                        return (
+                                          <button
+                                            key={option.letter}
+                                            onClick={() => !showAnswer && setSelectedAnswer(`${qIndex}-${option.letter}`)}
+                                            disabled={showAnswer}
+                                            className={`w-full text-left p-3 rounded border transition-all ${
+                                              showResult && isCorrect
+                                                ? 'bg-green-50 border-green-500 text-green-900'
+                                                : showResult && isSelected && !isCorrect
+                                                ? 'bg-red-50 border-red-500 text-red-900'
                                                 : isSelected
-                                                ? 'bg-red-900/40 border-red-500 text-white'
-                                                : 'bg-gray-800/50 border-gray-700 text-gray-400'
-                                              : isSelected
-                                              ? 'bg-purple-600/30 border-purple-400 text-white shadow-lg'
-                                              : 'bg-gray-800/50 border-gray-700 text-gray-300 hover:bg-gray-700/50 hover:border-gray-600'
-                                          }`}
-                                        >
-                                          <div className="flex items-center gap-3">
-                                            <span className={`font-bold text-xl ${
-                                              showResult && isCorrect ? 'text-green-400' : 
-                                              showResult && isSelected && !isCorrect ? 'text-red-400' :
-                                              isSelected ? 'text-purple-400' : 'text-gray-500'
-                                            }`}>
-                                              {option.letter})
-                                            </span>
-                                            <span className="flex-1">{option.text}</span>
-                                            {showResult && isCorrect && (
-                                              <FaCheckCircle className="text-green-400 text-xl" />
-                                            )}
-                                            {showResult && isSelected && !isCorrect && (
-                                              <FaTimes className="text-red-400 text-xl" />
-                                            )}
-                                          </div>
-                                        </button>
-                                      );
-                                    })}
-                                  </div>
-                                  
-                                  {/* Submit Button */}
-                                  {!showAnswer && selectedAnswer && (
-                                    <button
-                                      onClick={() => setShowAnswer(true)}
-                                      className="mt-6 w-full py-3 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-semibold rounded-lg transition-all duration-200 shadow-lg"
-                                    >
-                                      Check Answer
-                                    </button>
-                                  )}
-                                  
-                                  {/* Answer Explanation */}
-                                  {showAnswer && (
-                                    <div className={`mt-6 p-6 rounded-lg border-2 ${
-                                      selectedAnswer === correctAnswer
-                                        ? 'bg-green-900/20 border-green-500/50'
-                                        : 'bg-blue-900/20 border-blue-500/50'
-                                    }`}>
-                                      <div className="flex items-start gap-3 mb-3">
-                                        {selectedAnswer === correctAnswer ? (
-                                          <>
-                                            <FaCheckCircle className="text-green-400 text-2xl mt-1" />
-                                            <div>
-                                              <h3 className="text-xl font-bold text-green-400 mb-2">Correct! 🎉</h3>
-                                              <p className="text-gray-200">{explanation}</p>
-                                            </div>
-                                          </>
-                                        ) : (
-                                          <>
-                                            <FaTimes className="text-yellow-400 text-2xl mt-1" />
-                                            <div>
-                                              <h3 className="text-xl font-bold text-yellow-400 mb-2">Not quite!</h3>
-                                              <p className="text-gray-200 mb-2">The correct answer is: <strong className="text-white">{correctAnswer}</strong></p>
-                                              <p className="text-gray-300">{explanation}</p>
-                                            </div>
-                                          </>
-                                        )}
-                                      </div>
+                                                ? 'bg-orange-50 border-orange-500 text-orange-900'
+                                                : 'bg-white border-gray-300 text-gray-700 hover:border-orange-400'
+                                            }`}
+                                          >
+                                            <span className="font-medium">{option.letter}.</span> {option.text}
+                                          </button>
+                                        );
+                                      })}
                                     </div>
-                                  )}
-                                </div>
-                              </div>
-                            );
-                          }
+                                    
+                                    {!showAnswer && selectedAnswer?.startsWith(`${qIndex}-`) && (
+                                      <button
+                                        onClick={() => setShowAnswer(true)}
+                                        className="mt-4 px-6 py-2 bg-orange-500 hover:bg-orange-600 text-white font-medium rounded transition-colors"
+                                      >
+                                        Check Answer
+                                      </button>
+                                    )}
+                                    
+                                    {showAnswer && selectedAnswer?.startsWith(`${qIndex}-`) && (
+                                      <div className="mt-4 p-4 bg-gray-50 border border-gray-300 rounded">
+                                        <p className="text-sm text-gray-800"><strong>Answer:</strong> {correctAnswer}</p>
+                                      </div>
+                                    )}
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          );
                         }
                         
-                        // Render regular content section with proper markdown parsing
+                        // Check for Coding Task
+                        if (section.includes('## Coding Task')) {
+                          return (
+                            <div key={sectionIndex} className="my-8 bg-white border border-gray-300 rounded-lg p-6">
+                              <h2 className="text-2xl font-bold text-black mb-4">Coding Task</h2>
+                              {(() => {
+                                let inCodeBlock = false;
+                                let codeContent: string[] = [];
+                                const elements: JSX.Element[] = [];
+                                
+                                section.split('\n').forEach((line: string, lineIndex: number) => {
+                                  if (line.startsWith('```')) {
+                                    if (inCodeBlock) {
+                                      elements.push(
+                                        <div key={`code-${sectionIndex}-${lineIndex}`} className="bg-gray-100 border border-gray-300 rounded p-4 my-3">
+                                          <pre className="text-sm text-gray-800 overflow-x-auto font-mono">
+                                            <code>{codeContent.join('\n')}</code>
+                                          </pre>
+                                        </div>
+                                      );
+                                      codeContent = [];
+                                      inCodeBlock = false;
+                                    } else {
+                                      inCodeBlock = true;
+                                    }
+                                    return;
+                                  }
+                                  
+                                  if (inCodeBlock) {
+                                    codeContent.push(line);
+                                    return;
+                                  }
+                                  
+                                  if (line.startsWith('## ')) {
+                                    return; // Skip the heading as we already rendered it
+                                  }
+                                  
+                                  if (line.trim() && !line.startsWith('##')) {
+                                    elements.push(
+                                      <p key={`p-${sectionIndex}-${lineIndex}`} className="text-gray-700 mb-2 leading-relaxed">
+                                        {line}
+                                      </p>
+                                    );
+                                  }
+                                });
+                                
+                                return <div>{elements}</div>;
+                              })()}
+                            </div>
+                          );
+                        }
+                        
+                        // Regular content rendering with clean CodeChef style
                         return (
-                          <div key={sectionIndex} className="max-w-none">
+                          <div key={sectionIndex} className="my-6">
                             {(() => {
                               let inCodeBlock = false;
                               let codeContent: string[] = [];
@@ -308,10 +313,10 @@ const LearningPage: React.FC<LearningPageProps> = ({ courseId }) => {
                                 // Handle code blocks
                                 if (line.startsWith('```')) {
                                   if (inCodeBlock) {
-                                    // End code block
+                                    // End code block - CodeChef style
                                     elements.push(
-                                      <div key={`code-${sectionIndex}-${lineIndex}`} className="bg-gray-800/80 border border-gray-700 rounded-lg p-4 my-4">
-                                        <pre className="text-sm text-gray-200 overflow-x-auto font-mono">
+                                      <div key={`code-${sectionIndex}-${lineIndex}`} className="bg-gray-100 border border-gray-300 rounded p-4 my-4">
+                                        <pre className="text-sm text-gray-800 overflow-x-auto font-mono">
                                           <code>{codeContent.join('\n')}</code>
                                         </pre>
                                       </div>
@@ -334,18 +339,18 @@ const LearningPage: React.FC<LearningPageProps> = ({ courseId }) => {
                                 if (line.startsWith('## ')) {
                                   const text = line.substring(3).trim();
                                   elements.push(
-                                    <h2 key={`h2-${sectionIndex}-${lineIndex}`} className="text-3xl font-bold text-white mt-8 mb-4 flex items-center gap-3">
+                                    <h2 key={`h2-${sectionIndex}-${lineIndex}`} className="text-2xl font-bold text-black mt-8 mb-4">
                                       {text}
                                     </h2>
                                   );
                                   return;
                                 }
                                 
-                                // Handle bold text (for sub-sections)
-                                if (line.startsWith('**') && line.endsWith('**') && line.length > 4) {
-                                  const text = line.replace(/\*\*/g, '');
+                                // Handle subheadings (###)
+                                if (line.startsWith('### ')) {
+                                  const text = line.substring(4).trim();
                                   elements.push(
-                                    <h3 key={`h3-${sectionIndex}-${lineIndex}`} className="text-xl font-bold text-yellow-300 mt-6 mb-3">
+                                    <h3 key={`h3-${sectionIndex}-${lineIndex}`} className="text-lg font-bold text-gray-800 mt-6 mb-3">
                                       {text}
                                     </h3>
                                   );
@@ -356,9 +361,9 @@ const LearningPage: React.FC<LearningPageProps> = ({ courseId }) => {
                                 if (line.trim().startsWith('-')) {
                                   const text = line.trim().substring(1).trim();
                                   elements.push(
-                                    <li key={`li-${sectionIndex}-${lineIndex}`} className="text-gray-300 ml-6 mb-2 list-disc">
+                                    <li key={`li-${sectionIndex}-${lineIndex}`} className="text-gray-700 ml-6 mb-2 list-disc">
                                       {text.split('**').map((part, i) => 
-                                        i % 2 === 0 ? part : <strong key={i} className="text-white font-semibold">{part}</strong>
+                                        i % 2 === 0 ? part : <strong key={i} className="text-black font-semibold">{part}</strong>
                                       )}
                                     </li>
                                   );
@@ -371,12 +376,12 @@ const LearningPage: React.FC<LearningPageProps> = ({ courseId }) => {
                                   const parts = line.split('`');
                                   const content = parts.map((part, i) => 
                                     i % 2 === 0 
-                                      ? part.split('**').map((p, j) => j % 2 === 0 ? p : <strong key={j} className="text-white font-semibold">{p}</strong>)
-                                      : <code key={i} className="bg-gray-800 text-purple-300 px-2 py-1 rounded font-mono text-sm">{part}</code>
+                                      ? part.split('**').map((p, j) => j % 2 === 0 ? p : <strong key={j} className="text-black font-semibold">{p}</strong>)
+                                      : <code key={i} className="bg-gray-200 text-gray-900 px-2 py-1 rounded font-mono text-sm">{part}</code>
                                   );
                                   
                                   elements.push(
-                                    <p key={`p-${sectionIndex}-${lineIndex}`} className="text-gray-200 mb-3 leading-relaxed text-base">
+                                    <p key={`p-${sectionIndex}-${lineIndex}`} className="text-gray-700 mb-3 leading-relaxed text-base">
                                       {content}
                                     </p>
                                   );
