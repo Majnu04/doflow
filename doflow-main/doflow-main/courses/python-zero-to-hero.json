@@ -1,0 +1,509 @@
+{
+  "title": "Zero to Hero Python Course",
+  "slug": "python-zero-to-hero",
+  "description": "Master Python programming from scratch! This beginner-friendly course takes you from writing your first line of code to building real programs. Perfect for absolute beginners with no prior coding experience.",
+  "thumbnail": "https://images.unsplash.com/photo-1526379095098-d400fd0bf935?w=800",
+  "instructor": "DoFlow Academy",
+  "price": 0,
+  "originalPrice": 1999,
+  "duration": "8 hours",
+  "level": "Beginner",
+  "language": "English",
+  "category": "Programming",
+  "tags": ["Python", "Programming", "Beginner", "Coding"],
+  "features": [
+    "8 Interactive Modules",
+    "Real-World Analogies",
+    "Hands-on Coding Challenges",
+    "MCQ Quizzes",
+    "Certificate on Completion"
+  ],
+  "requirements": [
+    "No prior programming experience needed",
+    "A computer with internet access",
+    "Enthusiasm to learn!"
+  ],
+  "whatYouWillLearn": [
+    "Write and run Python programs",
+    "Understand variables and data types",
+    "Work with strings and numbers",
+    "Take user input and make decisions",
+    "Use loops to automate tasks",
+    "Create reusable functions"
+  ],
+  "modules": [
+    {
+      "id": 1,
+      "title": "Module 1: Output & Printing",
+      "description": "Learn to display text and numbers on screen",
+      "duration": "45 mins",
+      "lessons": [
+        {
+          "id": "1.1",
+          "title": "Your First Python Program",
+          "type": "concept",
+          "content": {
+            "explanation": "The `print()` function is your first tool in Python! It displays text, numbers, or any information on the screen. Think of it as Python's way of talking to you. Whatever you put inside the parentheses gets shown as output. Text must be wrapped in quotes (single or double), but numbers don't need quotes.",
+            "analogy": {
+              "title": "📢 Real-World Analogy: The Announcement Speaker",
+              "description": "Imagine a school announcement speaker. Whatever message you give it, it broadcasts to everyone. The `print()` function works the same way — it takes your message and displays it on the screen for everyone (or just you!) to see."
+            },
+            "syntax": {
+              "title": "🐍 Python Syntax",
+              "code": "# Printing text (use quotes)\nprint(\"Hello, World!\")\nprint('Welcome to Python!')\n\n# Printing numbers (no quotes needed)\nprint(42)\nprint(3.14)\n\n# Printing multiple items\nprint(\"My age is\", 25)\n\n# Printing on multiple lines\nprint(\"Line 1\")\nprint(\"Line 2\")\nprint(\"Line 3\")"
+            }
+          }
+        },
+        {
+          "id": "1.2",
+          "title": "Quiz: Output & Printing",
+          "type": "mcq",
+          "content": {
+            "question": "What will be the output of: `print(\"5 + 3\")`?",
+            "options": [
+              "A) 8",
+              "B) 5 + 3",
+              "C) \"5 + 3\"",
+              "D) Error"
+            ],
+            "correctAnswer": "B",
+            "explanation": "Since \"5 + 3\" is inside quotes, Python treats it as text (string), not a math operation. It prints exactly what's inside the quotes: 5 + 3"
+          }
+        },
+        {
+          "id": "1.3",
+          "title": "Coding Challenge: Say Hello",
+          "type": "challenge",
+          "content": {
+            "problemStatement": "Write a Python program that prints the following three lines:\n\nHello, I am learning Python!\nPython is fun!\nLet's code together!",
+            "hints": [
+              "Use three separate print() statements",
+              "Don't forget the quotes around text"
+            ],
+            "starterCode": "# Write your code below\n",
+            "expectedOutput": "Hello, I am learning Python!\nPython is fun!\nLet's code together!",
+            "solution": "print(\"Hello, I am learning Python!\")\nprint(\"Python is fun!\")\nprint(\"Let's code together!\")"
+          }
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Module 2: Variables & Data Types",
+      "description": "Store and manage data in your programs",
+      "duration": "60 mins",
+      "lessons": [
+        {
+          "id": "2.1",
+          "title": "Understanding Variables",
+          "type": "concept",
+          "content": {
+            "explanation": "Variables are containers that store data in your program. You create a variable by giving it a name and assigning a value using the `=` sign. Python automatically figures out what type of data you're storing — whether it's a number (integer/float), text (string), or true/false (boolean). Variable names should be descriptive and cannot start with numbers.",
+            "analogy": {
+              "title": "📦 Real-World Analogy: Labeled Boxes",
+              "description": "Imagine you're moving houses and using labeled boxes. One box says 'Books', another says 'Clothes'. You know exactly what's inside each box by its label. Variables work the same way — they're labeled containers where you store different types of information."
+            },
+            "syntax": {
+              "title": "🐍 Python Syntax",
+              "code": "# Integer (whole numbers)\nage = 25\nstudents = 100\n\n# Float (decimal numbers)\nprice = 99.99\ntemperature = 36.5\n\n# String (text)\nname = \"Rahul\"\ncity = 'Mumbai'\n\n# Boolean (True/False)\nis_student = True\nhas_license = False\n\n# Checking data type\nprint(type(age))      # <class 'int'>\nprint(type(price))    # <class 'float'>\nprint(type(name))     # <class 'str'>\nprint(type(is_student))  # <class 'bool'>\n\n# Using variables\nprint(\"My name is\", name)\nprint(\"I am\", age, \"years old\")"
+            }
+          }
+        },
+        {
+          "id": "2.2",
+          "title": "Quiz: Variables & Data Types",
+          "type": "mcq",
+          "content": {
+            "question": "What is the data type of the variable: `score = \"100\"`?",
+            "options": [
+              "A) int",
+              "B) float",
+              "C) str",
+              "D) bool"
+            ],
+            "correctAnswer": "C",
+            "explanation": "Even though 100 looks like a number, it's wrapped in quotes (\"\"), which makes it a string (str). To make it an integer, you would write: score = 100 (without quotes)."
+          }
+        },
+        {
+          "id": "2.3",
+          "title": "Coding Challenge: Personal Info Card",
+          "type": "challenge",
+          "content": {
+            "problemStatement": "Create variables to store your personal information and display them:\n\n1. Create a variable `name` with your name\n2. Create a variable `age` with your age (as a number)\n3. Create a variable `city` with your city\n4. Print: \"Hi, I'm [name], [age] years old, from [city]\"",
+            "hints": [
+              "Use descriptive variable names",
+              "Strings need quotes, numbers don't",
+              "Use print() with commas to combine text and variables"
+            ],
+            "starterCode": "# Create your variables below\nname = \nage = \ncity = \n\n# Print your info card\nprint()",
+            "expectedOutput": "Hi, I'm Rahul, 22 years old, from Mumbai",
+            "solution": "name = \"Rahul\"\nage = 22\ncity = \"Mumbai\"\n\nprint(\"Hi, I'm\", name + \",\", age, \"years old, from\", city)"
+          }
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Module 3: Arithmetic Operations",
+      "description": "Perform calculations with Python",
+      "duration": "50 mins",
+      "lessons": [
+        {
+          "id": "3.1",
+          "title": "Math in Python",
+          "type": "concept",
+          "content": {
+            "explanation": "Python is a powerful calculator! You can perform addition (+), subtraction (-), multiplication (*), division (/), floor division (//), modulus (%), and exponentiation (**). Python follows BODMAS/PEMDAS rules — parentheses first, then exponents, multiplication/division, and finally addition/subtraction from left to right.",
+            "analogy": {
+              "title": "🧮 Real-World Analogy: The Smart Calculator",
+              "description": "Think of Python as a super-smart calculator that never makes mistakes. Just like you'd punch numbers into a calculator for your monthly budget or splitting a restaurant bill, Python handles all the math — but it can also remember results and use them later!"
+            },
+            "syntax": {
+              "title": "🐍 Python Syntax",
+              "code": "# Basic Operations\na = 10\nb = 3\n\nprint(a + b)   # Addition: 13\nprint(a - b)   # Subtraction: 7\nprint(a * b)   # Multiplication: 30\nprint(a / b)   # Division: 3.333...\nprint(a // b)  # Floor Division: 3 (no decimal)\nprint(a % b)   # Modulus (remainder): 1\nprint(a ** b)  # Exponent (10³): 1000\n\n# Order of Operations (BODMAS)\nresult = 2 + 3 * 4      # 14 (not 20!)\nresult = (2 + 3) * 4    # 20 (parentheses first)\n\n# Storing results\ntotal = 100 + 50\ntax = total * 0.18\nfinal_price = total + tax\nprint(\"Final Price:\", final_price)"
+            }
+          }
+        },
+        {
+          "id": "3.2",
+          "title": "Quiz: Arithmetic Operations",
+          "type": "mcq",
+          "content": {
+            "question": "What is the result of: `17 // 5`?",
+            "options": [
+              "A) 3.4",
+              "B) 3",
+              "C) 2",
+              "D) 4"
+            ],
+            "correctAnswer": "B",
+            "explanation": "The // operator performs floor division, which divides and rounds DOWN to the nearest whole number. 17 ÷ 5 = 3.4, rounded down = 3."
+          }
+        },
+        {
+          "id": "3.3",
+          "title": "Coding Challenge: Bill Calculator",
+          "type": "challenge",
+          "content": {
+            "problemStatement": "You went to a restaurant with 4 friends. The total bill is ₹2500, and you want to add an 18% tip. Calculate:\n\n1. The tip amount\n2. The total amount (bill + tip)\n3. How much each person pays (split equally among 5 people)\n\nPrint all three values.",
+            "hints": [
+              "Tip = bill × 0.18",
+              "Use / for division",
+              "Store intermediate results in variables"
+            ],
+            "starterCode": "# Given values\nbill = 2500\npeople = 5\ntip_percent = 0.18\n\n# Calculate below\ntip_amount = \ntotal_amount = \nper_person = \n\n# Print results\nprint(\"Tip Amount:\", tip_amount)\nprint(\"Total Amount:\", total_amount)\nprint(\"Per Person:\", per_person)",
+            "expectedOutput": "Tip Amount: 450.0\nTotal Amount: 2950.0\nPer Person: 590.0",
+            "solution": "bill = 2500\npeople = 5\ntip_percent = 0.18\n\ntip_amount = bill * tip_percent\ntotal_amount = bill + tip_amount\nper_person = total_amount / people\n\nprint(\"Tip Amount:\", tip_amount)\nprint(\"Total Amount:\", total_amount)\nprint(\"Per Person:\", per_person)"
+          }
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "Module 4: String Manipulation",
+      "description": "Work with text like a pro",
+      "duration": "55 mins",
+      "lessons": [
+        {
+          "id": "4.1",
+          "title": "Mastering Strings",
+          "type": "concept",
+          "content": {
+            "explanation": "Strings are sequences of characters (text). You can combine strings (concatenation), access individual characters using their position (indexing starts at 0), and extract portions (slicing). Python strings are immutable — you can't change them directly, but you can create new strings from existing ones.",
+            "analogy": {
+              "title": "📿 Real-World Analogy: A Necklace of Beads",
+              "description": "Imagine a string as a necklace with beads, where each bead is a character. The first bead is at position 0, the second at position 1, and so on. You can look at any bead by its position, or take a section of beads (slicing) to make a smaller necklace."
+            },
+            "syntax": {
+              "title": "🐍 Python Syntax",
+              "code": "# String Creation\nmessage = \"Hello Python\"\nname = 'DoFlow'\n\n# Concatenation (joining strings)\nfirst = \"Hello\"\nlast = \"World\"\nfull = first + \" \" + last  # \"Hello World\"\n\n# Indexing (accessing characters)\n# Index:  0 1 2 3 4 5\n# String: P y t h o n\ntext = \"Python\"\nprint(text[0])   # 'P' (first character)\nprint(text[2])   # 't' (third character)\nprint(text[-1])  # 'n' (last character)\nprint(text[-2])  # 'o' (second last)\n\n# Slicing [start:end] (end not included)\nprint(text[0:3])   # 'Pyt' (index 0,1,2)\nprint(text[2:5])   # 'tho' (index 2,3,4)\nprint(text[:4])    # 'Pyth' (from start)\nprint(text[2:])    # 'thon' (to end)\n\n# String Methods\nprint(text.upper())      # 'PYTHON'\nprint(text.lower())      # 'python'\nprint(text.replace('P', 'J'))  # 'Jython'\nprint(len(text))         # 6 (length)"
+            }
+          }
+        },
+        {
+          "id": "4.2",
+          "title": "Quiz: String Manipulation",
+          "type": "mcq",
+          "content": {
+            "question": "Given `word = \"Programming\"`, what is `word[3:7]`?",
+            "options": [
+              "A) \"gram\"",
+              "B) \"gra\"",
+              "C) \"ogra\"",
+              "D) \"ramm\""
+            ],
+            "correctAnswer": "A",
+            "explanation": "Slicing [3:7] extracts characters at indices 3, 4, 5, 6 (7 is not included). P-r-o-g-r-a-m-m-i-n-g has indices 0-1-2-3-4-5-6-7-8-9-10. So indices 3-6 give us 'gram'."
+          }
+        },
+        {
+          "id": "4.3",
+          "title": "Coding Challenge: Username Generator",
+          "type": "challenge",
+          "content": {
+            "problemStatement": "Create a username generator! Given a first name and last name:\n\n1. Take the first 3 letters of the first name\n2. Take the last 3 letters of the last name  \n3. Combine them and convert to lowercase\n\nExample: \"Rahul\" + \"Sharma\" → \"rahma\" (rah + ma... wait, let's fix: rah + rma = \"rahrma\")",
+            "hints": [
+              "Use slicing: name[:3] for first 3 characters",
+              "Use slicing: name[-3:] for last 3 characters",
+              "Use .lower() to convert to lowercase"
+            ],
+            "starterCode": "first_name = \"Rahul\"\nlast_name = \"Sharma\"\n\n# Generate username\npart1 = \npart2 = \nusername = \n\nprint(\"Username:\", username)",
+            "expectedOutput": "Username: rahrma",
+            "solution": "first_name = \"Rahul\"\nlast_name = \"Sharma\"\n\npart1 = first_name[:3]\npart2 = last_name[-3:]\nusername = (part1 + part2).lower()\n\nprint(\"Username:\", username)"
+          }
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "title": "Module 5: User Inputs",
+      "description": "Make your programs interactive",
+      "duration": "50 mins",
+      "lessons": [
+        {
+          "id": "5.1",
+          "title": "Getting User Input",
+          "type": "concept",
+          "content": {
+            "explanation": "The `input()` function pauses your program and waits for the user to type something. It always returns a string, even if the user types a number! To use numbers in calculations, convert them using `int()` for whole numbers or `float()` for decimals. You can add a prompt message inside input() to tell users what to enter.",
+            "analogy": {
+              "title": "🎤 Real-World Analogy: The Interview",
+              "description": "Think of input() as an interviewer asking you questions. The interviewer (your program) asks a question, waits for your answer, and writes it down exactly as you said it (as text). If they need to do math with your answer, they first convert your words into numbers."
+            },
+            "syntax": {
+              "title": "🐍 Python Syntax",
+              "code": "# Basic input (returns string)\nname = input(\"What is your name? \")\nprint(\"Hello,\", name)\n\n# Input with type conversion\nage = input(\"Enter your age: \")      # \"25\" (string)\nage = int(age)                         # 25 (integer)\n\n# Shorter way - convert directly\nage = int(input(\"Enter your age: \"))\nprice = float(input(\"Enter price: \"))\n\n# Using input in calculations\nnum1 = int(input(\"Enter first number: \"))\nnum2 = int(input(\"Enter second number: \"))\ntotal = num1 + num2\nprint(\"Sum =\", total)\n\n# Common mistake to avoid!\n# This WON'T work for math:\nx = input(\"Number: \")  # x is \"5\" (string)\ny = x + x              # \"55\" not 10!\n\n# This WILL work:\nx = int(input(\"Number: \"))  # x is 5 (int)\ny = x + x                    # 10 ✓"
+            }
+          }
+        },
+        {
+          "id": "5.2",
+          "title": "Quiz: User Inputs",
+          "type": "mcq",
+          "content": {
+            "question": "What happens if you run: `x = input(\"Enter: \")` and the user types `42`?",
+            "options": [
+              "A) x stores the integer 42",
+              "B) x stores the float 42.0",
+              "C) x stores the string \"42\"",
+              "D) Python throws an error"
+            ],
+            "correctAnswer": "C",
+            "explanation": "The input() function ALWAYS returns a string, regardless of what the user types. Even if they type 42, it's stored as the string \"42\". You need int(input()) to get an integer."
+          }
+        },
+        {
+          "id": "5.3",
+          "title": "Coding Challenge: Age Calculator",
+          "type": "challenge",
+          "content": {
+            "problemStatement": "Create a program that:\n\n1. Asks the user for their birth year\n2. Calculates their age (assume current year is 2025)\n3. Calculates the year they will turn 100 years old\n4. Prints both results",
+            "hints": [
+              "Use int(input()) to get the birth year as a number",
+              "Age = 2025 - birth_year",
+              "Year turning 100 = birth_year + 100"
+            ],
+            "starterCode": "# Get birth year from user\nbirth_year = \n\n# Calculate age\ncurrent_year = 2025\nage = \n\n# Calculate year turning 100\nyear_100 = \n\n# Print results\nprint(\"Your age is:\", age)\nprint(\"You will turn 100 in:\", year_100)",
+            "expectedOutput": "Enter your birth year: 2000\nYour age is: 25\nYou will turn 100 in: 2100",
+            "solution": "birth_year = int(input(\"Enter your birth year: \"))\n\ncurrent_year = 2025\nage = current_year - birth_year\n\nyear_100 = birth_year + 100\n\nprint(\"Your age is:\", age)\nprint(\"You will turn 100 in:\", year_100)"
+          }
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "title": "Module 6: Conditionals",
+      "description": "Make decisions in your code",
+      "duration": "65 mins",
+      "lessons": [
+        {
+          "id": "6.1",
+          "title": "If, Else & Elif",
+          "type": "concept",
+          "content": {
+            "explanation": "Conditionals let your program make decisions! The `if` statement checks a condition — if it's True, the indented code runs. Use `else` for what happens when the condition is False. Use `elif` (else if) to check multiple conditions. Comparison operators: == (equal), != (not equal), > < >= <= for comparisons.",
+            "analogy": {
+              "title": "🚦 Real-World Analogy: Traffic Signal",
+              "description": "Conditionals work like traffic rules. IF the light is green, you go. ELIF (else if) the light is yellow, you slow down. ELSE (red light), you stop. Your program checks conditions and takes different actions based on what's true — just like you follow different rules based on the signal color."
+            },
+            "syntax": {
+              "title": "🐍 Python Syntax",
+              "code": "# Simple if statement\nage = 18\nif age >= 18:\n    print(\"You can vote!\")\n\n# if-else\ntemperature = 35\nif temperature > 30:\n    print(\"It's hot! 🔥\")\nelse:\n    print(\"Nice weather! 😊\")\n\n# if-elif-else (multiple conditions)\nmarks = 75\n\nif marks >= 90:\n    grade = \"A+\"\nelif marks >= 80:\n    grade = \"A\"\nelif marks >= 70:\n    grade = \"B\"\nelif marks >= 60:\n    grade = \"C\"\nelse:\n    grade = \"F\"\n\nprint(\"Grade:\", grade)  # Output: Grade: B\n\n# Comparison Operators\n# ==  Equal to\n# !=  Not equal to\n# >   Greater than\n# <   Less than\n# >=  Greater than or equal\n# <=  Less than or equal\n\n# Logical Operators\nage = 25\nhas_license = True\n\nif age >= 18 and has_license:\n    print(\"You can drive!\")\n\nif age < 13 or age > 60:\n    print(\"Special discount!\")"
+            }
+          }
+        },
+        {
+          "id": "6.2",
+          "title": "Quiz: Conditionals",
+          "type": "mcq",
+          "content": {
+            "question": "What will this code print?\n```python\nx = 10\nif x > 5:\n    print(\"A\")\nelif x > 8:\n    print(\"B\")\nelse:\n    print(\"C\")\n```",
+            "options": [
+              "A) A",
+              "B) B",
+              "C) A and B",
+              "D) C"
+            ],
+            "correctAnswer": "A",
+            "explanation": "Python checks conditions from top to bottom. The first condition (x > 5) is True, so it prints \"A\" and skips ALL remaining elif/else blocks. Even though x > 8 is also True, it's never checked!"
+          }
+        },
+        {
+          "id": "6.3",
+          "title": "Coding Challenge: Ticket Price Calculator",
+          "type": "challenge",
+          "content": {
+            "problemStatement": "Create a movie ticket price calculator based on age:\n\n• Children (under 12): ₹100\n• Teenagers (12-17): ₹150  \n• Adults (18-59): ₹200\n• Seniors (60+): ₹120\n\nAsk the user for their age and print the ticket price.",
+            "hints": [
+              "Use int(input()) to get age",
+              "Check conditions from youngest to oldest OR oldest to youngest",
+              "Use elif for multiple conditions"
+            ],
+            "starterCode": "# Get age from user\nage = int(input(\"Enter your age: \"))\n\n# Determine ticket price\nif age < 12:\n    price = \nelif :\n    price = \nelif :\n    price = \nelse:\n    price = \n\nprint(\"Ticket Price: ₹\" + str(price))",
+            "expectedOutput": "Enter your age: 25\nTicket Price: ₹200",
+            "solution": "age = int(input(\"Enter your age: \"))\n\nif age < 12:\n    price = 100\nelif age < 18:\n    price = 150\nelif age < 60:\n    price = 200\nelse:\n    price = 120\n\nprint(\"Ticket Price: ₹\" + str(price))"
+          }
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "title": "Module 7: Loops",
+      "description": "Automate repetitive tasks",
+      "duration": "70 mins",
+      "lessons": [
+        {
+          "id": "7.1",
+          "title": "For & While Loops",
+          "type": "concept",
+          "content": {
+            "explanation": "Loops repeat code automatically! `for` loops iterate over a sequence (like a range of numbers or characters in a string). `while` loops keep running as long as a condition is True. Use `break` to exit a loop early, and `continue` to skip to the next iteration. The `range(start, stop, step)` function generates number sequences.",
+            "analogy": {
+              "title": "🔄 Real-World Analogy: Assembly Line",
+              "description": "Imagine an assembly line in a factory. A FOR loop is like saying \"paint exactly 100 cars\" — you know how many times to repeat. A WHILE loop is like saying \"keep painting cars until the paint runs out\" — you keep going until a condition changes. BREAK is the emergency stop button!"
+            },
+            "syntax": {
+              "title": "🐍 Python Syntax",
+              "code": "# FOR loop with range\nfor i in range(5):        # 0, 1, 2, 3, 4\n    print(i)\n\nfor i in range(1, 6):     # 1, 2, 3, 4, 5\n    print(i)\n\nfor i in range(0, 10, 2): # 0, 2, 4, 6, 8 (step of 2)\n    print(i)\n\n# FOR loop with string\nfor char in \"Python\":\n    print(char)  # P y t h o n (each on new line)\n\n# WHILE loop\ncount = 1\nwhile count <= 5:\n    print(count)\n    count += 1  # Don't forget to update!\n\n# break - exit loop early\nfor i in range(10):\n    if i == 5:\n        break      # Stop when i is 5\n    print(i)       # Prints 0, 1, 2, 3, 4\n\n# continue - skip current iteration\nfor i in range(5):\n    if i == 2:\n        continue   # Skip when i is 2\n    print(i)       # Prints 0, 1, 3, 4\n\n# Practical example: Sum of numbers\ntotal = 0\nfor num in range(1, 11):\n    total += num\nprint(\"Sum 1-10:\", total)  # 55"
+            }
+          }
+        },
+        {
+          "id": "7.2",
+          "title": "Quiz: Loops",
+          "type": "mcq",
+          "content": {
+            "question": "How many times will this loop print \"Hello\"?\n```python\nfor i in range(2, 8, 2):\n    print(\"Hello\")\n```",
+            "options": [
+              "A) 6 times",
+              "B) 4 times",
+              "C) 3 times",
+              "D) 8 times"
+            ],
+            "correctAnswer": "C",
+            "explanation": "range(2, 8, 2) generates: 2, 4, 6 (starts at 2, stops before 8, steps by 2). That's 3 values, so \"Hello\" prints 3 times."
+          }
+        },
+        {
+          "id": "7.3",
+          "title": "Coding Challenge: Multiplication Table",
+          "type": "challenge",
+          "content": {
+            "problemStatement": "Create a program that:\n\n1. Asks the user for a number\n2. Prints the multiplication table for that number (1 to 10)\n\nExample output for number 5:\n5 x 1 = 5\n5 x 2 = 10\n...\n5 x 10 = 50",
+            "hints": [
+              "Use a for loop with range(1, 11)",
+              "Multiply the user's number by the loop variable",
+              "Use print() with multiple values separated by commas"
+            ],
+            "starterCode": "# Get number from user\nnum = int(input(\"Enter a number: \"))\n\n# Print multiplication table\nprint(f\"Multiplication Table for {num}\")\nprint(\"-\" * 20)\n\nfor i in range(1, 11):\n    # Calculate and print each line\n    ",
+            "expectedOutput": "Enter a number: 7\nMultiplication Table for 7\n--------------------\n7 x 1 = 7\n7 x 2 = 14\n7 x 3 = 21\n7 x 4 = 28\n7 x 5 = 35\n7 x 6 = 42\n7 x 7 = 49\n7 x 8 = 56\n7 x 9 = 63\n7 x 10 = 70",
+            "solution": "num = int(input(\"Enter a number: \"))\n\nprint(f\"Multiplication Table for {num}\")\nprint(\"-\" * 20)\n\nfor i in range(1, 11):\n    result = num * i\n    print(f\"{num} x {i} = {result}\")"
+          }
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "title": "Module 8: Functions",
+      "description": "Create reusable code blocks",
+      "duration": "75 mins",
+      "lessons": [
+        {
+          "id": "8.1",
+          "title": "Defining & Using Functions",
+          "type": "concept",
+          "content": {
+            "explanation": "Functions are reusable blocks of code that perform specific tasks. Define a function using `def function_name():`. Functions can accept inputs (parameters) and return outputs using `return`. This makes your code organized, reusable, and easier to debug. Once defined, call a function by its name followed by parentheses.",
+            "analogy": {
+              "title": "🍳 Real-World Analogy: Recipe Book",
+              "description": "A function is like a recipe. You write it once (define it), and you can use it whenever you want (call it). The recipe might need ingredients (parameters) and produces a dish (return value). Just like you don't rewrite the recipe every time you cook, you don't rewrite code — you just call the function!"
+            },
+            "syntax": {
+              "title": "🐍 Python Syntax",
+              "code": "# Simple function (no parameters)\ndef greet():\n    print(\"Hello, Welcome!\")\n\ngreet()  # Call the function\n\n# Function with parameters\ndef greet_user(name):\n    print(f\"Hello, {name}!\")\n\ngreet_user(\"Rahul\")    # Hello, Rahul!\ngreet_user(\"Priya\")    # Hello, Priya!\n\n# Function with return value\ndef add(a, b):\n    return a + b\n\nresult = add(5, 3)     # result = 8\nprint(result)\n\n# Function with default parameter\ndef power(base, exp=2):\n    return base ** exp\n\nprint(power(5))        # 25 (uses default exp=2)\nprint(power(5, 3))     # 125 (exp=3)\n\n# Multiple return values\ndef calculate(a, b):\n    sum_val = a + b\n    diff_val = a - b\n    return sum_val, diff_val\n\ns, d = calculate(10, 4)\nprint(f\"Sum: {s}, Difference: {d}\")\n\n# Practical example\ndef is_even(number):\n    return number % 2 == 0\n\nprint(is_even(4))   # True\nprint(is_even(7))   # False"
+            }
+          }
+        },
+        {
+          "id": "8.2",
+          "title": "Quiz: Functions",
+          "type": "mcq",
+          "content": {
+            "question": "What does this function return?\n```python\ndef mystery(x):\n    if x > 0:\n        return \"Positive\"\n    elif x < 0:\n        return \"Negative\"\n\nprint(mystery(0))\n```",
+            "options": [
+              "A) \"Positive\"",
+              "B) \"Negative\"",
+              "C) 0",
+              "D) None"
+            ],
+            "correctAnswer": "D",
+            "explanation": "When x is 0, neither condition (x > 0 or x < 0) is True, so no return statement executes. In Python, if a function doesn't explicitly return something, it returns None by default."
+          }
+        },
+        {
+          "id": "8.3",
+          "title": "Coding Challenge: Grade Calculator Function",
+          "type": "challenge",
+          "content": {
+            "problemStatement": "Create a function called `calculate_grade` that:\n\n1. Takes a marks parameter (0-100)\n2. Returns the grade based on:\n   • 90-100: \"A+\"\n   • 80-89: \"A\"\n   • 70-79: \"B\"\n   • 60-69: \"C\"\n   • Below 60: \"F\"\n3. Test it with marks: 95, 82, 73, 58",
+            "hints": [
+              "Use def to create the function",
+              "Use if-elif-else for grade logic",
+              "Use return to send back the grade",
+              "Call the function multiple times to test"
+            ],
+            "starterCode": "# Define the function\ndef calculate_grade(marks):\n    # Add your logic here\n    \n    return grade\n\n# Test the function\nprint(\"95 marks:\", calculate_grade(95))\nprint(\"82 marks:\", calculate_grade(82))\nprint(\"73 marks:\", calculate_grade(73))\nprint(\"58 marks:\", calculate_grade(58))",
+            "expectedOutput": "95 marks: A+\n82 marks: A\n73 marks: B\n58 marks: F",
+            "solution": "def calculate_grade(marks):\n    if marks >= 90:\n        grade = \"A+\"\n    elif marks >= 80:\n        grade = \"A\"\n    elif marks >= 70:\n        grade = \"B\"\n    elif marks >= 60:\n        grade = \"C\"\n    else:\n        grade = \"F\"\n    return grade\n\nprint(\"95 marks:\", calculate_grade(95))\nprint(\"82 marks:\", calculate_grade(82))\nprint(\"73 marks:\", calculate_grade(73))\nprint(\"58 marks:\", calculate_grade(58))"
+          }
+        },
+        {
+          "id": "8.4",
+          "title": "🎉 Congratulations!",
+          "type": "completion",
+          "content": {
+            "message": "You've completed the Zero to Hero Python Course!",
+            "summary": [
+              "✅ Printing output with print()",
+              "✅ Variables and data types",
+              "✅ Arithmetic operations",
+              "✅ String manipulation",
+              "✅ Taking user input",
+              "✅ Making decisions with conditionals",
+              "✅ Automating with loops",
+              "✅ Creating reusable functions"
+            ],
+            "nextSteps": [
+              "Practice more coding challenges",
+              "Build mini projects",
+              "Explore data structures (lists, dictionaries)",
+              "Learn about file handling",
+              "Try the DSA Roadmap course!"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
