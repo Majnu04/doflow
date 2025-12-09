@@ -1,6 +1,5 @@
 import React from 'react';
 import { FiBookOpen, FiMail, FiPhone, FiFacebook, FiTwitter, FiLinkedin, FiInstagram, FiYoutube } from 'react-icons/fi';
-import logo from '../../public/logo.png';
 
 const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
@@ -43,7 +42,7 @@ const Footer: React.FC = () => {
           {/* Company Info */}
           <div className="lg:col-span-2">
             <a href="/#/" className="flex items-center gap-3 mb-6 group">
-              <img src={logo} alt="DoFlow" className="h-12 w-auto object-contain drop-shadow-sm" />
+              <img src="/logo.png" alt="DoFlow" className="h-12 w-auto object-contain drop-shadow-sm" />
             </a>
             <p className="text-light-textSecondary mb-6 leading-relaxed transition-colors duration-300">
               Empowering learners worldwide with premium online courses. 
