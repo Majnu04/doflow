@@ -62,7 +62,7 @@ const Navbar: React.FC = () => {
             href="/#/" 
             className="flex items-center gap-3 group"
           >
-            <img src="\public\logo.png" alt="DoFlow" className="h-12 w-auto object-contain drop-shadow-sm" />
+            <img src="/logo.png" alt="DoFlow" className="h-12 w-auto object-contain drop-shadow-sm" />
             {/* <div className="hidden sm:block">
               <p className="text-xs font-semibold tracking-[0.28em] uppercase text-brand-primary">DoFlow</p>
               <p className="text-[11px] text-light-textMuted">Learning platform</p>
