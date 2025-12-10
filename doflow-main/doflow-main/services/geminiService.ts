@@ -2,10 +2,6 @@
 import { GoogleGenAI, Type } from "@google/genai";
 
 const resolveApiKey = (): string | undefined => {
-  // Hardcoded API key for DoFlow AI Tutor
-  const hardcodedKey = "AIzaSyBICwkEtkRHtY4F-L0yiBp5NP0Z6mPlB4g";
-  if (hardcodedKey) return hardcodedKey;
-
   // Prefer server-side environment variables
   if (typeof process !== 'undefined') {
     if (process.env.GEMINI_API_KEY) return process.env.GEMINI_API_KEY;
