@@ -85,17 +85,24 @@ export const fetchDsaCourseData = createAsyncThunk(
   'dsa/fetchDsaCourseData',
   async (courseId: string, { rejectWithValue }) => {
     try {
-      // Retry critical data fetches
-      const [sectionsRes, problemsRes, courseRes, enrollmentsRes] = await Promise.all([
+      // Fetch course data (these don't require auth)
+      const [sectionsRes, problemsRes, courseRes] = await Promise.all([
         retryWithBackoff(() => api.get(`/dsa/sections?courseId=${courseId}`), 2, 500),
         retryWithBackoff(() => api.get(`/dsa/problems?courseId=${courseId}`), 2, 500),
         retryWithBackoff(() => api.get(`/courses/${courseId}`), 2, 500),
-        retryWithBackoff(() => api.get('/payment/enrollments'), 2, 500)
       ]);
 
-      const isEnrolled = enrollmentsRes.data.some((enrollment: any) => 
-        enrollment.course._id === courseId || enrollment.course === courseId
-      );
+      // Try to fetch enrollments (requires auth, may fail for guests)
+      let isEnrolled = false;
+      try {
+        const enrollmentsRes = await retryWithBackoff(() => api.get('/payment/enrollments'), 2, 500);
+        isEnrolled = enrollmentsRes.data.some((enrollment: any) => 
+          enrollment.course._id === courseId || enrollment.course === courseId
+        );
+      } catch (enrollError) {
+        // User not logged in or enrollment check failed - that's okay
+        console.log('Enrollment check skipped (user may not be logged in)');
+      }
 
       return {
         sections: sectionsRes.data,

@@ -1,8 +1,11 @@
 import Progress from '../models/Progress.js';
 import Enrollment from '../models/Enrollment.js';
 import Course from '../models/Course.js';
+import Certificate from '../models/Certificate.js';
+import User from '../models/User.js';
 import { buildVideoCourseProgress } from '../utils/videoCourseProgress.js';
 import logger from '../utils/logger.js';
+import { v4 as uuidv4 } from 'uuid';
 
 // @desc    Update lesson progress
 // @route   POST /api/progress
@@ -59,6 +62,43 @@ export const updateProgress = async (req, res) => {
         // Check if course is completed
         if (enrollment.progress === 100 && !enrollment.completedAt) {
           enrollment.completedAt = new Date();
+          
+          // Auto-generate certificate when course is completed
+          try {
+            const existingCert = await Certificate.findOne({ userId: req.user._id, courseId });
+            if (!existingCert) {
+              const course = await Course.findById(courseId);
+              const user = await User.findById(req.user._id);
+              
+              if (course && user) {
+                const certificateId = `DOFLOW-${uuidv4().split('-')[0].toUpperCase()}`;
+                const verificationUrl = `${process.env.FRONTEND_URL || 'http://localhost:5173'}/#/certificate/verify/${certificateId}`;
+                
+                await Certificate.create({
+                  userId: req.user._id,
+                  courseId,
+                  certificateId,
+                  studentName: user.name,
+                  courseName: course.title,
+                  completionDate: new Date(),
+                  verificationUrl,
+                });
+                
+                enrollment.certificateIssued = true;
+                enrollment.certificateIssuedAt = new Date();
+                
+                logger.info('Certificate auto-generated on course completion', { 
+                  userId: req.user._id, 
+                  courseId, 
+                  certificateId 
+                });
+              }
+            } else {
+              enrollment.certificateIssued = true;
+            }
+          } catch (certError) {
+            logger.error('Failed to auto-generate certificate', { error: certError.message });
+          }
         }
 
         await enrollment.save();

@@ -19,10 +19,10 @@ const Footer: React.FC = () => {
   ];
 
   const categories = [
-    { name: 'Web Development', path: '/courses?category=web-development' },
-    { name: 'Data Science', path: '/courses?category=data-science' },
-    { name: 'Mobile Development', path: '/courses?category=mobile-development' },
-    { name: 'Business', path: '/courses?category=business' },
+    { name: 'Web Development', path: '/courses' },
+    { name: 'Data Science', path: '/courses' },
+    { name: 'Mobile Development', path: '/courses' },
+    { name: 'Business', path: '/courses' },
   ];
 
   const socialLinks = [
@@ -106,7 +106,7 @@ const Footer: React.FC = () => {
             </h3>
             <ul className="space-y-3">
               {categories.map((category) => (
-                <li key={category.path}>
+                <li key={category.name}>
                   <a
                     href={`/#${category.path}`}
                     className="text-light-textSecondary hover:text-brand-primary inline-block transition-colors duration-300"

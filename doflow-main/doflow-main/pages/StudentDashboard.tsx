@@ -143,6 +143,95 @@ const StudentDashboard: React.FC = () => {
           )}
         </div>
 
+        {/* Learning Analytics Section */}
+        {enrollments.length > 0 && (
+          <div className="mb-10">
+            <h2 className="text-3xl font-bold mb-5">Learning Analytics</h2>
+            
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+              {/* Progress Overview */}
+              <div className="bg-light-card border border-border-subtle rounded-xl p-6">
+                <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
+                  <FaChartLine className="text-brand-primary" />
+                  Progress Overview
+                </h3>
+                <div className="space-y-4">
+                  {enrollments.slice(0, 5).map(enrollment => {
+                    const course = enrollment.course;
+                    return (
+                      <div key={enrollment._id}>
+                        <div className="flex justify-between items-center mb-2">
+                          <span className="text-sm font-medium text-light-text truncate max-w-[70%]">
+                            {course?.title || 'Course'}
+                          </span>
+                          <span className="text-sm font-semibold text-brand-primary">
+                            {enrollment.progress || 0}%
+                          </span>
+                        </div>
+                        <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+                          <div 
+                            className="h-full bg-gradient-to-r from-brand-primary to-brand-primaryHover rounded-full transition-all duration-500"
+                            style={{ width: `${enrollment.progress || 0}%` }}
+                          ></div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Learning Stats */}
+              <div className="bg-light-card border border-border-subtle rounded-xl p-6">
+                <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
+                  <FaTrophy className="text-brand-primary" />
+                  Learning Stats
+                </h3>
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center p-3 bg-neutral-sand rounded-lg border border-border-subtle">
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 bg-brand-accentSoft rounded-lg">
+                        <FaBook className="text-brand-primary" />
+                      </div>
+                      <span className="font-medium text-light-text">Total Enrollments</span>
+                    </div>
+                    <span className="text-xl font-bold text-brand-primary">{stats.totalCourses}</span>
+                  </div>
+                  
+                  <div className="flex justify-between items-center p-3 bg-neutral-sand rounded-lg border border-border-subtle">
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 bg-brand-accentSoft rounded-lg">
+                        <FaClock className="text-brand-accent" />
+                      </div>
+                      <span className="font-medium text-light-text">Active Courses</span>
+                    </div>
+                    <span className="text-xl font-bold text-brand-accent">{stats.inProgressCourses}</span>
+                  </div>
+                  
+                  <div className="flex justify-between items-center p-3 bg-neutral-sand rounded-lg border border-border-subtle">
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 bg-brand-accentSoft rounded-lg">
+                        <FaTrophy className="text-brand-primaryHover" />
+                      </div>
+                      <span className="font-medium text-light-text">Completed</span>
+                    </div>
+                    <span className="text-xl font-bold text-brand-primaryHover">{stats.completedCourses}</span>
+                  </div>
+                  
+                  <div className="flex justify-between items-center p-3 bg-neutral-sand rounded-lg border border-border-subtle">
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 bg-brand-accentSoft rounded-lg">
+                        <FaCertificate className="text-brand-primary" />
+                      </div>
+                      <span className="font-medium text-light-text">Certificates</span>
+                    </div>
+                    <span className="text-xl font-bold text-brand-primary">{stats.certificatesEarned}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Quick Actions */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           <a href="#/wishlist" className="bg-light-card border border-border-subtle rounded-xl p-6 text-center hover:border-brand-primary hover:shadow-sm transition-all group">
@@ -151,16 +240,16 @@ const StudentDashboard: React.FC = () => {
             <p className="text-light-textSecondary text-sm">Courses you're interested in.</p>
           </a>
 
-          <a href="#/profile" className="bg-light-card border border-border-subtle rounded-xl p-6 text-center hover:border-brand-primary hover:shadow-sm transition-all group">
+          <a href="#/certificates" className="bg-light-card border border-border-subtle rounded-xl p-6 text-center hover:border-brand-primary hover:shadow-sm transition-all group">
             <FaCertificate className="text-4xl text-purple-500 mx-auto mb-4 transition-transform group-hover:scale-110" />
             <h3 className="text-xl font-bold mb-2">My Certificates</h3>
             <p className="text-light-textSecondary text-sm">View and share your achievements.</p>
           </a>
 
-          <a href="#/profile" className="bg-light-card border border-border-subtle rounded-xl p-6 text-center hover:border-brand-primary hover:shadow-sm transition-all group">
-            <FaChartLine className="text-4xl text-blue-500 mx-auto mb-4 transition-transform group-hover:scale-110" />
-            <h3 className="text-xl font-bold mb-2">Learning Analytics</h3>
-            <p className="text-light-textSecondary text-sm">Track your detailed progress.</p>
+          <a href="#/courses" className="bg-light-card border border-border-subtle rounded-xl p-6 text-center hover:border-brand-primary hover:shadow-sm transition-all group">
+            <FaBook className="text-4xl text-blue-500 mx-auto mb-4 transition-transform group-hover:scale-110" />
+            <h3 className="text-xl font-bold mb-2">Browse Courses</h3>
+            <p className="text-light-textSecondary text-sm">Explore more courses to learn.</p>
           </a>
         </div>
       </div>

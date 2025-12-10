@@ -97,6 +97,14 @@ const DSAProblemsPage: React.FC<{ courseId: string }> = ({ courseId }) => {
       return;
     }
 
+    // Check if token exists
+    const token = localStorage.getItem('token');
+    if (!token) {
+      toast.error('Session expired. Please login again.');
+      window.location.hash = '/auth';
+      return;
+    }
+
     const promise = dispatch(addToCart(courseId)).unwrap();
 
     toast.promise(promise, {
@@ -105,7 +113,17 @@ const DSAProblemsPage: React.FC<{ courseId: string }> = ({ courseId }) => {
         dispatch(getCart());
         return 'DSA Course added to cart!';
       },
-      error: (err) => err.message || 'Failed to add to cart',
+      error: (err) => {
+        if (err === 'Not authorized, token failed' || err === 'Not authorized, no token') {
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          setTimeout(() => {
+            window.location.hash = '/auth';
+          }, 1500);
+          return 'Session expired. Redirecting to login...';
+        }
+        return err || 'Failed to add to cart';
+      },
     });
   };
 

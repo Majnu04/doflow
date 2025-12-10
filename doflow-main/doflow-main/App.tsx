@@ -8,6 +8,13 @@ import HomePage from './pages/HomePage';
 import AuthPage from './pages/AuthPageNew';
 import CoursesPage from './pages/CoursesPage';
 import CourseDetailsPage from './pages/CourseDetailsPage';
+import AboutPage from './pages/AboutPage';
+import BecomeInstructorPage from './pages/BecomeInstructorPage';
+import BlogPage from './pages/BlogPage';
+import HelpPage from './pages/HelpPage';
+import FAQPage from './pages/FAQPage';
+import TermsPage from './pages/TermsPage';
+import PrivacyPage from './pages/PrivacyPage';
 
 // Lazy load heavy components
 const AdminDashboard = React.lazy(() => import('./pages/AdminDashboard'));
@@ -19,6 +26,8 @@ const DSAProblemsPage = React.lazy(() => import('./pages/DSAProblemsPage'));
 const CartPage = React.lazy(() => import('./pages/CartPage'));
 const WishlistPage = React.lazy(() => import('./pages/WishlistPage'));
 const ProfilePage = React.lazy(() => import('./pages/ProfilePage'));
+const CertificatesPage = React.lazy(() => import('./pages/CertificatesPage'));
+const CertificateVerificationPage = React.lazy(() => import('./pages/CertificateVerificationPage'));
 const CheckoutPage = React.lazy(() => import('./pages/CheckoutPage'));
 const ForgotPasswordPage = React.lazy(() => import('./pages/ForgotPasswordPage'));
 
@@ -119,6 +128,12 @@ const App: React.FC = () => {
             return <DSAProblemsPage courseId={courseId} />;
         }
 
+        // Certificate verification route
+        const certVerifyMatch = path.match(/^\/verify-certificate\/([\w-]+)$/);
+        if (certVerifyMatch) {
+            return <CertificateVerificationPage />;
+        }
+
         switch (path) {
             case '':
             case '/':
@@ -131,6 +146,20 @@ const App: React.FC = () => {
                 return <ForgotPasswordPage />;
             case '/courses':
                 return <CoursesPage />;
+            case '/about':
+                return <AboutPage />;
+            case '/become-instructor':
+                return <BecomeInstructorPage />;
+            case '/blog':
+                return <BlogPage />;
+            case '/help':
+                return <HelpPage />;
+            case '/faq':
+                return <FAQPage />;
+            case '/terms':
+                return <TermsPage />;
+            case '/privacy':
+                return <PrivacyPage />;
             case '/cart':
                 return <CartPage />;
             case '/checkout':
@@ -149,6 +178,12 @@ const App: React.FC = () => {
                 return (
                     <ProtectedRoute>
                         <ProfilePage />
+                    </ProtectedRoute>
+                );
+            case '/certificates':
+                return (
+                    <ProtectedRoute>
+                        <CertificatesPage />
                     </ProtectedRoute>
                 );
             case '/dashboard':

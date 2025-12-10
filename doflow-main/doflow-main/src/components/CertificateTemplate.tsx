@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { FiDownload, FiShare2, FiCheckCircle } from 'react-icons/fi';
+import { FiDownload, FiShare2 } from 'react-icons/fi';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 
@@ -25,8 +25,9 @@ const CertificateTemplate: React.FC<CertificateTemplateProps> = ({
 
     try {
       const canvas = await html2canvas(certificateRef.current, {
-        scale: 2,
+        scale: 3,
         backgroundColor: '#ffffff',
+        useCORS: true,
       });
 
       const imgData = canvas.toDataURL('image/png');
@@ -44,17 +45,16 @@ const CertificateTemplate: React.FC<CertificateTemplateProps> = ({
   };
 
   const handleShare = () => {
-    const text = `I just completed "${courseName}" on DoFlow! 🎓\nCertificate ID: ${certificateId}`;
+    const text = `🎓 I just earned a certificate for completing "${courseName}" on DoFlow Academy!\n\nCertificate ID: ${certificateId}`;
     const url = window.location.href;
 
     if (navigator.share) {
       navigator.share({
-        title: 'DoFlow Certificate',
+        title: 'DoFlow Certificate of Completion',
         text,
         url,
       });
     } else {
-      // Fallback to LinkedIn share
       window.open(
         `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`,
         '_blank'
@@ -71,173 +71,112 @@ const CertificateTemplate: React.FC<CertificateTemplateProps> = ({
   };
 
   return (
-    <div className="w-full max-w-6xl mx-auto">
+    <div className="w-full max-w-5xl mx-auto px-4 sm:px-0">
       {/* Action Buttons */}
-      <div className="flex items-center justify-center gap-4 mb-8">
+      <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mb-6 sm:mb-8">
         <button
           onClick={handleDownload}
-          className="flex items-center gap-2 px-6 py-3 bg-brand-primary hover:bg-brand-primaryHover text-white font-semibold rounded-lg transition-all duration-200 shadow-md hover:shadow-lg"
+          className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 sm:px-8 py-3 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl"
         >
           <FiDownload className="w-5 h-5" />
-          Download Certificate
+          Download PDF
         </button>
         <button
           onClick={handleShare}
-          className="flex items-center gap-2 px-6 py-3 bg-light-card dark:bg-dark-card hover:bg-light-cardAlt dark:hover:bg-dark-cardAlt text-light-text dark:text-dark-text font-semibold rounded-lg border-2 border-light-border dark:border-dark-border transition-all duration-200"
+          className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 sm:px-8 py-3 bg-white hover:bg-gray-50 text-gray-700 font-semibold rounded-lg border-2 border-gray-200 transition-all duration-300"
         >
           <FiShare2 className="w-5 h-5" />
           Share
         </button>
       </div>
 
-      {/* Certificate */}
-      <div
-        ref={certificateRef}
-        className="relative bg-white p-12 md:p-16 shadow-2xl"
-        style={{
-          aspectRatio: '1.414/1',
-          background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
-        }}
-      >
-        {/* Decorative Border */}
+      {/* Certificate - Scrollable container on mobile */}
+      <div className="overflow-x-auto pb-4">
         <div
-          className="absolute inset-4 border-8 border-double"
-          style={{
-            borderColor: '#8B5CF6',
-            borderRadius: '12px',
-          }}
+          ref={certificateRef}
+          className="relative bg-white shadow-2xl min-w-[600px] sm:min-w-0"
+          style={{ aspectRatio: '1.414/1' }}
         >
-          {/* Inner border */}
-          <div
-            className="absolute inset-2 border-2"
-            style={{
-              borderColor: '#A78BFA',
-              borderRadius: '8px',
-            }}
-          />
-        </div>
+          {/* Simple elegant border */}
+          <div className="absolute inset-2 sm:inset-4 border-2 border-orange-400 rounded" />
+          <div className="absolute inset-3 sm:inset-6 border border-orange-200 rounded" />
 
-        {/* Content */}
-        <div className="relative z-10 flex flex-col items-center justify-between h-full text-center">
-          {/* Header */}
-          <div className="flex-shrink-0">
-            <div className="flex items-center justify-center gap-3 mb-4">
-              <div
-                className="w-16 h-16 rounded-full flex items-center justify-center"
-                style={{ backgroundColor: '#8B5CF6' }}
-              >
-                <FiCheckCircle className="w-10 h-10 text-white" />
+          {/* Content */}
+          <div className="relative z-10 flex flex-col items-center justify-between h-full px-6 sm:px-12 py-6 sm:py-10 text-center">
+            
+            {/* Header */}
+            <div className="flex flex-col items-center">
+              {/* Logo */}
+              <div className="mb-3 sm:mb-6">
+                <img src="/logo.png" alt="DoFlow" className="h-10 sm:h-14 w-auto object-contain" />
               </div>
-            </div>
-            <h1
-              className="text-5xl md:text-6xl font-bold mb-2"
-              style={{ color: '#8B5CF6', fontFamily: 'serif' }}
-            >
-              Certificate
-            </h1>
-            <h2
-              className="text-3xl md:text-4xl font-semibold"
-              style={{ color: '#6D28D9', fontFamily: 'serif' }}
-            >
-              of Completion
-            </h2>
-          </div>
-
-          {/* Main Content */}
-          <div className="flex-grow flex flex-col justify-center py-8">
-            <p
-              className="text-xl md:text-2xl mb-6"
-              style={{ color: '#475569', fontFamily: 'serif' }}
-            >
-              This is to certify that
-            </p>
-
-            <h3
-              className="text-4xl md:text-5xl font-bold mb-8"
-              style={{ color: '#1E293B', fontFamily: 'serif' }}
-            >
-              {studentName}
-            </h3>
-
-            <p
-              className="text-xl md:text-2xl mb-4"
-              style={{ color: '#475569', fontFamily: 'serif' }}
-            >
-              has successfully completed the course
-            </p>
-
-            <h4
-              className="text-3xl md:text-4xl font-bold mb-8"
-              style={{ color: '#8B5CF6', fontFamily: 'serif' }}
-            >
-              {courseName}
-            </h4>
-
-            <p
-              className="text-lg md:text-xl"
-              style={{ color: '#64748B', fontFamily: 'serif' }}
-            >
-              Awarded on {formatDate(completionDate)}
-            </p>
-          </div>
-
-          {/* Footer */}
-          <div className="flex-shrink-0 w-full">
-            <div className="flex items-end justify-between gap-8">
-              {/* Signature */}
-              <div className="flex-1">
-                <div
-                  className="border-t-2 pt-2 mb-1"
-                  style={{ borderColor: '#8B5CF6' }}
-                >
-                  <p
-                    className="text-lg font-semibold"
-                    style={{ color: '#1E293B', fontFamily: 'serif' }}
-                  >
-                    DoFlow Academy
-                  </p>
-                  <p className="text-sm" style={{ color: '#64748B' }}>
-                    Founder & Lead Instructor
-                  </p>
-                </div>
-              </div>
-
-              {/* QR Code */}
-              {qrCode && (
-                <div className="flex flex-col items-center">
-                  <img src={qrCode} alt="QR Code" className="w-24 h-24 mb-1" />
-                  <p className="text-xs" style={{ color: '#64748B' }}>
-                    Verify Certificate
-                  </p>
-                </div>
-              )}
-
-              {/* Certificate ID */}
-              <div className="flex-1 text-right">
-                <p className="text-sm font-mono" style={{ color: '#64748B' }}>
-                  Certificate ID
-                </p>
-                <p
-                  className="text-base font-mono font-semibold"
-                  style={{ color: '#8B5CF6' }}
-                >
-                  {certificateId}
-                </p>
-              </div>
+              
+              <p className="text-[10px] sm:text-sm text-gray-400 uppercase tracking-[0.2em] sm:tracking-[0.3em] mb-1 sm:mb-2">Certificate of Completion</p>
+              
+              <h1 className="text-3xl sm:text-5xl font-serif text-gray-800" style={{ fontFamily: 'Georgia, serif' }}>
+                Certificate
+              </h1>
             </div>
 
-            {/* Developed by */}
-            <div className="mt-6 pt-4 border-t" style={{ borderColor: '#E2E8F0' }}>
-              <p className="text-xs" style={{ color: '#94A3B8' }}>
-                Developed by{' '}
-                <span className="font-semibold" style={{ color: '#8B5CF6' }}>
-                  Elite Digital Solutions
-                </span>
+            {/* Main Content */}
+            <div className="flex-grow flex flex-col justify-center py-2 sm:py-4 max-w-2xl w-full">
+              <p className="text-sm sm:text-base text-gray-500 mb-2 sm:mb-4" style={{ fontFamily: 'Georgia, serif' }}>
+                This is to certify that
               </p>
+
+              <h2 className="text-2xl sm:text-4xl font-bold text-gray-800 pb-2 sm:pb-4" style={{ fontFamily: 'Georgia, serif' }}>
+                {studentName}
+              </h2>
+              
+              <div className="w-40 sm:w-64 h-px bg-orange-400 mx-auto mt-1 sm:mt-2 mb-3 sm:mb-6" />
+
+              <p className="text-sm sm:text-base text-gray-500 mb-2 sm:mb-4" style={{ fontFamily: 'Georgia, serif' }}>
+                has successfully completed the course
+              </p>
+
+              <h3 className="text-lg sm:text-2xl font-semibold text-orange-600 mb-3 sm:mb-6 px-2" style={{ fontFamily: 'Georgia, serif' }}>
+                {courseName}
+              </h3>
+
+              <p className="text-xs sm:text-sm text-gray-500">
+                Awarded on <span className="font-medium text-gray-700">{formatDate(completionDate)}</span>
+              </p>
+            </div>
+
+            {/* Footer */}
+            <div className="w-full">
+              <div className="flex items-end justify-between px-2 sm:px-4 gap-2">
+                {/* Signature */}
+                <div className="text-left flex-shrink-0">
+                  <div className="w-20 sm:w-32 border-t border-gray-800 pt-1 sm:pt-2">
+                    <p className="text-[10px] sm:text-sm font-semibold text-gray-800">DoFlow Academy</p>
+                    <p className="text-[8px] sm:text-xs text-gray-500">Director</p>
+                  </div>
+                </div>
+
+                {/* QR Code */}
+                {qrCode && (
+                  <div className="flex flex-col items-center flex-shrink-0">
+                    <img src={qrCode} alt="Verify" className="w-10 h-10 sm:w-16 sm:h-16" />
+                    <p className="text-[8px] sm:text-[10px] text-gray-400 mt-0.5 sm:mt-1">Scan to verify</p>
+                  </div>
+                )}
+
+                {/* Certificate ID */}
+                <div className="text-right flex-shrink-0">
+                  <p className="text-[8px] sm:text-[10px] text-gray-400 uppercase tracking-wider">Certificate ID</p>
+                  <p className="text-[10px] sm:text-xs font-mono text-orange-600">{certificateId}</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Mobile tip */}
+      <p className="text-center text-xs text-gray-400 mt-2 sm:hidden">
+        Swipe left to see full certificate
+      </p>
     </div>
   );
 };

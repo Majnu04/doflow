@@ -486,24 +486,6 @@ const CourseDetailsPage: React.FC<{ courseId: string }> = ({ courseId }) => {
                                 <p className="text-light-textSecondary whitespace-pre-line leading-relaxed">{metadata.description}</p>
                             </div>
 
-                            <div className="border border-border-subtle rounded-2xl p-6 bg-light-card">
-                                <h2 className="text-2xl font-bold mb-4">Instructor</h2>
-                                <div className="flex items-start gap-4">
-                                    <img
-                                        src={instructorData.avatar}
-                                        alt={instructorData.name}
-                                        className="w-20 h-20 rounded-2xl object-cover"
-                                        onError={(e) => {
-                                            (e.target as HTMLImageElement).src = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(instructorData.name) + '&size=96&background=random';
-                                        }}
-                                    />
-                                    <div>
-                                        <h3 className="text-xl font-semibold">{instructorData.name}</h3>
-                                        <p className="text-light-textSecondary mt-2 leading-relaxed">{instructorData.bio}</p>
-                                    </div>
-                                </div>
-                            </div>
-
                             {metadata.reviews.length > 0 && (
                                 <div className="border border-border-subtle rounded-2xl p-6 bg-light-card">
                                     <h2 className="text-2xl font-bold mb-4">Student feedback</h2>
@@ -591,58 +573,86 @@ const CourseDetailsPage: React.FC<{ courseId: string }> = ({ courseId }) => {
                                             )}
                                         </div>
                                         <div className="mt-5 space-y-3">
-                                            <button
-                                                onClick={handleBuyNow}
-                                                disabled={isProcessingPayment || isAddingToCart}
-                                                className="w-full bg-brand-primary hover:bg-brand-primaryHover text-white font-semibold py-3 rounded-2xl transition disabled:bg-border-subtle disabled:cursor-not-allowed flex items-center justify-center"
-                                            >
-                                                {isProcessingPayment ? (
-                                                    <>
-                                                        <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                            {/* Show different buttons based on enrollment status */}
+                                            {!enrollmentsLoading && isEnrolled ? (
+                                                <>
+                                                    {/* Already Enrolled - Show Continue Learning */}
+                                                    <button
+                                                        onClick={() => {
+                                                            window.location.hash = `/learn/${courseId}`;
+                                                        }}
+                                                        className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-2xl transition flex items-center justify-center gap-2"
+                                                    >
+                                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                                         </svg>
-                                                        Processing...
-                                                    </>
-                                                ) : 'Buy Now'}
-                                            </button>
-                                            <button
-                                                onClick={handleAddToCart}
-                                                disabled={isAddingToCart || isProcessingPayment}
-                                                className="w-full bg-light-cardAlt hover:bg-white text-brand-primary font-semibold py-3 rounded-2xl border border-brand-primary/40 transition disabled:bg-border-subtle disabled:cursor-not-allowed flex items-center justify-center"
-                                            >
-                                                {isAddingToCart ? (
-                                                    <>
-                                                        <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-brand-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                                        Continue Learning
+                                                    </button>
+                                                    <div className="text-center text-sm text-green-600 font-medium flex items-center justify-center gap-2">
+                                                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"></path>
                                                         </svg>
-                                                        Adding...
-                                                    </>
-                                                ) : (
-                                                    <>
-                                                        <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                                                        </svg>
-                                                        Add to Cart
-                                                    </>
-                                                )}
-                                            </button>
-                                            <button
-                                                onClick={handleWishlistToggle}
-                                                className={`w-full font-semibold py-3 rounded-2xl transition border ${
-                                                    isInWishlist
-                                                        ? 'bg-brand-primary/10 border-brand-primary text-brand-primary'
-                                                        : 'border-border-subtle text-light-text hover:border-brand-primary'
-                                                }`}
-                                            >
-                                                <span className="flex items-center justify-center gap-2">
-                                                    <svg className="w-5 h-5" fill={isInWishlist ? 'currentColor' : 'none'} stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
-                                                    </svg>
-                                                    {isInWishlist ? 'Remove from Wishlist' : 'Add to Wishlist'}
-                                                </span>
-                                            </button>
+                                                        You're enrolled in this course
+                                                    </div>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    {/* Not Enrolled - Show Buy Now and Add to Cart */}
+                                                    <button
+                                                        onClick={handleBuyNow}
+                                                        disabled={isProcessingPayment || isAddingToCart}
+                                                        className="w-full bg-brand-primary hover:bg-brand-primaryHover text-white font-semibold py-3 rounded-2xl transition disabled:bg-border-subtle disabled:cursor-not-allowed flex items-center justify-center"
+                                                    >
+                                                        {isProcessingPayment ? (
+                                                            <>
+                                                                <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                                                </svg>
+                                                                Processing...
+                                                            </>
+                                                        ) : 'Buy Now'}
+                                                    </button>
+                                                    <button
+                                                        onClick={handleAddToCart}
+                                                        disabled={isAddingToCart || isProcessingPayment}
+                                                        className="w-full bg-light-cardAlt hover:bg-white text-brand-primary font-semibold py-3 rounded-2xl border border-brand-primary/40 transition disabled:bg-border-subtle disabled:cursor-not-allowed flex items-center justify-center"
+                                                    >
+                                                        {isAddingToCart ? (
+                                                            <>
+                                                                <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-brand-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                                                </svg>
+                                                                Adding...
+                                                            </>
+                                                        ) : (
+                                                            <>
+                                                                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                                                                </svg>
+                                                                Add to Cart
+                                                            </>
+                                                        )}
+                                                    </button>
+                                                    <button
+                                                        onClick={handleWishlistToggle}
+                                                        className={`w-full font-semibold py-3 rounded-2xl transition border ${
+                                                            isInWishlist
+                                                                ? 'bg-brand-primary/10 border-brand-primary text-brand-primary'
+                                                                : 'border-border-subtle text-light-text hover:border-brand-primary'
+                                                        }`}
+                                                    >
+                                                        <span className="flex items-center justify-center gap-2">
+                                                            <svg className="w-5 h-5" fill={isInWishlist ? 'currentColor' : 'none'} stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                                                            </svg>
+                                                            {isInWishlist ? 'Remove from Wishlist' : 'Add to Wishlist'}
+                                                        </span>
+                                                    </button>
+                                                </>
+                                            )}
                                         </div>
                                         <ul className="mt-6 text-sm text-light-textSecondary space-y-3">
                                             <li className="flex justify-between"><span>Duration</span> <strong className="text-light-text">{course.totalDuration} hours</strong></li>

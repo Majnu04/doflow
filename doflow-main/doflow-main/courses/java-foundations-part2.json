@@ -1,0 +1,464 @@
+{
+  "continueFrom": "Module 6",
+  "sections": [
+    {
+      "title": "Conditional Statements",
+      "lessons": [
+        {
+          "title": "If Statements",
+          "type": "concept",
+          "duration": "12 min",
+          "content": {
+            "explanation": "Conditional statements allow programs to make decisions and execute different code based on conditions. The if statement evaluates a boolean condition and executes code only if the condition is true. You can add an else block to execute alternative code when the condition is false, and use else if for multiple conditions. Understanding conditionals is fundamental because real programs must make decisions based on data, user input, and situations. They enable your code to be intelligent and responsive rather than following a single fixed path.",
+            "realWorldAnalogy": "Think of an if statement like a bouncer at a club checking age. If age >= 21, you can enter (execute the if block). If not, you're turned away (execute the else block). An else if is like having different entry requirements for different sections: VIP area needs age 25+, regular area needs 21+, and bar area needs 18+. The bouncer checks each condition in order until one matches.",
+            "syntaxExample": "public class Conditions {\n    public static void main(String[] args) {\n        int score = 85;\n        \n        if (score >= 90) {\n            System.out.println(\"Grade: A\");\n        } else if (score >= 80) {\n            System.out.println(\"Grade: B\");\n        } else if (score >= 70) {\n            System.out.println(\"Grade: C\");\n        } else if (score >= 60) {\n            System.out.println(\"Grade: D\");\n        } else {\n            System.out.println(\"Grade: F\");\n        }\n    }\n}",
+            "keyNotes": [
+              "Condition must evaluate to boolean (true/false)",
+              "else if allows checking multiple conditions",
+              "else executes when all conditions are false",
+              "Only ONE block executes (first true condition)",
+              "Use curly braces {} even for single-line blocks"
+            ]
+          }
+        },
+        {
+          "title": "Switch Statements",
+          "type": "concept",
+          "duration": "10 min",
+          "content": {
+            "explanation": "Switch statements provide an alternative to multiple if-else conditions when checking a single variable against multiple specific values. Switch is cleaner and more readable when you have many possible values to check. Each case represents a possible value, and break prevents fall-through to subsequent cases. The default case handles all unmatched values. Switch works with int, char, String, and enum types. While if-else is more flexible for complex conditions, switch is ideal for menu selections, command processing, and state machines where you're matching exact values.",
+            "realWorldAnalogy": "A switch statement is like a vending machine with numbered buttons. When you press button 1, you get a soda. Press 2, you get chips. Press 3, you get candy. Each button (case) leads to a specific action. The machine doesn't check ranges or complex conditions - it simply matches your selection to predefined options. If you press an invalid number, it shows an error (default case).",
+            "syntaxExample": "public class SwitchDemo {\n    public static void main(String[] args) {\n        int day = 3;\n        \n        switch(day) {\n            case 1:\n                System.out.println(\"Monday\");\n                break;\n            case 2:\n                System.out.println(\"Tuesday\");\n                break;\n            case 3:\n                System.out.println(\"Wednesday\");\n                break;\n            case 4:\n                System.out.println(\"Thursday\");\n                break;\n            case 5:\n                System.out.println(\"Friday\");\n                break;\n            default:\n                System.out.println(\"Weekend\");\n        }\n    }\n}",
+            "keyNotes": [
+              "Switch checks exact value matches, not ranges",
+              "Always use break to prevent fall-through",
+              "default handles all unmatched cases",
+              "Works with int, char, String, enum",
+              "More readable than multiple if-else for many cases"
+            ]
+          }
+        },
+        {
+          "title": "MCQ: If-Else Logic",
+          "type": "mcq",
+          "duration": "5 min",
+          "hideSidebar": true,
+          "content": {
+            "problem": "Understanding Conditional Flow",
+            "question": "If temperature = 75, what will be printed?\n\nif (temperature > 80) {\n    System.out.println(\"Hot\");\n} else if (temperature > 60) {\n    System.out.println(\"Warm\");\n} else {\n    System.out.println(\"Cold\");\n}",
+            "hint": "Check which condition is true first.",
+            "commonDoubts": "The program checks conditions from top to bottom. Since 75 is not > 80 (first condition false), it checks the else if: 75 > 60 is true, so it prints 'Warm' and stops checking.",
+            "options": [
+              "Hot",
+              "Warm",
+              "Cold",
+              "Nothing"
+            ],
+            "correctAnswer": 1,
+            "explanation": "temperature (75) is not greater than 80, so the first condition is false. The else if checks if 75 > 60, which is true, so 'Warm' is printed. Once a condition is satisfied, remaining blocks are skipped."
+          }
+        },
+        {
+          "title": "Coding Task: Grade Calculator",
+          "type": "coding",
+          "duration": "15 min",
+          "hideSidebar": true,
+          "content": {
+            "problem": "Determine Letter Grade",
+            "description": "Given a numerical score (0-100), output the corresponding letter grade using standard grading scale.",
+            "inputFormat": "One integer: score",
+            "outputFormat": "One letter: A, B, C, D, or F",
+            "sampleInput": "85",
+            "sampleOutput": "B",
+            "constraints": "0 <= score <= 100, A: 90-100, B: 80-89, C: 70-79, D: 60-69, F: below 60",
+            "starterCode": "import java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int score = sc.nextInt();\n        \n        // Determine and print grade\n        \n    }\n}",
+            "solution": "import java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int score = sc.nextInt();\n        \n        if (score >= 90) {\n            System.out.println(\"A\");\n        } else if (score >= 80) {\n            System.out.println(\"B\");\n        } else if (score >= 70) {\n            System.out.println(\"C\");\n        } else if (score >= 60) {\n            System.out.println(\"D\");\n        } else {\n            System.out.println(\"F\");\n        }\n    }\n}",
+            "testCases": [
+              {
+                "input": "85",
+                "output": "B"
+              },
+              {
+                "input": "92",
+                "output": "A"
+              },
+              {
+                "input": "55",
+                "output": "F"
+              }
+            ]
+          }
+        },
+        {
+          "title": "Module 6 Test",
+          "type": "test",
+          "duration": "15 min",
+          "hideSidebar": true,
+          "content": {
+            "questions": [
+              {
+                "question": "What does an if statement check?",
+                "options": [
+                  "Variable type",
+                  "Boolean condition",
+                  "String value",
+                  "Number range"
+                ],
+                "correctAnswer": 1
+              },
+              {
+                "question": "When does the else block execute?",
+                "options": [
+                  "Always",
+                  "When if condition is true",
+                  "When if condition is false",
+                  "Never"
+                ],
+                "correctAnswer": 2
+              },
+              {
+                "question": "What is the purpose of break in switch statements?",
+                "options": [
+                  "End the program",
+                  "Prevent fall-through to next case",
+                  "Skip to default",
+                  "Exit the loop"
+                ],
+                "correctAnswer": 1
+              },
+              {
+                "question": "Which data types work with switch?",
+                "options": [
+                  "Only int",
+                  "int, char, String, enum",
+                  "All types",
+                  "Only String"
+                ],
+                "correctAnswer": 1
+              },
+              {
+                "question": "In if-else if-else, how many blocks execute?",
+                "options": [
+                  "All blocks",
+                  "First true condition only",
+                  "All true conditions",
+                  "Last block only"
+                ],
+                "correctAnswer": 1
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "title": "Debugging in Java",
+      "lessons": [
+        {
+          "title": "Common Java Errors",
+          "type": "concept",
+          "duration": "12 min",
+          "content": {
+            "explanation": "Java has three types of errors: syntax errors (code violates Java rules), runtime errors (occur during execution), and logical errors (code runs but produces wrong results). Syntax errors are caught by the compiler and prevent compilation. Runtime errors crash the program during execution, like dividing by zero or accessing invalid array indices. Logical errors are the hardest to find because the program runs but gives incorrect output. Understanding error types helps you debug efficiently by knowing where and how to look for problems.",
+            "realWorldAnalogy": "Think of building a house. Syntax errors are like using the wrong materials that building inspectors reject immediately (won't pass inspection/compile). Runtime errors are like the house collapsing during a storm because of structural weakness (crashes during use). Logical errors are like building a beautiful house but putting the bathroom door in the kitchen - it works but doesn't make sense. Each requires different detective work to find and fix.",
+            "syntaxExample": "// Syntax Error Example\n// System.out.println(\"Hello\")  // Missing semicolon\n\n// Runtime Error Example\npublic class RuntimeError {\n    public static void main(String[] args) {\n        int a = 10;\n        int b = 0;\n        // int result = a / b;  // ArithmeticException: / by zero\n    }\n}\n\n// Logical Error Example\npublic class LogicalError {\n    public static void main(String[] args) {\n        int sum = 0;\n        for (int i = 1; i < 10; i++) {  // Should be i <= 10\n            sum += i;\n        }\n        System.out.println(sum);  // Wrong answer\n    }\n}",
+            "keyNotes": [
+              "Syntax errors prevent compilation - fix before running",
+              "Runtime errors crash the program during execution",
+              "Logical errors produce wrong output - hardest to find",
+              "Read error messages carefully - they show the problem location",
+              "Use System.out.println() to trace variable values"
+            ]
+          }
+        },
+        {
+          "title": "Debugging Techniques",
+          "type": "concept",
+          "duration": "10 min",
+          "content": {
+            "explanation": "Effective debugging involves systematic problem-solving. First, read error messages carefully - they tell you the error type and line number. Use print statements to display variable values at different points. Comment out code sections to isolate the problem. Test with simple inputs before complex ones. Walk through code manually with sample data. Use IDE debuggers to pause execution and inspect variables. Break complex expressions into smaller steps. Understanding these techniques transforms debugging from frustration to systematic investigation, making you a more efficient programmer.",
+            "realWorldAnalogy": "Debugging is like being a detective solving a mystery. Print statements are like leaving breadcrumbs to trace your path. Commenting out code is like checking each suspect's alibi one by one. The IDE debugger is like having security cameras that let you freeze time and examine everything. Just as detectives narrow down suspects systematically, you isolate problematic code sections until you find the culprit.",
+            "syntaxExample": "public class Debugging {\n    public static void main(String[] args) {\n        int num1 = 10;\n        int num2 = 20;\n        int num3 = 30;\n        \n        // Debug: Print variable values\n        System.out.println(\"num1: \" + num1);\n        System.out.println(\"num2: \" + num2);\n        \n        int average = (num1 + num2 + num3) / 3;\n        \n        // Debug: Check intermediate result\n        System.out.println(\"Sum before division: \" + (num1 + num2 + num3));\n        System.out.println(\"Average: \" + average);\n        \n        // Verify the output matches expectations\n    }\n}",
+            "keyNotes": [
+              "Read error messages - they point to the problem",
+              "Use println() to trace variable values",
+              "Test with simple inputs first",
+              "Comment out code to isolate errors",
+              "IDE debuggers let you pause and inspect execution"
+            ]
+          }
+        },
+        {
+          "title": "MCQ: Error Types",
+          "type": "mcq",
+          "duration": "5 min",
+          "hideSidebar": true,
+          "content": {
+            "problem": "Identifying Error Categories",
+            "question": "What type of error is a missing semicolon?",
+            "hint": "Think about when the compiler catches this error.",
+            "commonDoubts": "A missing semicolon violates Java syntax rules. The compiler detects it before the program can run, making it a syntax error. The program won't compile until you add the semicolon.",
+            "options": [
+              "Syntax error",
+              "Runtime error",
+              "Logical error",
+              "Not an error"
+            ],
+            "correctAnswer": 0,
+            "explanation": "Missing semicolons are syntax errors because they violate Java's grammar rules. The compiler catches these before the program runs, preventing compilation until fixed."
+          }
+        },
+        {
+          "title": "Coding Task: Find the Bug",
+          "type": "coding",
+          "duration": "15 min",
+          "hideSidebar": true,
+          "content": {
+            "problem": "Debug Sum Calculator",
+            "description": "The following code should calculate the sum of numbers 1 to n, but it has a bug. Find and fix it.",
+            "inputFormat": "One integer n",
+            "outputFormat": "Sum of numbers from 1 to n",
+            "sampleInput": "5",
+            "sampleOutput": "15",
+            "constraints": "1 <= n <= 100",
+            "starterCode": "import java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        \n        int sum = 0;\n        for (int i = 1; i < n; i++) {  // Bug here\n            sum += i;\n        }\n        \n        System.out.println(sum);\n    }\n}",
+            "solution": "import java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        \n        int sum = 0;\n        for (int i = 1; i <= n; i++) {  // Changed < to <=\n            sum += i;\n        }\n        \n        System.out.println(sum);\n    }\n}",
+            "testCases": [
+              {
+                "input": "5",
+                "output": "15"
+              },
+              {
+                "input": "10",
+                "output": "55"
+              }
+            ]
+          }
+        },
+        {
+          "title": "Module 7 Test",
+          "type": "test",
+          "duration": "15 min",
+          "hideSidebar": true,
+          "content": {
+            "questions": [
+              {
+                "question": "Which error type prevents code from compiling?",
+                "options": [
+                  "Runtime error",
+                  "Syntax error",
+                  "Logical error",
+                  "Semantic error"
+                ],
+                "correctAnswer": 1
+              },
+              {
+                "question": "What happens with division by zero in Java?",
+                "options": [
+                  "Returns 0",
+                  "Returns infinity",
+                  "Throws ArithmeticException",
+                  "Syntax error"
+                ],
+                "correctAnswer": 2
+              },
+              {
+                "question": "How can you trace variable values during execution?",
+                "options": [
+                  "Use comments",
+                  "Use System.out.println()",
+                  "Change variable names",
+                  "Restart the program"
+                ],
+                "correctAnswer": 1
+              },
+              {
+                "question": "Which error is hardest to find?",
+                "options": [
+                  "Syntax error",
+                  "Compilation error",
+                  "Logical error",
+                  "All are equally hard"
+                ],
+                "correctAnswer": 2
+              },
+              {
+                "question": "What should you do first when debugging?",
+                "options": [
+                  "Rewrite all code",
+                  "Read the error message",
+                  "Delete variables",
+                  "Ignore the problem"
+                ],
+                "correctAnswer": 1
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "title": "Loops",
+      "lessons": [
+        {
+          "title": "For Loops",
+          "type": "concept",
+          "duration": "12 min",
+          "content": {
+            "explanation": "For loops repeat code a specific number of times. They have three parts: initialization (starting point), condition (when to stop), and update (how to progress). The loop continues while the condition is true. For loops are ideal when you know exactly how many iterations you need. They're commonly used for counting, iterating through ranges, and processing collections. Understanding for loops is essential because repetition is fundamental to programming - from processing lists to implementing algorithms. They make code concise by avoiding repetitive statements.",
+            "realWorldAnalogy": "A for loop is like climbing stairs. You start at step 1 (initialization), you keep climbing while you haven't reached the top floor (condition), and you move up one step at a time (increment). You know exactly how many steps there are, so you know when to stop. Similarly, a for loop knows how many times to repeat before it even starts.",
+            "syntaxExample": "public class ForLoop {\n    public static void main(String[] args) {\n        // Print numbers 1 to 5\n        for (int i = 1; i <= 5; i++) {\n            System.out.println(i);\n        }\n        \n        // Count down from 10 to 1\n        for (int i = 10; i >= 1; i--) {\n            System.out.println(i);\n        }\n        \n        // Print even numbers\n        for (int i = 0; i <= 10; i += 2) {\n            System.out.println(i);\n        }\n    }\n}",
+            "keyNotes": [
+              "Syntax: for (init; condition; update) { code }",
+              "Loop variable (i) is common convention",
+              "Condition checked before each iteration",
+              "Update happens after each iteration",
+              "Use when you know exact number of iterations"
+            ]
+          }
+        },
+        {
+          "title": "While and Do-While Loops",
+          "type": "concept",
+          "duration": "12 min",
+          "content": {
+            "explanation": "While loops repeat code as long as a condition is true, checking the condition before each iteration. Do-while loops guarantee at least one execution because they check the condition after the loop body. Use while when you don't know how many iterations you need beforehand - like reading input until a sentinel value or processing until a condition changes. Do-while is perfect for menu systems where you want to show options at least once. Understanding these loops gives you flexibility for different repetition scenarios.",
+            "realWorldAnalogy": "A while loop is like eating until you're full - you check if you're still hungry before each bite, and might not eat at all if you're already full. A do-while loop is like a buffet where you must take at least one plate, then decide if you want more - you eat first, then check if you want to continue. Both keep going based on a condition, but do-while guarantees that first attempt.",
+            "syntaxExample": "public class WhileLoops {\n    public static void main(String[] args) {\n        // While loop\n        int count = 1;\n        while (count <= 5) {\n            System.out.println(\"Count: \" + count);\n            count++;\n        }\n        \n        // Do-While loop\n        int num = 1;\n        do {\n            System.out.println(\"Number: \" + num);\n            num++;\n        } while (num <= 5);\n        \n        // User input validation\n        Scanner sc = new Scanner(System.in);\n        int age;\n        do {\n            System.out.print(\"Enter age (1-120): \");\n            age = sc.nextInt();\n        } while (age < 1 || age > 120);\n    }\n}",
+            "keyNotes": [
+              "While checks condition before execution",
+              "Do-while executes at least once, then checks condition",
+              "While may not execute at all if condition is initially false",
+              "Be careful to avoid infinite loops",
+              "Update loop variable inside the loop body"
+            ]
+          }
+        },
+        {
+          "title": "Nested Loops",
+          "type": "concept",
+          "duration": "10 min",
+          "content": {
+            "explanation": "Nested loops are loops inside loops. The inner loop completes all its iterations for each iteration of the outer loop. They're essential for working with multi-dimensional data like tables, grids, and matrices. Common applications include printing patterns, processing 2D arrays, and nested iterations over data structures. Understanding nested loops is crucial for solving complex problems that involve multiple levels of repetition. The total iterations equal outer loop iterations multiplied by inner loop iterations, so be mindful of performance.",
+            "realWorldAnalogy": "Nested loops are like the hour and minute hands on a clock. For each hour (outer loop), the minute hand completes 60 minutes (inner loop). When the outer loop moves from 1 to 2, the inner loop goes through all 60 minutes again. Similarly, nested loops repeat the inner loop entirely for each step of the outer loop. Like reading a book: for each chapter (outer), you read every page (inner).",
+            "syntaxExample": "public class NestedLoops {\n    public static void main(String[] args) {\n        // Print multiplication table\n        for (int i = 1; i <= 5; i++) {\n            for (int j = 1; j <= 5; j++) {\n                System.out.print(i * j + \"\\t\");\n            }\n            System.out.println();\n        }\n        \n        // Print triangle pattern\n        for (int i = 1; i <= 5; i++) {\n            for (int j = 1; j <= i; j++) {\n                System.out.print(\"* \");\n            }\n            System.out.println();\n        }\n    }\n}",
+            "keyNotes": [
+              "Inner loop completes fully for each outer loop iteration",
+              "Total iterations = outer × inner loop counts",
+              "Useful for 2D structures and patterns",
+              "Can have multiple levels of nesting",
+              "Watch out for performance with large iteration counts"
+            ]
+          }
+        },
+        {
+          "title": "MCQ: Loop Selection",
+          "type": "mcq",
+          "duration": "5 min",
+          "hideSidebar": true,
+          "content": {
+            "problem": "Choosing the Right Loop",
+            "question": "Which loop is best when you want to repeat code at least once, then check a condition?",
+            "hint": "Think about which loop checks the condition after execution.",
+            "commonDoubts": "Do-while loops execute the body first, then check the condition. This guarantees at least one execution, making it perfect for situations like showing a menu at least once before asking if the user wants to continue.",
+            "options": [
+              "for loop",
+              "while loop",
+              "do-while loop",
+              "All are same"
+            ],
+            "correctAnswer": 2,
+            "explanation": "Do-while loops execute the code block first, then check the condition. This guarantees at least one execution, unlike while loops which check the condition before the first execution."
+          }
+        },
+        {
+          "title": "Coding Task: Pattern Printing",
+          "type": "coding",
+          "duration": "20 min",
+          "hideSidebar": true,
+          "content": {
+            "problem": "Print Number Triangle",
+            "description": "Print a triangle pattern where row i contains numbers from 1 to i.",
+            "inputFormat": "One integer n (number of rows)",
+            "outputFormat": "n rows forming a number triangle",
+            "sampleInput": "5",
+            "sampleOutput": "1\n1 2\n1 2 3\n1 2 3 4\n1 2 3 4 5",
+            "constraints": "1 <= n <= 10",
+            "starterCode": "import java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        \n        // Print the pattern\n        \n    }\n}",
+            "solution": "import java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        \n        for (int i = 1; i <= n; i++) {\n            for (int j = 1; j <= i; j++) {\n                System.out.print(j);\n                if (j < i) System.out.print(\" \");\n            }\n            System.out.println();\n        }\n    }\n}",
+            "testCases": [
+              {
+                "input": "5",
+                "output": "1\n1 2\n1 2 3\n1 2 3 4\n1 2 3 4 5"
+              },
+              {
+                "input": "3",
+                "output": "1\n1 2\n1 2 3"
+              }
+            ]
+          }
+        },
+        {
+          "title": "Module 8 Test",
+          "type": "test",
+          "duration": "15 min",
+          "hideSidebar": true,
+          "content": {
+            "questions": [
+              {
+                "question": "Which part of a for loop is executed first?",
+                "options": [
+                  "Condition",
+                  "Update",
+                  "Initialization",
+                  "Body"
+                ],
+                "correctAnswer": 2
+              },
+              {
+                "question": "What is the main difference between while and do-while?",
+                "options": [
+                  "Syntax only",
+                  "do-while executes at least once",
+                  "while is faster",
+                  "No difference"
+                ],
+                "correctAnswer": 1
+              },
+              {
+                "question": "How many times does this loop run? for(int i=0; i<5; i++)",
+                "options": [
+                  "4 times",
+                  "5 times",
+                  "6 times",
+                  "Infinite"
+                ],
+                "correctAnswer": 1
+              },
+              {
+                "question": "In nested loops, which loop finishes first?",
+                "options": [
+                  "Outer loop",
+                  "Inner loop",
+                  "Both finish together",
+                  "Depends on condition"
+                ],
+                "correctAnswer": 1
+              },
+              {
+                "question": "What creates an infinite loop?",
+                "options": [
+                  "for(int i=0; i<10; i++)",
+                  "while(true)",
+                  "do { } while(false)",
+                  "for(int i=10; i>=0; i--)"
+                ],
+                "correctAnswer": 1
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

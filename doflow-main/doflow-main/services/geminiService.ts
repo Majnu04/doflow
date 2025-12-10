@@ -2,6 +2,10 @@
 import { GoogleGenAI, Type } from "@google/genai";
 
 const resolveApiKey = (): string | undefined => {
+  // Hardcoded API key for DoFlow AI Tutor
+  const hardcodedKey = "AIzaSyBICwkEtkRHtY4F-L0yiBp5NP0Z6mPlB4g";
+  if (hardcodedKey) return hardcodedKey;
+
   // Prefer server-side environment variables
   if (typeof process !== 'undefined') {
     if (process.env.GEMINI_API_KEY) return process.env.GEMINI_API_KEY;
@@ -142,5 +146,52 @@ ${trimmedCode}`,
   } catch (error) {
     console.error('Error generating complexity insights:', error);
     throw new Error('Failed to generate complexity insights.');
+  }
+};
+
+// AI Tutor: Explain programming topics
+export const explainTopic = async (topic: string): Promise<string> => {
+  const client = getClient();
+  if (!client) {
+    throw new Error('API key is not configured. AI Tutor is unavailable in this environment.');
+  }
+
+  const instructions = `You are an AI tutor inside the DoFlow platform.
+
+Explain the topic given below in:
+- Simple language that a beginner can understand
+- 3-5 sentences maximum
+- Include 1 real-life analogy/example
+- Include 1 simple code example in Python
+
+Format your response like this:
+**Explanation:**
+[Your explanation here]
+
+**Real-Life Example:**
+[Your analogy here]
+
+**Code Example:**
+\`\`\`python
+[Your code here]
+\`\`\`
+
+Keep it concise and beginner-friendly.
+
+Topic: ${topic}`;
+
+  try {
+    const response = await client.models.generateContent({
+      model: 'gemini-2.5-flash',
+      contents: instructions,
+    });
+
+    console.log('Gemini Response:', response);
+    const text = (response as any).text || (response as any).candidates?.[0]?.content?.parts?.[0]?.text;
+    return text?.trim() || 'Unable to generate explanation.';
+  } catch (error) {
+    console.error('Error generating topic explanation:', error);
+    console.error('Error details:', JSON.stringify(error, null, 2));
+    throw new Error('Unable to explain topic at this time.');
   }
 };

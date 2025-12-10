@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState, AppDispatch } from '../src/store';
 import { getCart } from '../src/store/slices/cartSlice';
-import { FiCreditCard, FiLock, FiCheck, FiArrowLeft } from 'react-icons/fi';
-import { Button, Card } from '../src/components/ui';
+import { FiCreditCard, FiLock, FiCheck, FiArrowLeft, FiShield, FiAward, FiRefreshCw } from 'react-icons/fi';
 import api from '../src/utils/api';
 import toast from 'react-hot-toast';
 
@@ -163,212 +162,215 @@ const CheckoutPage: React.FC = () => {
 
   if (items.length === 0) {
     return (
-      <div className="min-h-screen pt-24 pb-12 px-4">
-        <div className="max-w-7xl mx-auto">
-          <Card variant="default" className="text-center py-20 backdrop-blur-sm bg-gray-900/50">
-            <h2 className="text-3xl font-bold mb-4">Your cart is empty</h2>
-            <p className="text-gray-400 mb-8">Add some courses to checkout</p>
-            <Button
-              variant="primary"
+      <div className="min-h-screen bg-white pt-24 pb-12 px-4">
+        <div className="max-w-2xl mx-auto text-center">
+          <div className="bg-white border border-gray-200 rounded-lg p-12">
+            <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
+              <FiCreditCard className="w-8 h-8 text-gray-400" />
+            </div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-3">Your cart is empty</h2>
+            <p className="text-gray-500 mb-8">Add some courses to checkout</p>
+            <button
               onClick={() => window.location.hash = '/courses'}
+              className="px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-lg transition-colors"
             >
               Browse Courses
-            </Button>
-          </Card>
+            </button>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen pt-24 pb-12 px-4 bg-elite-navy">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen bg-gray-50 pt-24 pb-12">
+      <div className="max-w-6xl mx-auto px-4">
         {/* Header */}
         <div className="mb-8">
-          <Button
-            variant="ghost"
-            size="sm"
+          <button
             onClick={() => window.location.hash = '/cart'}
-            icon={<FiArrowLeft />}
-            className="mb-4"
+            className="flex items-center gap-2 text-gray-600 hover:text-orange-500 transition-colors mb-4"
           >
-            Back to Cart
-          </Button>
-          <h1 className="text-4xl font-display font-bold gradient-text mb-2">
-            Checkout
-          </h1>
-          <p className="text-gray-400">Complete your purchase</p>
+            <FiArrowLeft className="w-4 h-4" />
+            <span className="text-sm font-medium">Back to Cart</span>
+          </button>
+          <h1 className="text-3xl font-bold text-gray-900">Checkout</h1>
+          <p className="text-gray-500 mt-1">Complete your purchase securely</p>
         </div>
 
         <div className="grid lg:grid-cols-3 gap-8">
-          {/* Payment Info */}
-          <div className="lg:col-span-2">
-            <Card variant="default" className="p-8 bg-gray-800/90 backdrop-blur-sm border border-gray-700">
-              <div className="flex items-center gap-3 mb-6 bg-green-500/20 border border-green-500/50 px-5 py-3 rounded-lg inline-flex">
-                <FiLock className="text-green-400 text-lg" />
-                <span className="text-base text-white font-semibold">Secure Payment with Razorpay</span>
+          {/* Main Content - Left Side */}
+          <div className="lg:col-span-2 space-y-6">
+            {/* Courses List */}
+            <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+              <div className="px-6 py-4 border-b border-gray-200">
+                <h2 className="text-lg font-bold text-gray-900">Order Items ({items.length})</h2>
               </div>
+              <div className="divide-y divide-gray-100">
+                {items.map((course) => {
+                  const coursePrice = resolveCoursePrice(course);
+                  const hasDiscount = typeof course.discountPrice === 'number' && course.discountPrice < course.price;
 
-              {/* Payment Info */}
-              <div className="mb-8">
-                <h3 className="text-xl font-bold text-white mb-4">Payment Details</h3>
-                <p className="text-white mb-6 leading-relaxed text-base font-medium">
-                  Complete your purchase securely with Razorpay. All payment methods including Credit/Debit Cards, Net Banking, UPI, and Wallets are supported.
-                </p>
-                <div className="flex flex-wrap gap-3 mb-6">
-                  <div className="flex items-center gap-3 px-5 py-3 bg-purple-600/30 border-2 border-purple-500/60 rounded-lg hover:bg-purple-600/40 hover:border-purple-400 transition-all shadow-lg">
-                    <FiCreditCard className="text-purple-300 text-xl" />
-                    <span className="text-base font-semibold text-white">Cards</span>
-                  </div>
-                  <div className="flex items-center gap-3 px-5 py-3 bg-blue-600/30 border-2 border-blue-500/60 rounded-lg hover:bg-blue-600/40 hover:border-blue-400 transition-all shadow-lg">
-                    <span className="text-xl">📱</span>
-                    <span className="text-base font-semibold text-white">UPI</span>
-                  </div>
-                  <div className="flex items-center gap-3 px-5 py-3 bg-green-600/30 border-2 border-green-500/60 rounded-lg hover:bg-green-600/40 hover:border-green-400 transition-all shadow-lg">
-                    <span className="text-xl">🏦</span>
-                    <span className="text-base font-semibold text-white">Net Banking</span>
-                  </div>
-                  <div className="flex items-center gap-3 px-5 py-3 bg-yellow-600/30 border-2 border-yellow-500/60 rounded-lg hover:bg-yellow-600/40 hover:border-yellow-400 transition-all shadow-lg">
-                    <span className="text-xl">💳</span>
-                    <span className="text-base font-semibold text-white">Wallets</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Courses List */}
-              <div className="mb-8">
-                <h3 className="text-xl font-bold text-white mb-4">Courses in Cart</h3>
-                <div className="space-y-3">
-                  {items.map((course) => {
-                    const coursePrice = resolveCoursePrice(course);
-                    const hasDiscount = typeof course.discountPrice === 'number' && course.discountPrice < course.price;
-
-                    return (
-                      <div key={course._id} className="flex items-center gap-4 p-4 bg-gradient-to-br from-gray-800/80 to-gray-900/80 border border-gray-700 rounded-lg hover:border-purple-500/50 transition-all">
+                  return (
+                    <div key={course._id} className="flex items-center gap-4 p-4 hover:bg-gray-50 transition-colors">
                       <img
                         src={course.thumbnail || COURSE_PLACEHOLDER}
                         alt={course.title}
-                        className="w-24 h-16 object-cover rounded-lg shadow-lg"
+                        className="w-20 h-14 object-cover rounded-lg border border-gray-200"
                       />
                       <div className="flex-1 min-w-0">
-                        <h4 className="font-semibold text-base text-white line-clamp-1 mb-1">{course.title}</h4>
-                        <p className="text-sm text-gray-300">
-                          By Gowri Shankar
-                        </p>
+                        <h3 className="font-semibold text-gray-900 line-clamp-1">{course.title}</h3>
+                        <p className="text-sm text-gray-500">By {course.instructor?.name || 'Gowri Shankar'}</p>
                       </div>
                       <div className="text-right">
-                        <div className="font-bold text-lg text-yellow-400">₹{coursePrice}</div>
+                        <div className="font-bold text-gray-900">₹{coursePrice}</div>
                         {hasDiscount && (
-                          <div className="text-xs text-gray-400 line-through">₹{course.price}</div>
+                          <div className="text-sm text-gray-400 line-through">₹{course.price}</div>
                         )}
                       </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Payment Button */}
-              <Button
-                variant="primary"
-                size="lg"
-                className="w-full"
-                disabled={isProcessing || (requiresPaymentGateway && !razorpayLoaded)}
-                onClick={handlePayment}
-                icon={isProcessing || !requiresPaymentGateway ? undefined : <FiCreditCard />}
-              >
-                {ctaLabel}
-              </Button>
-
-              {!requiresPaymentGateway && (
-                <p className="text-center text-sm text-green-400 mt-3">
-                  All courses in your cart are free right now. We&apos;ll enroll you instantly—no payment step required.
-                </p>
-              )}
-
-              <div className="mt-6 p-4 bg-green-500/10 border border-green-500/20 rounded-lg">
-                <div className="flex items-start gap-3">
-                  <FiLock className="text-green-400 mt-1 flex-shrink-0" />
-                  <div className="text-sm text-gray-300">
-                    <strong className="text-white">Secure Payment:</strong> Your payment information is encrypted and secure. We never store your card details.
-                  </div>
-                </div>
-              </div>
-            </Card>
-          </div>
-
-          {/* Order Summary */}
-          <div className="lg:col-span-1">
-            <Card variant="default" className="p-6 sticky top-24 bg-gray-900/95 border border-purple-500/40 backdrop-blur-sm shadow-xl shadow-purple-500/10">
-              <h3 className="text-2xl font-bold text-white mb-6">Order Summary</h3>
-              
-              <div className="space-y-3 mb-6">
-                {items.map((course) => {
-                  const coursePrice = resolveCoursePrice(course);
-                  return (
-                    <div key={course._id} className="flex justify-between items-start text-sm bg-gray-800/60 border border-gray-700/50 p-3 rounded-lg">
-                      <span className="text-white flex-1 line-clamp-2 font-medium pr-2">{course.title}</span>
-                      <span className="text-yellow-400 font-bold text-base whitespace-nowrap">
-                        ₹{coursePrice}
-                      </span>
                     </div>
                   );
                 })}
               </div>
+            </div>
 
-              <div className="border-t border-gray-700 pt-4 space-y-3">
-                <div className="flex justify-between text-white">
-                  <span className="font-medium">Subtotal:</span>
-                  <span className="font-semibold">₹{originalTotal}</span>
+            {/* Payment Methods */}
+            <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+              <div className="px-6 py-4 border-b border-gray-200">
+                <h2 className="text-lg font-bold text-gray-900">Payment Method</h2>
+              </div>
+              <div className="p-6">
+                <div className="flex items-center gap-2 mb-4">
+                  <FiShield className="w-5 h-5 text-green-500" />
+                  <span className="text-sm text-gray-600">Secured by <strong className="text-gray-900">Razorpay</strong></span>
                 </div>
                 
-                {savings > 0 && (
-                  <div className="flex justify-between text-green-400">
-                    <span className="font-medium">Discount:</span>
-                    <span className="font-semibold">-₹{savings}</span>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  <div className="flex flex-col items-center gap-2 p-4 border border-gray-200 rounded-lg bg-gray-50">
+                    <FiCreditCard className="w-6 h-6 text-gray-600" />
+                    <span className="text-sm font-medium text-gray-700">Cards</span>
                   </div>
+                  <div className="flex flex-col items-center gap-2 p-4 border border-gray-200 rounded-lg bg-gray-50">
+                    <span className="text-2xl">📱</span>
+                    <span className="text-sm font-medium text-gray-700">UPI</span>
+                  </div>
+                  <div className="flex flex-col items-center gap-2 p-4 border border-gray-200 rounded-lg bg-gray-50">
+                    <span className="text-2xl">🏦</span>
+                    <span className="text-sm font-medium text-gray-700">Net Banking</span>
+                  </div>
+                  <div className="flex flex-col items-center gap-2 p-4 border border-gray-200 rounded-lg bg-gray-50">
+                    <span className="text-2xl">💳</span>
+                    <span className="text-sm font-medium text-gray-700">Wallets</span>
+                  </div>
+                </div>
+
+                <p className="text-sm text-gray-500 mt-4">
+                  Click the button below to proceed. You'll be redirected to Razorpay's secure payment gateway.
+                </p>
+              </div>
+            </div>
+
+            {/* Security Note */}
+            <div className="flex items-start gap-3 p-4 bg-green-50 border border-green-200 rounded-lg">
+              <FiLock className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+              <div>
+                <p className="text-sm text-green-800">
+                  <strong>Secure Payment:</strong> Your payment information is encrypted and secure. We never store your card details.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Order Summary - Right Side */}
+          <div className="lg:col-span-1">
+            <div className="bg-white border border-gray-200 rounded-lg overflow-hidden sticky top-24">
+              <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                <h2 className="text-lg font-bold text-gray-900">Order Summary</h2>
+              </div>
+              
+              <div className="p-6">
+                {/* Price Breakdown */}
+                <div className="space-y-3 mb-6">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600">Subtotal</span>
+                    <span className="text-gray-900 font-medium">₹{originalTotal}</span>
+                  </div>
+                  
+                  {savings > 0 && (
+                    <div className="flex justify-between text-sm">
+                      <span className="text-green-600">Discount</span>
+                      <span className="text-green-600 font-medium">-₹{savings}</span>
+                    </div>
+                  )}
+                  
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600">Tax</span>
+                    <span className="text-gray-900 font-medium">₹0</span>
+                  </div>
+                </div>
+
+                {/* Total */}
+                <div className="border-t border-gray-200 pt-4 mb-6">
+                  <div className="flex justify-between items-center">
+                    <span className="text-lg font-bold text-gray-900">Total</span>
+                    <span className="text-2xl font-bold text-orange-500">₹{total}</span>
+                  </div>
+                </div>
+
+                {/* Pay Button */}
+                <button
+                  onClick={handlePayment}
+                  disabled={isProcessing || (requiresPaymentGateway && !razorpayLoaded)}
+                  className="w-full py-4 bg-orange-500 hover:bg-orange-600 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-bold rounded-lg transition-colors flex items-center justify-center gap-2"
+                >
+                  {isProcessing ? (
+                    <>
+                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                      Processing...
+                    </>
+                  ) : (
+                    <>
+                      <FiLock className="w-4 h-4" />
+                      {ctaLabel}
+                    </>
+                  )}
+                </button>
+
+                {!requiresPaymentGateway && (
+                  <p className="text-center text-sm text-green-600 mt-3">
+                    All courses are free! Click to enroll instantly.
+                  </p>
                 )}
-                
-                <div className="flex justify-between text-white">
-                  <span className="font-medium">Tax:</span>
-                  <span className="font-semibold">₹0</span>
-                </div>
 
-                <div className="border-t border-gray-700 pt-3 mt-3">
-                  <div className="flex justify-between text-2xl font-bold">
-                    <span className="text-white">Total:</span>
-                    <span className="text-yellow-400">₹{total}</span>
+                {/* Benefits */}
+                <div className="mt-6 pt-6 border-t border-gray-200 space-y-3">
+                  <div className="flex items-center gap-3 text-sm">
+                    <div className="w-5 h-5 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
+                      <FiCheck className="w-3 h-3 text-green-600" />
+                    </div>
+                    <span className="text-gray-700">Lifetime access</span>
+                  </div>
+                  <div className="flex items-center gap-3 text-sm">
+                    <div className="w-5 h-5 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
+                      <FiCheck className="w-3 h-3 text-green-600" />
+                    </div>
+                    <span className="text-gray-700">All future updates</span>
+                  </div>
+                  <div className="flex items-center gap-3 text-sm">
+                    <div className="w-5 h-5 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
+                      <FiAward className="w-3 h-3 text-green-600" />
+                    </div>
+                    <span className="text-gray-700">Certificate of completion</span>
+                  </div>
+                  <div className="flex items-center gap-3 text-sm">
+                    <div className="w-5 h-5 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
+                      <FiRefreshCw className="w-3 h-3 text-green-600" />
+                    </div>
+                    <span className="text-gray-700">30-day money-back guarantee</span>
                   </div>
                 </div>
               </div>
-
-              <div className="mt-6 space-y-3 bg-gray-800/40 border border-gray-700/50 rounded-lg p-4">
-                <div className="flex items-center gap-3 text-sm text-white">
-                  <div className="flex-shrink-0 w-5 h-5 rounded-full bg-green-500/20 flex items-center justify-center">
-                    <FiCheck className="text-green-400 text-xs" />
-                  </div>
-                  <span className="font-medium">Lifetime access</span>
-                </div>
-                <div className="flex items-center gap-3 text-sm text-white">
-                  <div className="flex-shrink-0 w-5 h-5 rounded-full bg-green-500/20 flex items-center justify-center">
-                    <FiCheck className="text-green-400 text-xs" />
-                  </div>
-                  <span className="font-medium">All future updates</span>
-                </div>
-                <div className="flex items-center gap-3 text-sm text-white">
-                  <div className="flex-shrink-0 w-5 h-5 rounded-full bg-green-500/20 flex items-center justify-center">
-                    <FiCheck className="text-green-400 text-xs" />
-                  </div>
-                  <span className="font-medium">Certificate of completion</span>
-                </div>
-                <div className="flex items-center gap-3 text-sm text-white">
-                  <div className="flex-shrink-0 w-5 h-5 rounded-full bg-green-500/20 flex items-center justify-center">
-                    <FiCheck className="text-green-400 text-xs" />
-                  </div>
-                  <span className="font-medium">30-day money-back guarantee</span>
-                </div>
-              </div>
-            </Card>
+            </div>
           </div>
         </div>
       </div>

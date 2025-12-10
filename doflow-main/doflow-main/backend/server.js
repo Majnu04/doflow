@@ -26,6 +26,8 @@ import bookmarkRoutes from './routes/bookmarkRoutes.js';
 import roadmapProgressRoutes from './routes/roadmapProgressRoutes.js';
 import dsaRoutes from './routes/dsaRoutes.js';
 import certificateRoutes from './routes/certificateRoutes.js';
+import codeExecutionRoutes from './routes/codeExecutionRoutes.js';
+import publicRoutes from './routes/publicRoutes.js';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 
@@ -73,10 +75,10 @@ app.options('*', cors(corsOptions));
 // Security middleware
 app.use(helmet());
 
-// Rate limiting
+// Rate limiting - increased for development
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100 // limit each IP to 100 requests per windowMs
+  max: 1000 // limit each IP to 1000 requests per windowMs (increased for dev)
 });
 app.use('/api', limiter);
 
@@ -107,6 +109,8 @@ app.use('/api/bookmarks', bookmarkRoutes);
 app.use('/api/roadmap-progress', roadmapProgressRoutes);
 app.use('/api/dsa', dsaRoutes);
 app.use('/api/certificates', certificateRoutes);
+app.use('/api/code', codeExecutionRoutes);
+app.use('/api/public', publicRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
