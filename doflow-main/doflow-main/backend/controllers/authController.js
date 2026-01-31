@@ -459,7 +459,6 @@ export const sendResetOTP = async (req, res) => {
     await PendingRegistration.create({
       name: user.name,
       email,
-      password: user.password, // Keep existing password hash
       otp,
       otpExpire: Date.now() + 10 * 60 * 1000
     });

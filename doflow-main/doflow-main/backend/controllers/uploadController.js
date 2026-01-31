@@ -1,4 +1,6 @@
-import AWS from 'aws-sdk';
+import { S3Client, DeleteObjectCommand } from '@aws-sdk/client-s3';
+import { getSignedUrl as getS3SignedUrl } from '@aws-sdk/s3-request-presigner';
+import { GetObjectCommand } from '@aws-sdk/client-s3';
 import multer from 'multer';
 import multerS3 from 'multer-s3';
 import path from 'path';
@@ -8,12 +10,14 @@ let s3 = null;
 let bucketName = null;
 
 if (process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY) {
-  const spacesEndpoint = new AWS.Endpoint(process.env.DO_SPACES_ENDPOINT || 's3.amazonaws.com');
-  s3 = new AWS.S3({
-    endpoint: spacesEndpoint,
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-    region: process.env.AWS_REGION || 'us-east-1'
+  s3 = new S3Client({
+    endpoint: process.env.DO_SPACES_ENDPOINT || undefined,
+    credentials: {
+      accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+    },
+    region: process.env.AWS_REGION || 'us-east-1',
+    forcePathStyle: false
   });
   bucketName = process.env.DO_SPACES_BUCKET || process.env.S3_BUCKET_NAME;
 }
@@ -106,13 +110,12 @@ export const getSignedUrl = async (req, res) => {
       return res.status(400).json({ message: 'File key is required' });
     }
 
-    const params = {
+    const command = new GetObjectCommand({
       Bucket: bucketName,
-      Key: key,
-      Expires: 3600 // URL expires in 1 hour
-    };
+      Key: key
+    });
 
-    const signedUrl = await s3.getSignedUrlPromise('getObject', params);
+    const signedUrl = await getS3SignedUrl(s3, command, { expiresIn: 3600 }); // URL expires in 1 hour
 
     res.json({ url: signedUrl });
   } catch (error) {
@@ -135,12 +138,12 @@ export const deleteFile = async (req, res) => {
       return res.status(400).json({ message: 'File key is required' });
     }
 
-    const params = {
+    const command = new DeleteObjectCommand({
       Bucket: bucketName,
       Key: key
-    };
+    });
 
-    await s3.deleteObject(params).promise();
+    await s3.send(command);
 
     res.json({ message: 'File deleted successfully' });
   } catch (error) {

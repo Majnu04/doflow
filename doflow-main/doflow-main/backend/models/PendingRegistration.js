@@ -15,7 +15,7 @@ const pendingRegistrationSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: true
+    required: false // Optional for password reset flow
   },
   otp: {
     type: String,

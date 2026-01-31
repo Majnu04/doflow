@@ -16,6 +16,9 @@ const createTransporter = () => {
       user: process.env.EMAIL_USER,
       pass: process.env.EMAIL_PASSWORD,
     },
+    tls: {
+      rejectUnauthorized: false
+    }
   });
 };
 
@@ -31,112 +34,109 @@ export const sendPasswordResetOTP = async (email, name, otp) => {
   const mailOptions = {
     from: `"${process.env.EMAIL_FROM_NAME || 'DoFlow Academy'}" <${process.env.EMAIL_USER}>`,
     to: email,
-    subject: 'Password Reset OTP - DoFlow Academy',
+    subject: 'Password Reset Verification Code',
     html: `
       <!DOCTYPE html>
-      <html>
+      <html lang="en">
       <head>
-        <style>
-          body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-          }
-          .container {
-            max-width: 600px;
-            margin: 20px auto;
-            background: #ffffff;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-          }
-          .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 30px;
-            text-align: center;
-            color: white;
-          }
-          .header h1 {
-            margin: 0;
-            font-size: 28px;
-          }
-          .content {
-            padding: 30px;
-          }
-          .otp-box {
-            background: #f8f9fa;
-            border: 2px dashed #dc3545;
-            border-radius: 8px;
-            padding: 20px;
-            text-align: center;
-            margin: 25px 0;
-          }
-          .otp-code {
-            font-size: 36px;
-            font-weight: bold;
-            color: #dc3545;
-            letter-spacing: 8px;
-            margin: 10px 0;
-          }
-          .footer {
-            background: #f8f9fa;
-            padding: 20px;
-            text-align: center;
-            font-size: 14px;
-            color: #666;
-          }
-          .warning {
-            background: #fff3cd;
-            border-left: 4px solid #ffc107;
-            padding: 12px;
-            margin: 20px 0;
-            border-radius: 4px;
-          }
-          .alert {
-            background: #f8d7da;
-            border-left: 4px solid #dc3545;
-            padding: 12px;
-            margin: 20px 0;
-            border-radius: 4px;
-            color: #721c24;
-          }
-        </style>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Password Reset Verification</title>
       </head>
-      <body>
-        <div class="container">
-          <div class="header">
-            <h1>🔒 DoFlow Academy</h1>
-          </div>
-          <div class="content">
-            <h2 style="color: #333; margin-bottom: 20px;">Hi ${name}! 👋</h2>
-            <p>We received a request to reset your password. Use the OTP code below to set a new password:</p>
-            
-            <div class="otp-box">
-              <p style="margin: 0; font-size: 14px; color: #666;">Your Password Reset OTP</p>
-              <div class="otp-code">${otp}</div>
-              <p style="margin: 0; font-size: 12px; color: #999;">Valid for 10 minutes</p>
-            </div>
+      <body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #f5f7fa; line-height: 1.6;">
+        <!-- Email Container -->
+        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color: #f5f7fa; padding: 40px 20px;">
+          <tr>
+            <td align="center">
+              <!-- Main Card -->
+              <table role="presentation" width="600" cellspacing="0" cellpadding="0" border="0" style="max-width: 600px; width: 100%; background-color: #ffffff; border-radius: 12px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07); overflow: hidden;">
+                
+                <!-- Header Section -->
+                <tr>
+                  <td style="background: linear-gradient(135deg, #e06438 0%, #f3a45c 100%); padding: 48px 40px; text-align: center;">
+                    <h1 style="margin: 0; font-size: 28px; font-weight: 600; color: #ffffff; letter-spacing: -0.5px;">DoFlow</h1>
+                    <p style="margin: 12px 0 0 0; font-size: 15px; color: rgba(255, 255, 255, 0.9); font-weight: 400;">Professional Learning Platform</p>
+                  </td>
+                </tr>
 
-            <div class="alert">
-              <strong>⚠️ Security Alert:</strong> If you didn't request this password reset, please ignore this email and ensure your account is secure.
-            </div>
+                <!-- Content Section -->
+                <tr>
+                  <td style="padding: 48px 40px;">
+                    <h2 style="margin: 0 0 12px 0; font-size: 24px; font-weight: 600; color: #1a1f36; line-height: 1.3;">Password Reset Request</h2>
+                    <p style="margin: 0 0 24px 0; font-size: 15px; color: #697386; line-height: 1.6;">Hello ${name},</p>
+                    <p style="margin: 0 0 32px 0; font-size: 15px; color: #697386; line-height: 1.6;">We received a request to reset your password. Please use the verification code below to proceed with resetting your password:</p>
+                    
+                    <!-- OTP Box -->
+                    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin: 0 0 32px 0;">
+                      <tr>
+                        <td style="background-color: #fef8f5; border: 2px solid #f3a45c; border-radius: 8px; padding: 32px; text-align: center;">
+                          <p style="margin: 0 0 12px 0; font-size: 13px; font-weight: 500; color: #8896ab; text-transform: uppercase; letter-spacing: 0.5px;">Verification Code</p>
+                          <p style="margin: 0 0 12px 0; font-size: 42px; font-weight: 700; color: #e06438; letter-spacing: 12px; font-family: 'Courier New', monospace;">${otp}</p>
+                          <p style="margin: 0; font-size: 13px; color: #8896ab;">Expires in 10 minutes</p>
+                        </td>
+                      </tr>
+                    </table>
 
-            <div class="warning">
-              <strong>🔐 Important:</strong> Never share this OTP with anyone, including DoFlow staff. We will never ask for your OTP.
-            </div>
+                    <!-- Security Notice -->
+                    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin: 0 0 24px 0;">
+                      <tr>
+                        <td style="background-color: #fef5f5; border-left: 4px solid #e63946; border-radius: 6px; padding: 20px 20px 20px 24px;">
+                          <p style="margin: 0 0 8px 0; font-size: 14px; font-weight: 600; color: #c53030;">Security Alert</p>
+                          <p style="margin: 0; font-size: 14px; color: #5a2626; line-height: 1.5;">If you did not request a password reset, please secure your account immediately and contact our support team.</p>
+                        </td>
+                      </tr>
+                    </table>
 
-            <p style="color: #666; margin-top: 20px;">
-              This OTP will expire in 10 minutes. If you didn't request a password reset, you can safely ignore this email.
-            </p>
-          </div>
-          <div class="footer">
-            <p style="margin: 0 0 10px 0;">© ${new Date().getFullYear()} DoFlow Academy. All rights reserved.</p>
-            <p style="margin: 0;">Need help? Contact us at <a href="mailto:support@doflow.com" style="color: #667eea;">support@doflow.com</a></p>
-          </div>
-        </div>
+                    <!-- Important Notice -->
+                    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin: 0 0 32px 0;">
+                      <tr>
+                        <td style="background-color: #fef8f5; border-left: 4px solid #e06438; border-radius: 6px; padding: 20px 20px 20px 24px;">
+                          <p style="margin: 0 0 8px 0; font-size: 14px; font-weight: 600; color: #1a1f36;">Keep This Secure</p>
+                          <p style="margin: 0; font-size: 14px; color: #4e5d78; line-height: 1.5;">Never share this code with anyone. DoFlow staff will never ask for your verification code.</p>
+                        </td>
+                      </tr>
+                    </table>
+
+                    <!-- CTA Buttons -->
+                    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin: 0 0 32px 0;">
+                      <tr>
+                        <td align="center">
+                          <a href="${process.env.FRONTEND_URL || 'http://localhost:5173'}/#/forgot-password" style="display: inline-block; padding: 14px 32px; background: linear-gradient(135deg, #e06438 0%, #f3a45c 100%); color: #ffffff; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 15px; box-shadow: 0 2px 4px rgba(224, 100, 56, 0.3);">Reset Password</a>
+                        </td>
+                      </tr>
+                    </table>
+
+                    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                      <tr>
+                        <td align="center">
+                          <a href="${process.env.FRONTEND_URL || 'http://localhost:5173'}/#/help" style="display: inline-block; color: #e06438; text-decoration: none; font-size: 14px; font-weight: 500;">Need Help? Contact Support</a>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+
+                <!-- Footer Section -->
+                <tr>
+                  <td style="background-color: #fef8f5; padding: 32px 40px; border-top: 1px solid #e3e8ef;">
+                    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                      <tr>
+                        <td align="center">
+                          <p style="margin: 0 0 8px 0; font-size: 14px; font-weight: 600; color: #1a1f36;">DoFlow Academy</p>
+                          <p style="margin: 0 0 16px 0; font-size: 13px; color: #8896ab;">Professional Online Learning Platform</p>
+                          <p style="margin: 0 0 12px 0; font-size: 13px; color: #8896ab;">
+                            <a href="mailto:support@doflow.academy" style="color: #e06438; text-decoration: none;">support@doflow.academy</a>
+                          </p>
+                          <p style="margin: 0; font-size: 12px; color: #adb5c4;">© ${new Date().getFullYear()} DoFlow Academy. All rights reserved.</p>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
       </body>
       </html>
     `
@@ -164,100 +164,97 @@ export const sendRegistrationOTP = async (email, name, otp) => {
   const mailOptions = {
     from: `"${process.env.EMAIL_FROM_NAME || 'DoFlow Academy'}" <${process.env.EMAIL_USER}>`,
     to: email,
-    subject: 'Your Registration OTP - DoFlow Academy',
+    subject: 'Complete Your Registration',
     html: `
       <!DOCTYPE html>
-      <html>
+      <html lang="en">
       <head>
-        <style>
-          body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-          }
-          .container {
-            max-width: 600px;
-            margin: 20px auto;
-            background: #ffffff;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-          }
-          .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 30px;
-            text-align: center;
-            color: white;
-          }
-          .header h1 {
-            margin: 0;
-            font-size: 28px;
-          }
-          .content {
-            padding: 30px;
-          }
-          .otp-box {
-            background: #f8f9fa;
-            border: 2px dashed #667eea;
-            border-radius: 8px;
-            padding: 20px;
-            text-align: center;
-            margin: 25px 0;
-          }
-          .otp-code {
-            font-size: 36px;
-            font-weight: bold;
-            color: #667eea;
-            letter-spacing: 8px;
-            margin: 10px 0;
-          }
-          .footer {
-            background: #f8f9fa;
-            padding: 20px;
-            text-align: center;
-            font-size: 14px;
-            color: #666;
-          }
-          .warning {
-            background: #fff3cd;
-            border-left: 4px solid #ffc107;
-            padding: 12px;
-            margin: 20px 0;
-            border-radius: 4px;
-          }
-        </style>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Complete Registration</title>
       </head>
-      <body>
-        <div class="container">
-          <div class="header">
-            <h1>🎓 DoFlow Academy</h1>
-          </div>
-          <div class="content">
-            <h2 style="color: #333; margin-bottom: 20px;">Hi ${name}! 👋</h2>
-            <p>Thank you for signing up with DoFlow Academy! To complete your registration, please use the OTP code below:</p>
-            
-            <div class="otp-box">
-              <p style="margin: 0; font-size: 14px; color: #666;">Your OTP Code</p>
-              <div class="otp-code">${otp}</div>
-              <p style="margin: 0; font-size: 12px; color: #999;">Valid for 10 minutes</p>
-            </div>
+      <body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #f5f7fa; line-height: 1.6;">
+        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color: #f5f7fa; padding: 40px 20px;">
+          <tr>
+            <td align="center">
+              <table role="presentation" width="600" cellspacing="0" cellpadding="0" border="0" style="max-width: 600px; width: 100%; background-color: #ffffff; border-radius: 12px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07); overflow: hidden;">
+                
+                <!-- Header -->
+                <tr>
+                  <td style="background: linear-gradient(135deg, #e06438 0%, #f3a45c 100%); padding: 48px 40px; text-align: center;">
+                    <h1 style="margin: 0; font-size: 28px; font-weight: 600; color: #ffffff; letter-spacing: -0.5px;">DoFlow</h1>
+                    <p style="margin: 12px 0 0 0; font-size: 15px; color: rgba(255, 255, 255, 0.9); font-weight: 400;">Professional Learning Platform</p>
+                  </td>
+                </tr>
 
-            <div class="warning">
-              <strong>⚠️ Security Notice:</strong> Never share this OTP with anyone. DoFlow staff will never ask for your OTP.
-            </div>
+                <!-- Content -->
+                <tr>
+                  <td style="padding: 48px 40px;">
+                    <h2 style="margin: 0 0 12px 0; font-size: 24px; font-weight: 600; color: #1a1f36; line-height: 1.3;">Welcome to DoFlow!</h2>
+                    <p style="margin: 0 0 24px 0; font-size: 15px; color: #697386; line-height: 1.6;">Hello ${name},</p>
+                    <p style="margin: 0 0 32px 0; font-size: 15px; color: #697386; line-height: 1.6;">Thank you for joining DoFlow Academy. To complete your registration and start your learning journey, please verify your email using the code below:</p>
+                    
+                    <!-- OTP Box -->
+                    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin: 0 0 32px 0;">
+                      <tr>
+                        <td style="background-color: #fef8f5; border: 2px solid #f3a45c; border-radius: 8px; padding: 32px; text-align: center;">
+                          <p style="margin: 0 0 12px 0; font-size: 13px; font-weight: 500; color: #8896ab; text-transform: uppercase; letter-spacing: 0.5px;">Verification Code</p>
+                          <p style="margin: 0 0 12px 0; font-size: 42px; font-weight: 700; color: #e06438; letter-spacing: 12px; font-family: 'Courier New', monospace;">${otp}</p>
+                          <p style="margin: 0; font-size: 13px; color: #8896ab;">Expires in 10 minutes</p>
+                        </td>
+                      </tr>
+                    </table>
 
-            <p style="color: #666; margin-top: 20px;">
-              If you didn't request this registration, please ignore this email.
-            </p>
-          </div>
-          <div class="footer">
-            <p style="margin: 0 0 10px 0;">© ${new Date().getFullYear()} DoFlow Academy. All rights reserved.</p>
-            <p style="margin: 0;">Need help? Contact us at <a href="mailto:support@doflow.com" style="color: #667eea;">support@doflow.com</a></p>
-          </div>
-        </div>
+                    <!-- Info Notice -->
+                    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin: 0 0 32px 0;">
+                      <tr>
+                        <td style="background-color: #fef8f5; border-left: 4px solid #e06438; border-radius: 6px; padding: 20px 20px 20px 24px;">
+                          <p style="margin: 0 0 8px 0; font-size: 14px; font-weight: 600; color: #1a1f36;">Keep This Secure</p>
+                          <p style="margin: 0; font-size: 14px; color: #4e5d78; line-height: 1.5;">Never share this code with anyone. DoFlow staff will never ask for your verification code.</p>
+                        </td>
+                      </tr>
+                    </table>
+
+                    <!-- CTA Buttons -->
+                    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin: 0 0 32px 0;">
+                      <tr>
+                        <td align="center">
+                          <a href="${process.env.FRONTEND_URL || 'http://localhost:5173'}" style="display: inline-block; padding: 14px 32px; background: linear-gradient(135deg, #e06438 0%, #f3a45c 100%); color: #ffffff; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 15px; box-shadow: 0 2px 4px rgba(224, 100, 56, 0.3);">Go to Dashboard</a>
+                        </td>
+                      </tr>
+                    </table>
+
+                    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                      <tr>
+                        <td align="center">
+                          <a href="${process.env.FRONTEND_URL || 'http://localhost:5173'}/#/courses" style="display: inline-block; color: #e06438; text-decoration: none; font-size: 14px; font-weight: 500;">Browse Courses</a>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+
+                <!-- Footer -->
+                <tr>
+                  <td style="background-color: #fef8f5; padding: 32px 40px; border-top: 1px solid #e3e8ef;">
+                    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                      <tr>
+                        <td align="center">
+                          <p style="margin: 0 0 8px 0; font-size: 14px; font-weight: 600; color: #1a1f36;">DoFlow Academy</p>
+                          <p style="margin: 0 0 16px 0; font-size: 13px; color: #8896ab;">Professional Online Learning Platform</p>
+                          <p style="margin: 0 0 12px 0; font-size: 13px; color: #8896ab;">
+                            <a href="mailto:support@doflow.academy" style="color: #e06438; text-decoration: none;">support@doflow.academy</a>
+                          </p>
+                          <p style="margin: 0; font-size: 12px; color: #adb5c4;">© ${new Date().getFullYear()} DoFlow Academy. All rights reserved.</p>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
       </body>
       </html>
     `
@@ -560,91 +557,107 @@ export const sendWelcomeEmail = async (email, name) => {
   const mailOptions = {
     from: `"${process.env.EMAIL_FROM_NAME || 'DoFlow Academy'}" <${process.env.EMAIL_USER}>`,
     to: email,
-    subject: 'Welcome to DoFlow Academy! 🎉',
+    subject: 'Welcome to DoFlow Academy',
     html: `
       <!DOCTYPE html>
-      <html>
+      <html lang="en">
       <head>
-        <style>
-          body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-          }
-          .container {
-            max-width: 600px;
-            margin: 20px auto;
-            background: #ffffff;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-          }
-          .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 40px;
-            text-align: center;
-            color: white;
-          }
-          .content {
-            padding: 30px;
-          }
-          .button {
-            display: inline-block;
-            padding: 12px 30px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            font-weight: bold;
-            margin: 20px 0;
-          }
-          .feature-box {
-            background: #f8f9fa;
-            padding: 15px;
-            margin: 10px 0;
-            border-radius: 5px;
-            border-left: 4px solid #667eea;
-          }
-        </style>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Welcome to DoFlow</title>
       </head>
-      <body>
-        <div class="container">
-          <div class="header">
-            <h1>🎉 Welcome to DoFlow!</h1>
-          </div>
-          <div class="content">
-            <h2>Your Learning Journey Begins Now, ${name}! 🚀</h2>
-            <p>Your email has been verified successfully. You're all set to start learning!</p>
-            
-            <h3>What You Can Do Now:</h3>
-            
-            <div class="feature-box">
-              <strong>📚 Browse Courses</strong><br>
-              Explore our extensive library of courses in web development, data science, and more.
-            </div>
-            
-            <div class="feature-box">
-              <strong>💻 Practice DSA</strong><br>
-              Access our Data Structures & Algorithms roadmap with 180+ practice problems.
-            </div>
-            
-            <div class="feature-box">
-              <strong>🎓 Earn Certificates</strong><br>
-              Complete courses and earn industry-recognized certificates.
-            </div>
-            
-            <div style="text-align: center; margin: 30px 0;">
-              <a href="${process.env.FRONTEND_URL || 'http://localhost:5173'}/#/courses" class="button">Start Learning Now</a>
-            </div>
-            
-            <p>Need help? Our support team is here for you 24/7 at support@doflow.academy</p>
-            
-            <p>Happy Learning!<br>The DoFlow Team 💜</p>
-          </div>
-        </div>
+      <body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #f5f7fa; line-height: 1.6;">
+        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color: #f5f7fa; padding: 40px 20px;">
+          <tr>
+            <td align="center">
+              <table role="presentation" width="600" cellspacing="0" cellpadding="0" border="0" style="max-width: 600px; width: 100%; background-color: #ffffff; border-radius: 12px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07); overflow: hidden;">
+                
+                <!-- Header -->
+                <tr>
+                  <td style="background: linear-gradient(135deg, #e06438 0%, #f3a45c 100%); padding: 56px 40px; text-align: center;">
+                    <h1 style="margin: 0 0 16px 0; font-size: 32px; font-weight: 600; color: #ffffff; letter-spacing: -0.5px;">Welcome to DoFlow</h1>
+                    <p style="margin: 0; font-size: 16px; color: rgba(255, 255, 255, 0.95); font-weight: 400;">Your learning journey starts today</p>
+                  </td>
+                </tr>
+
+                <!-- Content -->
+                <tr>
+                  <td style="padding: 48px 40px;">
+                    <h2 style="margin: 0 0 12px 0; font-size: 24px; font-weight: 600; color: #1a1f36; line-height: 1.3;">Hello ${name},</h2>
+                    <p style="margin: 0 0 32px 0; font-size: 15px; color: #697386; line-height: 1.6;">Your email has been verified successfully. You now have full access to our platform and all its features. We're excited to support you on your learning journey.</p>
+                    
+                    <h3 style="margin: 0 0 20px 0; font-size: 18px; font-weight: 600; color: #1a1f36;">What's available to you:</h3>
+
+                    <!-- Feature Boxes -->
+                    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin: 0 0 16px 0;">
+                      <tr>
+                        <td style="background-color: #fef8f5; border-left: 4px solid #e06438; border-radius: 6px; padding: 20px 20px 20px 24px;">
+                          <p style="margin: 0 0 8px 0; font-size: 15px; font-weight: 600; color: #1a1f36;">Comprehensive Course Library</p>
+                          <p style="margin: 0; font-size: 14px; color: #4e5d78; line-height: 1.5;">Access hundreds of courses in web development, data science, and emerging technologies.</p>
+                        </td>
+                      </tr>
+                    </table>
+
+                    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin: 0 0 16px 0;">
+                      <tr>
+                        <td style="background-color: #fef8f5; border-left: 4px solid #f3a45c; border-radius: 6px; padding: 20px 20px 20px 24px;">
+                          <p style="margin: 0 0 8px 0; font-size: 15px; font-weight: 600; color: #1a1f36;">DSA Practice Platform</p>
+                          <p style="margin: 0; font-size: 14px; color: #4e5d78; line-height: 1.5;">Master data structures and algorithms with 180+ curated problems and detailed solutions.</p>
+                        </td>
+                      </tr>
+                    </table>
+
+                    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin: 0 0 32px 0;">
+                      <tr>
+                        <td style="background-color: #fef8f5; border-left: 4px solid #e06438; border-radius: 6px; padding: 20px 20px 20px 24px;">
+                          <p style="margin: 0 0 8px 0; font-size: 15px; font-weight: 600; color: #1a1f36;">Professional Certificates</p>
+                          <p style="margin: 0; font-size: 14px; color: #4e5d78; line-height: 1.5;">Earn industry-recognized certificates to showcase your skills and advance your career.</p>
+                        </td>
+                      </tr>
+                    </table>
+
+                    <!-- CTA Buttons -->
+                    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin: 0 0 24px 0;">
+                      <tr>
+                        <td align="center">
+                          <a href="${process.env.FRONTEND_URL || 'http://localhost:5173'}/#/courses" style="display: inline-block; padding: 14px 32px; background: linear-gradient(135deg, #e06438 0%, #f3a45c 100%); color: #ffffff; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 15px; box-shadow: 0 2px 4px rgba(224, 100, 56, 0.3);">Start Learning</a>
+                        </td>
+                      </tr>
+                    </table>
+
+                    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin: 0 0 24px 0;">
+                      <tr>
+                        <td align="center">
+                          <a href="${process.env.FRONTEND_URL || 'http://localhost:5173'}/#/dashboard" style="display: inline-block; color: #e06438; text-decoration: none; font-size: 14px; font-weight: 500;">View Dashboard</a>
+                        </td>
+                      </tr>
+                    </table>
+
+                    <p style="margin: 0; font-size: 14px; color: #697386; line-height: 1.6; text-align: center;">If you need any assistance, our support team is available 24/7.</p>
+                  </td>
+                </tr>
+
+                <!-- Footer -->
+                <tr>
+                  <td style="background-color: #fef8f5; padding: 32px 40px; border-top: 1px solid #e3e8ef;">
+                    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                      <tr>
+                        <td align="center">
+                          <p style="margin: 0 0 8px 0; font-size: 14px; font-weight: 600; color: #1a1f36;">DoFlow Academy</p>
+                          <p style="margin: 0 0 16px 0; font-size: 13px; color: #8896ab;">Professional Online Learning Platform</p>
+                          <p style="margin: 0 0 12px 0; font-size: 13px; color: #8896ab;">
+                            <a href="mailto:support@doflow.academy" style="color: #e06438; text-decoration: none;">support@doflow.academy</a>
+                          </p>
+                          <p style="margin: 0; font-size: 12px; color: #adb5c4;">© ${new Date().getFullYear()} DoFlow Academy. All rights reserved.</p>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
       </body>
       </html>
     `
