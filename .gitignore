@@ -28,6 +28,9 @@ coverage
 backend/notes_in
 backend/notes_out
 
+# Script caches / scratch
+backend/scripts/.cache
+
 # Optional: PDF/image processing scratch
 backend/.cache
 
