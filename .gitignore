@@ -45,3 +45,6 @@ Thumbs.db
 *.njsproj
 *.sln
 *.sw?
+
+# Accidental nested workspace folder
+doflow-main/
