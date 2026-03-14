@@ -1,0 +1,54 @@
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Local-only docs (removed from repo)
+*.md
+*.MD
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Vite/TS caches
+.vite
+*.tsbuildinfo
+
+# Test/coverage output
+coverage
+
+# Generated course note artifacts (keep local; can be large)
+backend/notes_in
+backend/notes_out
+
+# Script caches / scratch
+backend/scripts/.cache
+
+# Optional: PDF/image processing scratch
+backend/.cache
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+Thumbs.db
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Accidental nested workspace folder
+doflow-main/

@@ -1,0 +1,5 @@
+{
+  "name": "DoFlow",
+  "description": "A modern, full-featured MERN course selling platform. It includes student and admin dashboards, payment simulation, progress tracking, reviews, and analytics, all wrapped in a sleek, responsive UI.",
+  "requestFramePermissions": []
+}
