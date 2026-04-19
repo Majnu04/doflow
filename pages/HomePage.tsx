@@ -124,6 +124,13 @@ const HomePage: React.FC = () => {
   ];
 
   const heroCourse = featuredCourses[0];
+  const heroFallbackImage = 'https://images.unsplash.com/photo-1513258496099-48168024aec0?auto=format&fit=crop&w=1400&q=80';
+  const featuredFallbackImages = [
+    'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1515879218367-8466d910aaa4?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1526378722484-bd91ca387e72?auto=format&fit=crop&w=1200&q=80',
+  ];
 
   return (
     <div className="min-h-screen bg-light-bg text-light-text transition-colors duration-300">
@@ -195,11 +202,11 @@ const HomePage: React.FC = () => {
                   <Badge variant="secondary" className="hidden md:inline-flex">Live</Badge>
                 </div>
                 <div className="relative h-48 rounded-2xl overflow-hidden mb-6">
-                  {heroCourse?.thumbnail ? (
-                    <img src={heroCourse.thumbnail} alt={heroCourse.title} className="w-full h-full object-cover scale-105" />
-                  ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-brand-primary/30 via-brand-gold/20 to-transparent" />
-                  )}
+                  <img
+                    src={heroCourse?.thumbnail || heroFallbackImage}
+                    alt={heroCourse?.title || 'Course preview'}
+                    className="w-full h-full object-cover scale-105"
+                  />
                 </div>
                 <div className="flex flex-wrap gap-6 text-sm text-light-textMuted">
                   <div>
@@ -329,7 +336,7 @@ const HomePage: React.FC = () => {
                 <EmptyState title="No Courses Yet" message="No featured courses available at the moment." />
               </div>
             ) : (
-              featuredCourses.map((course) => (
+              featuredCourses.map((course, index) => (
                 <button
                   key={course._id}
                   onClick={() => {
@@ -343,7 +350,7 @@ const HomePage: React.FC = () => {
                 >
                   <div className="relative h-48 overflow-hidden">
                     <img
-                      src={course.thumbnail}
+                      src={course.thumbnail || featuredFallbackImages[index % featuredFallbackImages.length]}
                       alt={course.title}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />
@@ -358,7 +365,7 @@ const HomePage: React.FC = () => {
                     <h3 className="text-lg font-bold text-light-text mb-2 line-clamp-2 group-hover:text-brand-primary transition-colors">
                       {course.title}
                     </h3>
-                    <p className="text-sm text-light-textSecondary mb-4">by {typeof course.instructor === 'string' ? course.instructor : course.instructor?.name || 'DoFlow Academy'}</p>
+                    <p className="text-sm text-light-textSecondary mb-4">by DoFlow</p>
 
                     <div className="flex items-center gap-4 mb-4 text-xs text-light-textMuted">
                       <div className="flex items-center gap-1">
@@ -383,9 +390,9 @@ const HomePage: React.FC = () => {
                           <span className="text-xl font-bold text-brand-primary">Free</span>
                         ) : (
                           <div className="flex items-baseline gap-2">
-                            <span className="text-xl font-bold text-light-text">${course.price}</span>
+                            <span className="text-xl font-bold text-light-text">₹{Math.round(course.price).toLocaleString('en-IN')}</span>
                             {course.originalPrice && course.originalPrice > course.price && (
-                              <span className="text-sm text-light-textMuted line-through">${course.originalPrice}</span>
+                              <span className="text-sm text-light-textMuted line-through">₹{Math.round(course.originalPrice).toLocaleString('en-IN')}</span>
                             )}
                           </div>
                         )}

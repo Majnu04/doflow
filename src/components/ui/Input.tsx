@@ -8,12 +8,12 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 }
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ label, error, icon, helperText, className = '', ...props }, ref) => {
+  ({ label, error, icon, helperText, className = '', style, ...props }, ref) => {
     const inputClasses = `
       w-full px-4 py-3 ${icon ? 'pl-12' : ''}
       bg-white/90
       border ${error ? 'border-red-500/70' : 'border-border-subtle'}
-      rounded-2xl text-light-text placeholder-light-textMuted/70
+      rounded-2xl text-light-text caret-light-text placeholder-light-textMuted/70
       focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/18 focus:shadow-[0_12px_30px_rgba(224,100,56,0.14)]
       transition-all duration-200
       ${className}
@@ -35,6 +35,12 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           <input
             ref={ref}
             className={inputClasses}
+            style={{
+              color: 'var(--page-text)',
+              WebkitTextFillColor: 'var(--page-text)',
+              caretColor: 'var(--page-text)',
+              ...style,
+            }}
             {...props}
           />
         </div>

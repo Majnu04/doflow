@@ -38,7 +38,7 @@ const Footer: React.FC = () => {
       <div className="absolute inset-0 pointer-events-none bg-soft-vignette" />
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Main Footer Content */}
-        <div className="pt-10 pb-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12">
+        <div className="pt-10 pb-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12">
           {/* Company Info */}
           <div className="lg:col-span-2">
             <a href="/#/" className="flex items-center gap-3 mb-6 group">
@@ -127,7 +127,7 @@ const Footer: React.FC = () => {
         </div>
 
         {/* Bottom Bar */}
-        <div className="py-8 border-t border-border-subtle transition-colors duration-300">
+        <div className="py-5 border-t border-border-subtle transition-colors duration-300">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             {/* Copyright */}
             <p className="text-light-textMuted text-sm transition-colors duration-300">

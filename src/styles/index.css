@@ -134,6 +134,31 @@
     outline: none;
   }
 
+  input,
+  textarea,
+  select {
+    color: var(--page-text);
+    caret-color: var(--page-text);
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: var(--page-text-muted);
+    opacity: 0.75;
+  }
+
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  textarea:-webkit-autofill,
+  textarea:-webkit-autofill:hover,
+  textarea:-webkit-autofill:focus {
+    -webkit-text-fill-color: var(--page-text);
+    caret-color: var(--page-text);
+    box-shadow: 0 0 0px 1000px rgba(255, 255, 255, 0.9) inset;
+    transition: background-color 9999s ease-out 0s;
+  }
+
   input:disabled,
   textarea:disabled,
   select:disabled {

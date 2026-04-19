@@ -165,8 +165,14 @@ const AuthPageNew: React.FC = () => {
     { value: '100+', label: 'Instructors' }
   ];
 
+  const authInputStyle: React.CSSProperties = {
+    color: '#1F232E',
+    WebkitTextFillColor: '#1F232E',
+    caretColor: '#1F232E',
+  };
+
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-12 bg-light-bg">
+    <div className="min-h-[calc(100vh-80px)] flex items-start justify-center px-4 pt-24 md:pt-28 pb-12 bg-light-bg">
       {/* Auth Container */}
       <div className="w-full max-w-6xl mx-auto grid md:grid-cols-2 gap-8 items-center">
         {/* Left Side - Branding */}
@@ -213,15 +219,15 @@ const AuthPageNew: React.FC = () => {
 
         {/* Right Side - Auth Form */}
         <div>
-          <div className="bg-light-card border border-light-border rounded-xl p-6 md:p-8 shadow-sm">
+          <div className="bg-light-card border border-border-subtle rounded-2xl p-6 md:p-8 shadow-[0_20px_50px_rgba(32,29,25,0.08)]">
             {/* Tab Switcher */}
-            <div className="flex gap-2 mb-6 p-1 bg-light-cardAlt rounded-lg">
+            <div className="flex gap-2 mb-6 p-1 bg-light-cardAlt rounded-xl border border-border-subtle/70">
               <button
                 onClick={() => setIsLogin(true)}
                 className={`flex-1 py-2.5 px-6 rounded-md font-medium transition-all ${
                   isLogin
                     ? 'bg-brand-primary text-white shadow-sm'
-                    : 'text-light-textMuted hover:text-light-text'
+                    : 'text-light-textSecondary hover:text-light-text hover:bg-white/70'
                 }`}
               >
                 Login
@@ -231,7 +237,7 @@ const AuthPageNew: React.FC = () => {
                 className={`flex-1 py-2.5 px-6 rounded-md font-medium transition-all ${
                   !isLogin
                     ? 'bg-brand-primary text-white shadow-sm'
-                    : 'text-light-textMuted hover:text-light-text'
+                    : 'text-light-textSecondary hover:text-light-text hover:bg-white/70'
                 }`}
               >
                 Sign Up
@@ -310,6 +316,8 @@ const AuthPageNew: React.FC = () => {
                     placeholder="Full Name"
                     icon={<FiUser className="w-5 h-5" />}
                     label="Full Name"
+                    style={authInputStyle}
+                    className="!bg-white !border-border-subtle placeholder:!text-light-textMuted/80"
                     required
                   />
                 )}
@@ -322,6 +330,8 @@ const AuthPageNew: React.FC = () => {
                   placeholder="Enter your email"
                   icon={<FiMail className="w-5 h-5" />}
                   label="Email Address"
+                  style={authInputStyle}
+                  className="!bg-white !border-border-subtle placeholder:!text-light-textMuted/80"
                   required
                 />
 
@@ -334,6 +344,8 @@ const AuthPageNew: React.FC = () => {
                     placeholder="Enter your password"
                     icon={<FiLock className="w-5 h-5" />}
                     label="Password"
+                    style={authInputStyle}
+                    className="!bg-white !border-border-subtle placeholder:!text-light-textMuted/80"
                     required
                 />
                 <button
@@ -350,7 +362,7 @@ const AuthPageNew: React.FC = () => {
                   <label className="flex items-center gap-2 text-light-textSecondary cursor-pointer">
                     <input 
                       type="checkbox" 
-                      className="w-4 h-4 rounded border-light-border accent-brand-primary" 
+                      className="w-4 h-4 rounded border border-border-subtle bg-white accent-brand-primary" 
                     />
                     <span>Remember me</span>
                   </label>
@@ -378,33 +390,6 @@ const AuthPageNew: React.FC = () => {
               </Button>
               </form>
             )}
-
-            {/* Divider */}
-            <div className="relative my-6">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-light-border" />
-              </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-4 bg-light-card text-light-textMuted">Or continue with</span>
-              </div>
-            </div>
-
-            {/* Social Login */}
-            <div className="grid grid-cols-3 gap-2.5">
-              {[
-                { name: 'Google', icon: '🔍', color: 'hover:border-brand-primary' },
-                { name: 'GitHub', icon: '💻', color: 'hover:border-light-text' },
-                { name: 'LinkedIn', icon: '💼', color: 'hover:border-brand-primary' }
-              ].map((social) => (
-                <button
-                  key={social.name}
-                  className={`p-3 bg-light-cardAlt border border-light-border rounded-lg hover:bg-light-card ${social.color} transition-all`}
-                  title={social.name}
-                >
-                  <span className="text-2xl">{social.icon}</span>
-                </button>
-              ))}
-            </div>
 
             {/* Toggle */}
             <p className="text-center text-light-textSecondary mt-6">

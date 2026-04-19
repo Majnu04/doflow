@@ -137,6 +137,13 @@ const UnlockedCurriculum: React.FC<{ modules: Course['modules'] }> = ({ modules 
 
 const CourseDetailsPage: React.FC<{ courseId: string }> = ({ courseId }) => {
     const dispatch = useDispatch<AppDispatch>();
+    const mentorDisplayName = 'DoFlow Mentor';
+
+    const formatInr = (amount: unknown) => {
+        const numericAmount = Number(amount);
+        if (!Number.isFinite(numericAmount)) return '₹0';
+        return `₹${Math.round(numericAmount).toLocaleString('en-IN')}`;
+    };
     
     // Redux state
     const { currentCourse, isLoading, error } = useSelector((state: RootState) => state.courses);
@@ -196,6 +203,7 @@ const CourseDetailsPage: React.FC<{ courseId: string }> = ({ courseId }) => {
 
     const instructorData = getInstructorData();
     const metadata = getCourseMetadata();
+    const coursePreviewFallbackImage = 'https://images.unsplash.com/photo-1484417894907-623942c8ee29?auto=format&fit=crop&w=1400&q=80';
 
     // Check if user is enrolled
     const { items: cartItems } = useSelector((state: RootState) => state.cart);
@@ -441,7 +449,7 @@ const CourseDetailsPage: React.FC<{ courseId: string }> = ({ courseId }) => {
                             <span className="text-sm text-light-textMuted">({metadata.reviewCount.toLocaleString()})</span>
                         </div>
                         <p className="text-light-textSecondary">{metadata.studentCount.toLocaleString()} students</p>
-                        <p className="text-light-textSecondary">By <span className="font-semibold text-brand-primary">{instructorData.name}</span></p>
+                        <p className="text-light-textSecondary">by <span className="font-semibold text-brand-primary">{mentorDisplayName}</span></p>
                     </div>
                 </div>
             </section>
@@ -521,7 +529,7 @@ const CourseDetailsPage: React.FC<{ courseId: string }> = ({ courseId }) => {
                                         }}
                                     />
                                     <div>
-                                        <h3 className="text-xl font-semibold">{instructorData.name}</h3>
+                                        <h3 className="text-xl font-semibold">{mentorDisplayName}</h3>
                                         <p className="text-light-textSecondary mt-2 leading-relaxed">{instructorData.bio}</p>
                                     </div>
                                 </div>
@@ -600,17 +608,21 @@ const CourseDetailsPage: React.FC<{ courseId: string }> = ({ courseId }) => {
                                         </div>
                                     ) : (
                                         <div className="relative">
-                                            <img src={metadata.thumbnail} alt={course.title} className="w-full object-cover aspect-video" />
-                                            <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-                                                <p className="text-white text-lg font-semibold">Video Preview Not Available</p>
-                                            </div>
+                                            <img
+                                                src={metadata.thumbnail || coursePreviewFallbackImage}
+                                                alt={course.title}
+                                                className="w-full object-cover aspect-video"
+                                                onError={(e) => {
+                                                    (e.target as HTMLImageElement).src = coursePreviewFallbackImage;
+                                                }}
+                                            />
                                         </div>
                                     )}
                                     <div className="p-6">
                                         <div className="flex items-baseline gap-3">
-                                            <span className="text-4xl font-bold text-brand-primary">${metadata.displayPrice}</span>
+                                            <span className="text-4xl font-bold text-brand-primary">{formatInr(metadata.displayPrice)}</span>
                                             {metadata.originalPrice && (
-                                                <span className="text-light-textMuted line-through">${metadata.originalPrice}</span>
+                                                <span className="text-light-textMuted line-through">{formatInr(metadata.originalPrice)}</span>
                                             )}
                                         </div>
                                         <div className="mt-5 space-y-3">

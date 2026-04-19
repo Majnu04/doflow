@@ -266,7 +266,8 @@ const ProfilePage: React.FC = () => {
                   onChange={handleChange}
                   placeholder="Your full name"
                   icon={<FiUser className="w-5 h-5" />}
-                  disabled={!isEditing}
+                  readOnly={!isEditing}
+                  className={!isEditing ? 'bg-light-cardAlt text-light-text' : ''}
                   required
                 />
               </div>
@@ -282,7 +283,8 @@ const ProfilePage: React.FC = () => {
                   onChange={handleChange}
                   placeholder="your.email@example.com"
                   icon={<FiMail className="w-5 h-5" />}
-                  disabled={!isEditing}
+                  readOnly={!isEditing}
+                  className={!isEditing ? 'bg-light-cardAlt text-light-text' : ''}
                   required
                 />
               </div>
@@ -298,7 +300,8 @@ const ProfilePage: React.FC = () => {
                   onChange={handleChange}
                   placeholder="+91 1234567890"
                   icon={<FiPhone className="w-5 h-5" />}
-                  disabled={!isEditing}
+                  readOnly={!isEditing}
+                  className={!isEditing ? 'bg-light-cardAlt text-light-text' : ''}
                 />
               </div>
 
@@ -312,8 +315,8 @@ const ProfilePage: React.FC = () => {
                   onChange={handleChange}
                   placeholder="Tell us about yourself..."
                   rows={4}
-                  disabled={!isEditing}
-                  className="w-full px-4 py-3 bg-white/90 border border-border-subtle rounded-2xl text-light-text placeholder-light-textMuted/70 focus:outline-none focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/18 transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed"
+                  readOnly={!isEditing}
+                  className={`w-full px-4 py-3 border border-border-subtle rounded-2xl text-light-text placeholder-light-textMuted/70 focus:outline-none focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/18 transition-all duration-300 ${!isEditing ? 'bg-light-cardAlt' : 'bg-white/90'}`}
                 />
               </div>
 
