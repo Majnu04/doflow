@@ -60,13 +60,9 @@ const Navbar: React.FC = () => {
           {/* Logo */}
           <a 
             href="/#/" 
-            className="flex items-center gap-3 group"
+            className="flex items-center group"
           >
             <img src="/Logo.PNG" alt="DoFlow" className="h-11 w-auto object-contain drop-shadow-sm" />
-            <div className="hidden sm:block">
-              <p className="text-xs font-semibold tracking-[0.28em] uppercase text-brand-primary">DoFlow</p>
-              <p className="text-[11px] text-light-textMuted">Learning platform</p>
-            </div>
           </a>
 
           {/* Desktop Navigation */}
