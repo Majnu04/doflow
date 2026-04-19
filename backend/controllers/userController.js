@@ -78,7 +78,7 @@ export const addToCart = async (req, res) => {
     const alreadyInCart = user.cart.includes(req.params.courseId);
 
     if (alreadyInCart) {
-      return res.status(400).json({ message: 'Course already in cart' });
+      return res.json({ message: 'Course already in cart', alreadyInCart: true });
     }
 
     user.cart.push(req.params.courseId);

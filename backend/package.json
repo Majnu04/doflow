@@ -14,6 +14,7 @@
     "seed:hwi:reset": "set HWI_RESET=1 && node scripts/seedHackWithInfyCourse.js && node scripts/auditHackWithInfyStarters.js",
     "audit:hwi": "node scripts/auditHackWithInfyStarters.js",
     "seed:hwi:verify": "node scripts/seedHackWithInfyCourse.js && node scripts/auditHackWithInfyStarters.js",
+    "price:set-2": "node scripts/setAllCoursePricesTo2.js",
     "smoke:hwi": "node scripts/smokeJudge0HackWithInfyStarters.js",
     "smoke:hwi:quick": "node scripts/smokeJudge0HackWithInfyStarters.js --max 10 --continue",
     "smoke:hwi:all": "node scripts/smokeJudge0HackWithInfyStarters.js --continue"

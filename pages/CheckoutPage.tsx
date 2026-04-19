@@ -29,6 +29,7 @@ const CheckoutPage: React.FC = () => {
   const total = items.reduce((sum, item) => sum + resolveCoursePrice(item), 0);
   const originalTotal = items.reduce((sum, item) => sum + item.price, 0);
   const savings = originalTotal - total;
+  const formatCurrency = (amount: number) => `₹${amount.toLocaleString('en-IN')}`;
   const requiresPaymentGateway = items.some((item) => resolveCoursePrice(item) > 0);
   const ctaLabel = isProcessing
     ? 'Processing...'
@@ -163,11 +164,11 @@ const CheckoutPage: React.FC = () => {
 
   if (items.length === 0) {
     return (
-      <div className="min-h-screen pt-24 pb-12 px-4">
+      <div className="min-h-screen pt-24 pb-12 px-4 bg-light-bg">
         <div className="max-w-7xl mx-auto">
-          <Card variant="default" className="text-center py-20 backdrop-blur-sm bg-gray-900/50">
-            <h2 className="text-3xl font-bold mb-4">Your cart is empty</h2>
-            <p className="text-gray-400 mb-8">Add some courses to checkout</p>
+          <Card variant="glass" className="text-center py-20">
+            <h2 className="text-3xl font-bold text-light-text mb-4">Your cart is empty</h2>
+            <p className="text-light-textSecondary mb-8">Add some courses to checkout</p>
             <Button
               variant="primary"
               onClick={() => window.location.hash = '/courses'}
@@ -181,7 +182,8 @@ const CheckoutPage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen pt-24 pb-12 px-4 bg-elite-navy">
+    <div className="min-h-screen pt-24 pb-12 px-4 bg-light-bg relative overflow-hidden">
+      <div className="absolute inset-0 -z-10 bg-hero-gradient opacity-60" />
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
@@ -194,72 +196,76 @@ const CheckoutPage: React.FC = () => {
           >
             Back to Cart
           </Button>
-          <h1 className="text-4xl font-display font-bold gradient-text mb-2">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-primary/10 text-brand-primary text-sm font-medium mb-4">
+            <FiLock className="w-4 h-4" />
+            Secure Checkout
+          </div>
+          <h1 className="text-4xl font-display font-bold text-light-text mb-2">
             Checkout
           </h1>
-          <p className="text-gray-400">Complete your purchase</p>
+          <p className="text-light-textSecondary">Complete your purchase in under a minute</p>
         </div>
 
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Payment Info */}
           <div className="lg:col-span-2">
-            <Card variant="default" className="p-8">
-              <div className="flex items-center gap-2 mb-6">
+            <Card variant="glass" className="p-8 border-brand-primary/20">
+              <div className="flex items-center gap-2 mb-6 bg-green-500/10 border border-green-500/20 rounded-xl px-4 py-3">
                 <FiLock className="text-green-400" />
-                <span className="text-sm text-gray-400">Secure Payment with Razorpay</span>
+                <span className="text-sm text-light-text">Secure payment powered by Razorpay</span>
               </div>
 
               {/* Payment Info */}
               <div className="mb-8">
-                <h3 className="text-xl font-bold mb-4">Payment Details</h3>
-                <p className="text-gray-400 mb-4">
+                <h3 className="text-xl font-bold text-light-text mb-4">Payment Details</h3>
+                <p className="text-light-textSecondary mb-4 leading-relaxed">
                   Complete your purchase securely with Razorpay. All payment methods including Credit/Debit Cards, Net Banking, UPI, and Wallets are supported.
                 </p>
                 <div className="flex flex-wrap gap-3 mb-6">
-                  <div className="flex items-center gap-2 px-3 py-2 bg-gray-800 rounded">
-                    <FiCreditCard className="text-elite-purple" />
-                    <span className="text-sm">Cards</span>
+                  <div className="flex items-center gap-2 px-3 py-2 bg-light-card border border-border-subtle rounded-lg text-light-text">
+                    <FiCreditCard className="text-brand-primary" />
+                    <span className="text-sm font-medium">Cards</span>
                   </div>
-                  <div className="flex items-center gap-2 px-3 py-2 bg-gray-800 rounded">
+                  <div className="flex items-center gap-2 px-3 py-2 bg-light-card border border-border-subtle rounded-lg text-light-text">
                     <span className="text-lg">📱</span>
-                    <span className="text-sm">UPI</span>
+                    <span className="text-sm font-medium">UPI</span>
                   </div>
-                  <div className="flex items-center gap-2 px-3 py-2 bg-gray-800 rounded">
+                  <div className="flex items-center gap-2 px-3 py-2 bg-light-card border border-border-subtle rounded-lg text-light-text">
                     <span className="text-lg">🏦</span>
-                    <span className="text-sm">Net Banking</span>
+                    <span className="text-sm font-medium">Net Banking</span>
                   </div>
-                  <div className="flex items-center gap-2 px-3 py-2 bg-gray-800 rounded">
-                    <span className="text-lg">�</span>
-                    <span className="text-sm">Wallets</span>
+                  <div className="flex items-center gap-2 px-3 py-2 bg-light-card border border-border-subtle rounded-lg text-light-text">
+                    <span className="text-lg">💼</span>
+                    <span className="text-sm font-medium">Wallets</span>
                   </div>
                 </div>
               </div>
 
               {/* Courses List */}
               <div className="mb-8">
-                <h3 className="text-xl font-bold mb-4">Courses in Cart</h3>
+                <h3 className="text-xl font-bold text-light-text mb-4">Courses in Cart</h3>
                 <div className="space-y-3">
                   {items.map((course) => {
                     const coursePrice = resolveCoursePrice(course);
                     const hasDiscount = typeof course.discountPrice === 'number' && course.discountPrice < course.price;
 
                     return (
-                      <div key={course._id} className="flex items-center gap-3 p-3 bg-gray-800 rounded-lg">
+                      <div key={course._id} className="flex items-center gap-3 p-3 bg-light-card border border-border-subtle rounded-xl">
                       <img
                         src={course.thumbnail || COURSE_PLACEHOLDER}
                         alt={course.title}
-                        className="w-20 h-14 object-cover rounded"
+                        className="w-20 h-14 object-cover rounded-lg border border-border-subtle"
                       />
                       <div className="flex-1">
-                        <h4 className="font-semibold text-sm line-clamp-1">{course.title}</h4>
-                        <p className="text-xs text-gray-400">
+                        <h4 className="font-semibold text-sm text-light-text line-clamp-1">{course.title}</h4>
+                        <p className="text-xs text-light-textSecondary">
                           By {typeof course.instructor === 'object' ? course.instructor?.name : course.instructor}
                         </p>
                       </div>
                       <div className="text-right">
-                        <div className="font-bold text-elite-gold">₹{coursePrice}</div>
+                        <div className="font-bold text-brand-primary">{formatCurrency(coursePrice)}</div>
                         {hasDiscount && (
-                          <div className="text-xs text-gray-500 line-through">₹{course.price}</div>
+                          <div className="text-xs text-light-textMuted line-through">{formatCurrency(course.price)}</div>
                         )}
                       </div>
                       </div>
@@ -281,16 +287,16 @@ const CheckoutPage: React.FC = () => {
               </Button>
 
               {!requiresPaymentGateway && (
-                <p className="text-center text-sm text-green-400 mt-3">
+                <p className="text-center text-sm text-green-600 mt-3">
                   All courses in your cart are free right now. We&apos;ll enroll you instantly—no payment step required.
                 </p>
               )}
 
-              <div className="mt-6 p-4 bg-green-500/10 border border-green-500/20 rounded-lg">
+              <div className="mt-6 p-4 bg-light-card border border-border-subtle rounded-xl">
                 <div className="flex items-start gap-3">
-                  <FiLock className="text-green-400 mt-1 flex-shrink-0" />
-                  <div className="text-sm text-gray-300">
-                    <strong className="text-white">Secure Payment:</strong> Your payment information is encrypted and secure. We never store your card details.
+                  <FiLock className="text-green-600 mt-1 flex-shrink-0" />
+                  <div className="text-sm text-light-textSecondary">
+                    <strong className="text-light-text">Secure Payment:</strong> Your payment information is encrypted and secure. We never store your card details.
                   </div>
                 </div>
               </div>
@@ -299,64 +305,64 @@ const CheckoutPage: React.FC = () => {
 
           {/* Order Summary */}
           <div className="lg:col-span-1">
-            <Card variant="default" className="p-6 sticky top-24 bg-gradient-to-br from-elite-purple/20 to-elite-gold/20">
-              <h3 className="text-2xl font-bold mb-6">Order Summary</h3>
+            <Card variant="glass" className="p-6 sticky top-24 border-brand-primary/20">
+              <h3 className="text-2xl font-bold text-light-text mb-6">Order Summary</h3>
               
               <div className="space-y-3 mb-6">
                 {items.map((course) => {
                   const coursePrice = resolveCoursePrice(course);
                   return (
                     <div key={course._id} className="flex justify-between text-sm">
-                      <span className="text-gray-300 flex-1 line-clamp-1">{course.title}</span>
-                      <span className="text-white ml-2">
-                        ₹{coursePrice}
+                      <span className="text-light-textSecondary flex-1 line-clamp-1">{course.title}</span>
+                      <span className="text-light-text ml-2 font-medium">
+                        {formatCurrency(coursePrice)}
                       </span>
                     </div>
                   );
                 })}
               </div>
 
-              <div className="border-t border-white/10 pt-4 space-y-3">
-                <div className="flex justify-between text-gray-300">
+              <div className="border-t border-border-subtle pt-4 space-y-3">
+                <div className="flex justify-between text-light-textSecondary">
                   <span>Subtotal:</span>
-                  <span>₹{originalTotal}</span>
+                  <span>{formatCurrency(originalTotal)}</span>
                 </div>
                 
                 {savings > 0 && (
-                  <div className="flex justify-between text-green-400">
+                  <div className="flex justify-between text-green-600 font-medium">
                     <span>Discount:</span>
-                    <span>-₹{savings}</span>
+                    <span>-{formatCurrency(savings)}</span>
                   </div>
                 )}
                 
-                <div className="flex justify-between text-gray-300">
+                <div className="flex justify-between text-light-textSecondary">
                   <span>Tax:</span>
                   <span>₹0</span>
                 </div>
 
-                <div className="border-t border-white/10 pt-3">
-                  <div className="flex justify-between text-xl font-bold">
+                <div className="border-t border-border-subtle pt-3">
+                  <div className="flex justify-between text-xl font-bold text-light-text">
                     <span>Total:</span>
-                    <span className="gradient-text">₹{total}</span>
+                    <span className="text-brand-primary">{formatCurrency(total)}</span>
                   </div>
                 </div>
               </div>
 
               <div className="mt-6 space-y-2">
-                <div className="flex items-center gap-2 text-sm text-gray-300">
-                  <FiCheck className="text-green-400" />
+                <div className="flex items-center gap-2 text-sm text-light-textSecondary">
+                  <FiCheck className="text-green-600" />
                   <span>Lifetime access</span>
                 </div>
-                <div className="flex items-center gap-2 text-sm text-gray-300">
-                  <FiCheck className="text-green-400" />
+                <div className="flex items-center gap-2 text-sm text-light-textSecondary">
+                  <FiCheck className="text-green-600" />
                   <span>All future updates</span>
                 </div>
-                <div className="flex items-center gap-2 text-sm text-gray-300">
-                  <FiCheck className="text-green-400" />
+                <div className="flex items-center gap-2 text-sm text-light-textSecondary">
+                  <FiCheck className="text-green-600" />
                   <span>Certificate of completion</span>
                 </div>
-                <div className="flex items-center gap-2 text-sm text-gray-300">
-                  <FiCheck className="text-green-400" />
+                <div className="flex items-center gap-2 text-sm text-light-textSecondary">
+                  <FiCheck className="text-green-600" />
                   <span>30-day money-back guarantee</span>
                 </div>
               </div>

@@ -17,17 +17,42 @@ const StudentDashboard: React.FC = () => {
     }
   }, [dispatch, user]);
 
-  const StatCard: React.FC<{ icon: React.ElementType; title: string; value: string | number; accent: string }> = ({ icon: Icon, title, value, accent }) => (
-    <div className="bg-light-card border border-border-subtle rounded-xl p-5 flex items-center gap-4 transition-all hover:shadow-md hover:border-brand-primary/70">
-      <div className={`p-3 rounded-lg ${accent}`}>
-        <Icon className="text-xl" />
+  const StatCard: React.FC<{
+    icon: React.ElementType;
+    title: string;
+    value: string | number;
+    accent: string;
+    href?: string;
+  }> = ({ icon: Icon, title, value, accent, href }) => {
+    const content = (
+      <>
+        <div className={`p-3 rounded-lg ${accent}`}>
+          <Icon className="text-xl" />
+        </div>
+        <div>
+          <p className="text-light-textMuted text-xs uppercase tracking-wide">{title}</p>
+          <p className="text-2xl font-semibold text-light-text">{value}</p>
+        </div>
+      </>
+    );
+
+    if (href) {
+      return (
+        <a
+          href={href}
+          className="bg-light-card border border-border-subtle rounded-xl p-5 flex items-center gap-4 transition-all hover:shadow-md hover:border-brand-primary/70"
+        >
+          {content}
+        </a>
+      );
+    }
+
+    return (
+      <div className="bg-light-card border border-border-subtle rounded-xl p-5 flex items-center gap-4 transition-all hover:shadow-md hover:border-brand-primary/70">
+        {content}
       </div>
-      <div>
-        <p className="text-light-textMuted text-xs uppercase tracking-wide">{title}</p>
-        <p className="text-2xl font-semibold text-light-text">{value}</p>
-      </div>
-    </div>
-  );
+    );
+  };
 
   if (!user) {
     return (
@@ -43,27 +68,40 @@ const StudentDashboard: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-light-bg text-light-text pt-20 pb-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-light-bg text-light-text pt-20 pb-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+      <div className="absolute inset-0 -z-10 bg-hero-gradient opacity-45" />
       <div className="max-w-7xl mx-auto">
         {/* Welcome Section */}
-        <div className="mb-10">
-          <h1 className="text-4xl font-bold mb-2">Welcome back, {user.name}! 👋</h1>
-          <p className="text-light-textSecondary">Let's continue your learning journey.</p>
+        <div className="mb-10 bg-light-card/90 border border-border-subtle rounded-3xl p-6 md:p-8 shadow-sm backdrop-blur">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div>
+              <h1 className="text-3xl md:text-5xl font-bold text-light-text mb-2">Welcome back, {user.name}! 👋</h1>
+              <p className="text-light-textSecondary text-base md:text-lg">Let's continue your learning journey.</p>
+            </div>
+            <div className="flex flex-wrap gap-3">
+              <a href="#/courses" className="inline-flex items-center px-4 py-2.5 rounded-xl bg-brand-primary text-white font-semibold hover:bg-brand-primaryHover transition-colors">
+                Explore Courses
+              </a>
+              <a href="#/certificates" className="inline-flex items-center px-4 py-2.5 rounded-xl border border-border-subtle bg-light-cardAlt text-light-text font-semibold hover:border-brand-primary/60 hover:text-brand-primary transition-colors">
+                View Certificates
+              </a>
+            </div>
+          </div>
         </div>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-5 mb-10">
+        <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-10">
           <StatCard icon={FaBook} title="Enrolled Courses" value={stats.totalCourses} accent="bg-sky-50 text-sky-600" />
           <StatCard icon={FaChartLine} title="In Progress" value={stats.inProgressCourses} accent="bg-amber-50 text-amber-600" />
           <StatCard icon={FaTrophy} title="Completed" value={stats.completedCourses} accent="bg-emerald-50 text-emerald-600" />
-          <StatCard icon={FaCertificate} title="Certificates" value={stats.certificatesEarned} accent="bg-violet-50 text-violet-600" />
+          <StatCard icon={FaCertificate} title="Certificates" value={stats.certificatesEarned} accent="bg-violet-50 text-violet-600" href="#/certificates" />
           <StatCard icon={FaClock} title="Hours Learned" value={stats.totalHoursLearned} accent="bg-cyan-50 text-cyan-600" />
         </div>
 
         {/* My Courses */}
         <div className="mb-10">
           <div className="flex items-center justify-between mb-5">
-            <h2 className="text-3xl font-bold">My Courses</h2>
+            <h2 className="text-3xl font-bold text-light-text">My Courses</h2>
             <a href="#/courses" className="hidden md:inline-flex items-center gap-2 px-5 py-2.5 bg-light-card hover:bg-light-cardAlt text-light-text font-medium rounded-lg border border-border-subtle transition-all duration-300">
               Browse More
             </a>
@@ -145,21 +183,21 @@ const StudentDashboard: React.FC = () => {
 
         {/* Quick Actions */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          <a href="#/wishlist" className="bg-light-card border border-border-subtle rounded-xl p-6 text-center hover:border-brand-primary hover:shadow-sm transition-all group">
+          <a href="#/wishlist" className="bg-light-card/95 border border-border-subtle rounded-2xl p-6 text-center hover:border-brand-primary hover:shadow-sm transition-all group">
             <FaHeart className="text-4xl text-red-500 mx-auto mb-4 transition-transform group-hover:scale-110" />
-            <h3 className="text-xl font-bold mb-2">My Wishlist</h3>
+            <h3 className="text-xl font-bold text-light-text mb-2">My Wishlist</h3>
             <p className="text-light-textSecondary text-sm">Courses you're interested in.</p>
           </a>
 
-          <a href="#/profile" className="bg-light-card border border-border-subtle rounded-xl p-6 text-center hover:border-brand-primary hover:shadow-sm transition-all group">
+          <a href="#/certificates" className="bg-light-card/95 border border-border-subtle rounded-2xl p-6 text-center hover:border-brand-primary hover:shadow-sm transition-all group">
             <FaCertificate className="text-4xl text-purple-500 mx-auto mb-4 transition-transform group-hover:scale-110" />
-            <h3 className="text-xl font-bold mb-2">My Certificates</h3>
+            <h3 className="text-xl font-bold text-light-text mb-2">My Certificates</h3>
             <p className="text-light-textSecondary text-sm">View and share your achievements.</p>
           </a>
 
-          <a href="#/profile" className="bg-light-card border border-border-subtle rounded-xl p-6 text-center hover:border-brand-primary hover:shadow-sm transition-all group">
+          <a href="#/profile" className="bg-light-card/95 border border-border-subtle rounded-2xl p-6 text-center hover:border-brand-primary hover:shadow-sm transition-all group">
             <FaChartLine className="text-4xl text-blue-500 mx-auto mb-4 transition-transform group-hover:scale-110" />
-            <h3 className="text-xl font-bold mb-2">Learning Analytics</h3>
+            <h3 className="text-xl font-bold text-light-text mb-2">Learning Analytics</h3>
             <p className="text-light-textSecondary text-sm">Track your detailed progress.</p>
           </a>
         </div>

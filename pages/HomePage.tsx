@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState, AppDispatch } from '../src/store';
 import { getCourses } from '../src/store/slices/coursesSlice';
@@ -22,16 +22,18 @@ const HomePage: React.FC = () => {
   const { courses, isLoading, error } = useSelector((state: RootState) => state.courses);
   const [isVisible, setIsVisible] = useState(false);
   const [statProgress, setStatProgress] = useState(0);
+  const hasRequestedCourses = useRef(false);
 
   useEffect(() => {
     setIsVisible(true);
   }, []);
 
   useEffect(() => {
-    if (!courses.length && !isLoading) {
+    if (!hasRequestedCourses.current && !courses.length && !isLoading && !error) {
+      hasRequestedCourses.current = true;
       dispatch(getCourses({}));
     }
-  }, [courses.length, isLoading, dispatch]);
+  }, [courses.length, isLoading, error, dispatch]);
 
   useEffect(() => {
     if (!isVisible) return;
@@ -202,7 +204,7 @@ const HomePage: React.FC = () => {
                 <div className="flex flex-wrap gap-6 text-sm text-light-textMuted">
                   <div>
                     <p className="text-xs uppercase tracking-wide">Mentor</p>
-                    <p className="font-semibold text-light-text">{typeof heroCourse?.instructor === 'string' ? heroCourse?.instructor : heroCourse?.instructor?.name || 'DoFlow Team'}</p>
+                    <p className="font-semibold text-light-text">DOflow instrutor</p>
                   </div>
                   <div>
                     <p className="text-xs uppercase tracking-wide">Duration</p>

@@ -18,9 +18,10 @@ export const retryWithBackoff = async (
     } catch (error: any) {
       lastError = error;
 
-      // Don't retry on client errors (4xx) except 429 (rate limit)
+      // Don't retry on client errors (4xx), including 429.
+      // Retrying a throttled request usually increases the throttle window locally.
       const status = error.response?.status;
-      if (status && status >= 400 && status < 500 && status !== 429) {
+      if (status && status >= 400 && status < 500) {
         throw error;
       }
 

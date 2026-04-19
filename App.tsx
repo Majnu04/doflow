@@ -21,6 +21,7 @@ const DSAProblemsPage = React.lazy(() => import('./pages/DSAProblemsPage'));
 const CartPage = React.lazy(() => import('./pages/CartPage'));
 const WishlistPage = React.lazy(() => import('./pages/WishlistPage'));
 const ProfilePage = React.lazy(() => import('./pages/ProfilePage'));
+const CertificatesPage = React.lazy(() => import('./pages/CertificatesPage'));
 const CheckoutPage = React.lazy(() => import('./pages/CheckoutPage'));
 const ForgotPasswordPage = React.lazy(() => import('./pages/ForgotPasswordPage'));
 
@@ -90,6 +91,10 @@ const App: React.FC = () => {
             window.removeEventListener('hashchange', handleHashChange);
         };
     }, []);
+
+    useEffect(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, [route]);
 
     const normalizedRoute = route.replace('#', '');
 
@@ -164,6 +169,12 @@ const App: React.FC = () => {
                         <ProfilePage />
                     </ProtectedRoute>
                 );
+            case '/certificates':
+                return (
+                    <ProtectedRoute>
+                        <CertificatesPage />
+                    </ProtectedRoute>
+                );
             case '/dashboard':
                 return (
                     <ProtectedRoute>
@@ -217,7 +228,7 @@ const App: React.FC = () => {
             />
             {!hideNavbar && <Navbar />}
             <Suspense fallback={<LoadingFallback />}>
-                <main className={hideNavbar ? '' : 'min-h-[calc(100vh-80px)]'}>
+                <main className={`${hideNavbar ? '' : 'min-h-[calc(100vh-80px)]'} animate-soft`}>
                      {renderRoute()}
                 </main>
             </Suspense>

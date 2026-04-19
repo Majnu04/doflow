@@ -101,6 +101,7 @@ const courseSchema = new mongoose.Schema({
   price: {
     type: Number,
     required: [true, 'Please provide a price'],
+    default: 2,
     min: 0
   },
   discountPrice: {

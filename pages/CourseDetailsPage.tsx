@@ -148,6 +148,15 @@ const CourseDetailsPage: React.FC<{ courseId: string }> = ({ courseId }) => {
     const [isPlaying, setIsPlaying] = useState(false);
     const videoRef = useRef<HTMLVideoElement>(null);
 
+    const getErrorMessage = (err: unknown, fallback: string) => {
+        if (typeof err === 'string' && err.trim()) return err;
+        if (err && typeof err === 'object' && 'message' in err) {
+            const msg = String((err as { message?: unknown }).message || '').trim();
+            if (msg) return msg;
+        }
+        return fallback;
+    };
+
     // Use backend data if available, fallback to mock
     const course = currentCourse || mockCourse;
     
@@ -305,7 +314,7 @@ const CourseDetailsPage: React.FC<{ courseId: string }> = ({ courseId }) => {
             await dispatch(getCart());
             toast.success(`"${course.title}" has been added to your cart!`);
         } catch (error: any) {
-            toast.error(error.message || 'Failed to add to cart');
+            toast.error(getErrorMessage(error, 'Failed to add to cart'));
         } finally {
             setIsAddingToCart(false);
         }
@@ -329,7 +338,7 @@ const CourseDetailsPage: React.FC<{ courseId: string }> = ({ courseId }) => {
         toast.promise(promise, {
             loading: 'Preparing your order...',
             success: (message) => message,
-            error: (err) => err.message || 'Failed to process order',
+            error: (err) => getErrorMessage(err, 'Failed to process order'),
         }).finally(() => {
             setIsProcessingPayment(false);
         });
