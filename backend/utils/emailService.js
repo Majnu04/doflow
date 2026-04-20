@@ -1,10 +1,302 @@
 import nodemailer from 'nodemailer';
 
+const THEME = {
+  brand: '#E06438',
+  brandHover: '#C7542F',
+  accent: '#F3A45C',
+  bg: '#FDFBF8',
+  card: '#FFFFFF',
+  border: '#E5DDD2',
+  text: '#1F232E',
+  textMuted: '#5A6072',
+  chipBg: '#FFE4CC',
+  warningBg: '#FFF4E5',
+  warningBorder: '#F3A45C',
+  dangerBg: '#FEECEC',
+  dangerBorder: '#E06438',
+  successBg: '#EAF9F0',
+  successBorder: '#2A8F5A',
+};
+
+const escapeHtml = (value = '') =>
+  String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+
+const getSenderName = () => process.env.EMAIL_FROM_NAME || 'DoFlow';
+const getSupportEmail = () => process.env.SUPPORT_EMAIL || 'support@doflow.com';
+const getFrontendUrl = () => process.env.FRONTEND_URL || 'http://localhost:5173';
+
+const renderEmailLayout = ({ preheader, badge, title, subtitle, bodyHtml, footerHtml }) => `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>${escapeHtml(title)}</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: ${THEME.bg};
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+      color: ${THEME.text};
+    }
+    .preheader {
+      display: none;
+      visibility: hidden;
+      opacity: 0;
+      color: transparent;
+      height: 0;
+      width: 0;
+      overflow: hidden;
+      mso-hide: all;
+    }
+    .wrapper {
+      width: 100%;
+      padding: 24px 12px;
+      box-sizing: border-box;
+    }
+    .card {
+      max-width: 620px;
+      margin: 0 auto;
+      background: ${THEME.card};
+      border: 1px solid ${THEME.border};
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 16px 34px rgba(32, 29, 25, 0.08);
+    }
+    .header {
+      padding: 28px 28px 16px;
+      background: linear-gradient(135deg, #fff 0%, #fff7ef 100%);
+      border-bottom: 1px solid ${THEME.border};
+    }
+    .logo {
+      display: inline-block;
+      font-size: 22px;
+      font-weight: 800;
+      color: ${THEME.brand};
+      letter-spacing: 0.2px;
+      margin-bottom: 14px;
+    }
+    .chip {
+      display: inline-block;
+      background: ${THEME.chipBg};
+      color: ${THEME.brand};
+      border: 1px solid rgba(224, 100, 56, 0.28);
+      border-radius: 999px;
+      padding: 5px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 14px;
+    }
+    h1 {
+      margin: 0 0 10px;
+      font-size: 28px;
+      line-height: 1.2;
+      color: ${THEME.text};
+    }
+    .subtitle {
+      margin: 0;
+      font-size: 15px;
+      line-height: 1.6;
+      color: ${THEME.textMuted};
+    }
+    .content {
+      padding: 24px 28px 28px;
+      font-size: 15px;
+      line-height: 1.7;
+      color: ${THEME.text};
+    }
+    .footer {
+      background: #fffaf4;
+      border-top: 1px solid ${THEME.border};
+      padding: 18px 28px 24px;
+      font-size: 13px;
+      color: ${THEME.textMuted};
+      line-height: 1.6;
+    }
+    .btn {
+      display: inline-block;
+      background: ${THEME.brand};
+      color: #ffffff !important;
+      text-decoration: none;
+      font-weight: 700;
+      border-radius: 10px;
+      padding: 12px 22px;
+      margin: 12px 0 10px;
+    }
+    .muted {
+      color: ${THEME.textMuted};
+    }
+    .code-box {
+      margin: 18px 0;
+      border: 1px dashed ${THEME.brand};
+      border-radius: 12px;
+      background: #fff7ef;
+      text-align: center;
+      padding: 16px 12px;
+    }
+    .code {
+      margin: 8px 0;
+      font-size: 34px;
+      letter-spacing: 8px;
+      font-weight: 800;
+      color: ${THEME.brand};
+    }
+    .notice {
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin: 16px 0;
+      border-left: 4px solid;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    .notice-warning {
+      background: ${THEME.warningBg};
+      border-color: ${THEME.warningBorder};
+      color: #7a4a1a;
+    }
+    .notice-danger {
+      background: ${THEME.dangerBg};
+      border-color: ${THEME.dangerBorder};
+      color: #7f1f1f;
+    }
+    .notice-success {
+      background: ${THEME.successBg};
+      border-color: ${THEME.successBorder};
+      color: #1f5a3d;
+    }
+    .link-box {
+      margin: 14px 0;
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid ${THEME.border};
+      background: #fdfaf6;
+      word-break: break-all;
+      font-family: Consolas, 'Courier New', monospace;
+      font-size: 12px;
+      color: ${THEME.textMuted};
+    }
+    @media only screen and (max-width: 640px) {
+      .header, .content, .footer {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+      h1 {
+        font-size: 24px;
+      }
+      .code {
+        font-size: 30px;
+        letter-spacing: 6px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <span class="preheader">${escapeHtml(preheader)}</span>
+  <div class="wrapper">
+    <div class="card">
+      <div class="header">
+        <div class="logo">DoFlow</div><br />
+        <div class="chip">${escapeHtml(badge)}</div>
+        <h1>${escapeHtml(title)}</h1>
+        <p class="subtitle">${escapeHtml(subtitle)}</p>
+      </div>
+      <div class="content">
+        ${bodyHtml}
+      </div>
+      <div class="footer">
+        ${footerHtml}
+      </div>
+    </div>
+  </div>
+</body>
+</html>
+`;
+
+const defaultFooterHtml = () => `
+  <div>Need help? Contact us at <a href="mailto:${escapeHtml(getSupportEmail())}" style="color:${THEME.brand}; text-decoration:none;">${escapeHtml(getSupportEmail())}</a></div>
+  <div style="margin-top:6px;">&copy; ${new Date().getFullYear()} DoFlow. All rights reserved.</div>
+`;
+
+const otpBodyHtml = ({ name, otp, contextLabel, actionLine }) => `
+  <p>Hi ${escapeHtml(name || 'there')},</p>
+  <p>${escapeHtml(actionLine)}</p>
+
+  <div class="code-box">
+    <div class="muted" style="font-size:13px;">${escapeHtml(contextLabel)}</div>
+    <div class="code">${escapeHtml(otp)}</div>
+    <div class="muted" style="font-size:12px;">Valid for 10 minutes</div>
+  </div>
+
+  <div class="notice notice-warning">
+    <strong>Security tip:</strong> Never share this code with anyone. DoFlow support will never ask for your OTP.
+  </div>
+`;
+
+const verificationBodyHtml = ({ name, verificationUrl }) => `
+  <p>Hi ${escapeHtml(name || 'there')},</p>
+  <p>Thanks for creating your DoFlow account. Please verify your email address to activate all features.</p>
+
+  <p style="text-align:center; margin: 16px 0;">
+    <a class="btn" href="${escapeHtml(verificationUrl)}">Verify Email</a>
+  </p>
+
+  <p class="muted" style="margin-bottom:8px;">If the button does not work, copy and paste this link:</p>
+  <div class="link-box">${escapeHtml(verificationUrl)}</div>
+
+  <div class="notice notice-warning">
+    This verification link expires in 24 hours.
+  </div>
+`;
+
+const passwordResetBodyHtml = ({ name, resetUrl }) => `
+  <p>Hi ${escapeHtml(name || 'there')},</p>
+  <p>We received a request to reset your password.</p>
+
+  <p style="text-align:center; margin: 16px 0;">
+    <a class="btn" href="${escapeHtml(resetUrl)}">Reset Password</a>
+  </p>
+
+  <p class="muted" style="margin-bottom:8px;">If the button does not work, copy and paste this link:</p>
+  <div class="link-box">${escapeHtml(resetUrl)}</div>
+
+  <div class="notice notice-danger">
+    <strong>Important:</strong>
+    <ul style="margin:8px 0 0 18px; padding:0;">
+      <li>This link expires in 1 hour.</li>
+      <li>If you did not request this reset, you can safely ignore this email.</li>
+      <li>Your password remains unchanged until you complete the reset.</li>
+    </ul>
+  </div>
+`;
+
+const welcomeBodyHtml = ({ name }) => `
+  <p>Hi ${escapeHtml(name || 'there')},</p>
+  <p>Your account is now active. Welcome to DoFlow.</p>
+
+  <div class="notice notice-success">
+    You can now access courses, learning paths, coding practice, and certificates.
+  </div>
+
+  <p style="text-align:center; margin: 16px 0;">
+    <a class="btn" href="${escapeHtml(`${getFrontendUrl()}/#/courses`)}">Explore Courses</a>
+  </p>
+
+  <p class="muted">We are excited to be part of your learning journey.</p>
+`;
+
 // Create transporter
 const createTransporter = () => {
   // Check if email service is configured
   if (!process.env.EMAIL_HOST || !process.env.EMAIL_USER || !process.env.EMAIL_PASSWORD) {
-    console.warn('⚠️ Email service not configured. Set EMAIL_HOST, EMAIL_USER, and EMAIL_PASSWORD in .env');
+    console.warn('Email service not configured. Set EMAIL_HOST, EMAIL_USER, and EMAIL_PASSWORD in .env');
     return null;
   }
 
@@ -22,132 +314,41 @@ const createTransporter = () => {
 // Send OTP for password reset
 export const sendPasswordResetOTP = async (email, name, otp) => {
   const transporter = createTransporter();
-  
+
   if (!transporter) {
-    console.log('📧 Password reset OTP email would be sent to:', email, '(Email service not configured)');
+    console.log('Password reset OTP email would be sent to:', email, '(Email service not configured)');
     return { success: false, message: 'Email service not configured' };
   }
 
   const mailOptions = {
-    from: `"${process.env.EMAIL_FROM_NAME || 'DoFlow Academy'}" <${process.env.EMAIL_USER}>`,
+    from: `"${getSenderName()}" <${process.env.EMAIL_USER}>`,
     to: email,
-    subject: 'Password Reset OTP - DoFlow Academy',
-    html: `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <style>
-          body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-          }
-          .container {
-            max-width: 600px;
-            margin: 20px auto;
-            background: #ffffff;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-          }
-          .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 30px;
-            text-align: center;
-            color: white;
-          }
-          .header h1 {
-            margin: 0;
-            font-size: 28px;
-          }
-          .content {
-            padding: 30px;
-          }
-          .otp-box {
-            background: #f8f9fa;
-            border: 2px dashed #dc3545;
-            border-radius: 8px;
-            padding: 20px;
-            text-align: center;
-            margin: 25px 0;
-          }
-          .otp-code {
-            font-size: 36px;
-            font-weight: bold;
-            color: #dc3545;
-            letter-spacing: 8px;
-            margin: 10px 0;
-          }
-          .footer {
-            background: #f8f9fa;
-            padding: 20px;
-            text-align: center;
-            font-size: 14px;
-            color: #666;
-          }
-          .warning {
-            background: #fff3cd;
-            border-left: 4px solid #ffc107;
-            padding: 12px;
-            margin: 20px 0;
-            border-radius: 4px;
-          }
-          .alert {
-            background: #f8d7da;
-            border-left: 4px solid #dc3545;
-            padding: 12px;
-            margin: 20px 0;
-            border-radius: 4px;
-            color: #721c24;
-          }
-        </style>
-      </head>
-      <body>
-        <div class="container">
-          <div class="header">
-            <h1>🔒 DoFlow Academy</h1>
-          </div>
-          <div class="content">
-            <h2 style="color: #333; margin-bottom: 20px;">Hi ${name}! 👋</h2>
-            <p>We received a request to reset your password. Use the OTP code below to set a new password:</p>
-            
-            <div class="otp-box">
-              <p style="margin: 0; font-size: 14px; color: #666;">Your Password Reset OTP</p>
-              <div class="otp-code">${otp}</div>
-              <p style="margin: 0; font-size: 12px; color: #999;">Valid for 10 minutes</p>
-            </div>
-
-            <div class="alert">
-              <strong>⚠️ Security Alert:</strong> If you didn't request this password reset, please ignore this email and ensure your account is secure.
-            </div>
-
-            <div class="warning">
-              <strong>🔐 Important:</strong> Never share this OTP with anyone, including DoFlow staff. We will never ask for your OTP.
-            </div>
-
-            <p style="color: #666; margin-top: 20px;">
-              This OTP will expire in 10 minutes. If you didn't request a password reset, you can safely ignore this email.
-            </p>
-          </div>
-          <div class="footer">
-            <p style="margin: 0 0 10px 0;">© ${new Date().getFullYear()} DoFlow Academy. All rights reserved.</p>
-            <p style="margin: 0;">Need help? Contact us at <a href="mailto:support@doflow.com" style="color: #667eea;">support@doflow.com</a></p>
-          </div>
-        </div>
-      </body>
-      </html>
-    `
+    subject: 'DoFlow password reset code',
+    html: renderEmailLayout({
+      preheader: 'Your password reset code for DoFlow',
+      badge: 'Password Reset',
+      title: 'Reset your password',
+      subtitle: 'Use the one-time code below to continue securely.',
+      bodyHtml: `${otpBodyHtml({
+        name,
+        otp,
+        contextLabel: 'Password reset code',
+        actionLine: 'Use this one-time code to set a new password for your account.',
+      })}
+      <div class="notice notice-danger">
+        If you did not request a password reset, please ignore this email and review your account security.
+      </div>`,
+      footerHtml: defaultFooterHtml(),
+    }),
+    text: `Password reset code: ${otp}\n\nThis code is valid for 10 minutes. If you did not request this, ignore this email.`,
   };
 
   try {
     await transporter.sendMail(mailOptions);
-    console.log(`✅ Password reset OTP sent to: ${email}`);
+    console.log(`Password reset OTP sent to: ${email}`);
     return { success: true, message: 'Password reset OTP sent successfully' };
   } catch (error) {
-    console.error('❌ Error sending password reset OTP:', error);
+    console.error('Error sending password reset OTP:', error);
     return { success: false, message: 'Failed to send password reset OTP email' };
   }
 };
@@ -155,120 +356,38 @@ export const sendPasswordResetOTP = async (email, name, otp) => {
 // Send OTP for registration
 export const sendRegistrationOTP = async (email, name, otp) => {
   const transporter = createTransporter();
-  
+
   if (!transporter) {
-    console.log('📧 OTP email would be sent to:', email, '(Email service not configured)');
+    console.log('OTP email would be sent to:', email, '(Email service not configured)');
     return { success: false, message: 'Email service not configured' };
   }
 
   const mailOptions = {
-    from: `"${process.env.EMAIL_FROM_NAME || 'DoFlow Academy'}" <${process.env.EMAIL_USER}>`,
+    from: `"${getSenderName()}" <${process.env.EMAIL_USER}>`,
     to: email,
-    subject: 'Your Registration OTP - DoFlow Academy',
-    html: `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <style>
-          body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-          }
-          .container {
-            max-width: 600px;
-            margin: 20px auto;
-            background: #ffffff;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-          }
-          .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 30px;
-            text-align: center;
-            color: white;
-          }
-          .header h1 {
-            margin: 0;
-            font-size: 28px;
-          }
-          .content {
-            padding: 30px;
-          }
-          .otp-box {
-            background: #f8f9fa;
-            border: 2px dashed #667eea;
-            border-radius: 8px;
-            padding: 20px;
-            text-align: center;
-            margin: 25px 0;
-          }
-          .otp-code {
-            font-size: 36px;
-            font-weight: bold;
-            color: #667eea;
-            letter-spacing: 8px;
-            margin: 10px 0;
-          }
-          .footer {
-            background: #f8f9fa;
-            padding: 20px;
-            text-align: center;
-            font-size: 14px;
-            color: #666;
-          }
-          .warning {
-            background: #fff3cd;
-            border-left: 4px solid #ffc107;
-            padding: 12px;
-            margin: 20px 0;
-            border-radius: 4px;
-          }
-        </style>
-      </head>
-      <body>
-        <div class="container">
-          <div class="header">
-            <h1>🎓 DoFlow Academy</h1>
-          </div>
-          <div class="content">
-            <h2 style="color: #333; margin-bottom: 20px;">Hi ${name}! 👋</h2>
-            <p>Thank you for signing up with DoFlow Academy! To complete your registration, please use the OTP code below:</p>
-            
-            <div class="otp-box">
-              <p style="margin: 0; font-size: 14px; color: #666;">Your OTP Code</p>
-              <div class="otp-code">${otp}</div>
-              <p style="margin: 0; font-size: 12px; color: #999;">Valid for 10 minutes</p>
-            </div>
-
-            <div class="warning">
-              <strong>⚠️ Security Notice:</strong> Never share this OTP with anyone. DoFlow staff will never ask for your OTP.
-            </div>
-
-            <p style="color: #666; margin-top: 20px;">
-              If you didn't request this registration, please ignore this email.
-            </p>
-          </div>
-          <div class="footer">
-            <p style="margin: 0 0 10px 0;">© ${new Date().getFullYear()} DoFlow Academy. All rights reserved.</p>
-            <p style="margin: 0;">Need help? Contact us at <a href="mailto:support@doflow.com" style="color: #667eea;">support@doflow.com</a></p>
-          </div>
-        </div>
-      </body>
-      </html>
-    `
+    subject: 'DoFlow registration code',
+    html: renderEmailLayout({
+      preheader: 'Your DoFlow registration OTP',
+      badge: 'Email Verification',
+      title: 'Complete your sign up',
+      subtitle: 'Enter this one-time code to verify your email and activate your account.',
+      bodyHtml: otpBodyHtml({
+        name,
+        otp,
+        contextLabel: 'Registration code',
+        actionLine: 'Thanks for joining DoFlow. Use the code below to complete registration.',
+      }),
+      footerHtml: defaultFooterHtml(),
+    }),
+    text: `Registration OTP: ${otp}\n\nThis code is valid for 10 minutes. Do not share it with anyone.`,
   };
 
   try {
     await transporter.sendMail(mailOptions);
-    console.log(`✅ Registration OTP sent to: ${email}`);
+    console.log(`Registration OTP sent to: ${email}`);
     return { success: true, message: 'OTP sent successfully' };
   } catch (error) {
-    console.error('❌ Error sending OTP:', error);
+    console.error('Error sending OTP:', error);
     return { success: false, message: 'Failed to send OTP email' };
   }
 };
@@ -276,133 +395,35 @@ export const sendRegistrationOTP = async (email, name, otp) => {
 // Send email verification
 export const sendVerificationEmail = async (email, name, verificationToken) => {
   const transporter = createTransporter();
-  
+
   if (!transporter) {
-    console.log('📧 Email would be sent to:', email, '(Email service not configured)');
+    console.log('Email would be sent to:', email, '(Email service not configured)');
     return { success: false, message: 'Email service not configured' };
   }
 
-  const verificationUrl = `${process.env.FRONTEND_URL || 'http://localhost:5173'}/#/verify-email/${verificationToken}`;
+  const verificationUrl = `${getFrontendUrl()}/#/verify-email/${verificationToken}`;
 
   const mailOptions = {
-    from: `"${process.env.EMAIL_FROM_NAME || 'DoFlow Academy'}" <${process.env.EMAIL_USER}>`,
+    from: `"${getSenderName()}" <${process.env.EMAIL_USER}>`,
     to: email,
-    subject: 'Verify Your Email - DoFlow Academy',
-    html: `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <style>
-          body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-          }
-          .container {
-            max-width: 600px;
-            margin: 20px auto;
-            background: #ffffff;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-          }
-          .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 30px;
-            text-align: center;
-            color: white;
-          }
-          .header h1 {
-            margin: 0;
-            font-size: 28px;
-          }
-          .content {
-            padding: 30px;
-          }
-          .button {
-            display: inline-block;
-            padding: 12px 30px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            font-weight: bold;
-            margin: 20px 0;
-          }
-          .footer {
-            background: #f8f8f8;
-            padding: 20px;
-            text-align: center;
-            font-size: 12px;
-            color: #666;
-          }
-          .code {
-            background: #f4f4f4;
-            padding: 15px;
-            border-radius: 5px;
-            font-family: monospace;
-            font-size: 16px;
-            text-align: center;
-            margin: 20px 0;
-            letter-spacing: 2px;
-          }
-        </style>
-      </head>
-      <body>
-        <div class="container">
-          <div class="header">
-            <h1>🎓 DoFlow Academy</h1>
-          </div>
-          <div class="content">
-            <h2>Welcome, ${name}! 👋</h2>
-            <p>Thank you for signing up with DoFlow Academy. We're excited to have you on board!</p>
-            <p>To complete your registration and start learning, please verify your email address by clicking the button below:</p>
-            
-            <div style="text-align: center;">
-              <a href="${verificationUrl}" class="button">Verify Email Address</a>
-            </div>
-            
-            <p>Or copy and paste this link into your browser:</p>
-            <div class="code">${verificationUrl}</div>
-            
-            <p><strong>This link will expire in 24 hours.</strong></p>
-            
-            <p>If you didn't create an account with DoFlow Academy, please ignore this email.</p>
-            
-            <p>Best regards,<br>The DoFlow Team</p>
-          </div>
-          <div class="footer">
-            <p>&copy; 2025 DoFlow Academy. All rights reserved.</p>
-            <p>You're receiving this email because you signed up for DoFlow Academy.</p>
-          </div>
-        </div>
-      </body>
-      </html>
-    `,
-    text: `
-      Welcome to DoFlow Academy, ${name}!
-      
-      Thank you for signing up. Please verify your email address by visiting:
-      ${verificationUrl}
-      
-      This link will expire in 24 hours.
-      
-      If you didn't create an account, please ignore this email.
-      
-      Best regards,
-      The DoFlow Team
-    `
+    subject: 'Verify your DoFlow email',
+    html: renderEmailLayout({
+      preheader: 'Verify your email to activate your DoFlow account',
+      badge: 'Account Verification',
+      title: 'Verify your email',
+      subtitle: 'One quick step to finish setting up your account.',
+      bodyHtml: verificationBodyHtml({ name, verificationUrl }),
+      footerHtml: defaultFooterHtml(),
+    }),
+    text: `Verify your DoFlow account by visiting: ${verificationUrl}\n\nThis link expires in 24 hours.`,
   };
 
   try {
     await transporter.sendMail(mailOptions);
-    console.log('✅ Verification email sent to:', email);
+    console.log('Verification email sent to:', email);
     return { success: true, message: 'Verification email sent' };
   } catch (error) {
-    console.error('❌ Error sending verification email:', error);
+    console.error('Error sending verification email:', error);
     return { success: false, message: 'Failed to send verification email', error: error.message };
   }
 };
@@ -410,141 +431,35 @@ export const sendVerificationEmail = async (email, name, verificationToken) => {
 // Send password reset email
 export const sendPasswordResetEmail = async (email, name, resetToken) => {
   const transporter = createTransporter();
-  
+
   if (!transporter) {
-    console.log('📧 Password reset email would be sent to:', email, '(Email service not configured)');
+    console.log('Password reset email would be sent to:', email, '(Email service not configured)');
     return { success: false, message: 'Email service not configured' };
   }
 
-  const resetUrl = `${process.env.FRONTEND_URL || 'http://localhost:5173'}/#/reset-password/${resetToken}`;
+  const resetUrl = `${getFrontendUrl()}/#/reset-password/${resetToken}`;
 
   const mailOptions = {
-    from: `"${process.env.EMAIL_FROM_NAME || 'DoFlow Academy'}" <${process.env.EMAIL_USER}>`,
+    from: `"${getSenderName()}" <${process.env.EMAIL_USER}>`,
     to: email,
-    subject: 'Password Reset Request - DoFlow Academy',
-    html: `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <style>
-          body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-          }
-          .container {
-            max-width: 600px;
-            margin: 20px auto;
-            background: #ffffff;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-          }
-          .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 30px;
-            text-align: center;
-            color: white;
-          }
-          .header h1 {
-            margin: 0;
-            font-size: 28px;
-          }
-          .content {
-            padding: 30px;
-          }
-          .button {
-            display: inline-block;
-            padding: 12px 30px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            font-weight: bold;
-            margin: 20px 0;
-          }
-          .footer {
-            background: #f8f8f8;
-            padding: 20px;
-            text-align: center;
-            font-size: 12px;
-            color: #666;
-          }
-          .warning {
-            background: #fff3cd;
-            border-left: 4px solid #ffc107;
-            padding: 15px;
-            margin: 20px 0;
-            border-radius: 4px;
-          }
-        </style>
-      </head>
-      <body>
-        <div class="container">
-          <div class="header">
-            <h1>🔐 Password Reset</h1>
-          </div>
-          <div class="content">
-            <h2>Hello, ${name}</h2>
-            <p>We received a request to reset your password for your DoFlow Academy account.</p>
-            
-            <p>Click the button below to reset your password:</p>
-            
-            <div style="text-align: center;">
-              <a href="${resetUrl}" class="button">Reset Password</a>
-            </div>
-            
-            <p>Or copy and paste this link into your browser:</p>
-            <p style="word-break: break-all; background: #f4f4f4; padding: 10px; border-radius: 5px;">
-              ${resetUrl}
-            </p>
-            
-            <div class="warning">
-              <strong>⚠️ Important:</strong>
-              <ul style="margin: 10px 0;">
-                <li>This link will expire in 1 hour</li>
-                <li>If you didn't request a password reset, please ignore this email</li>
-                <li>Your password will remain unchanged unless you click the link above</li>
-              </ul>
-            </div>
-            
-            <p>If you're having trouble, contact our support team at support@doflow.academy</p>
-            
-            <p>Best regards,<br>The DoFlow Team</p>
-          </div>
-          <div class="footer">
-            <p>&copy; 2025 DoFlow Academy. All rights reserved.</p>
-          </div>
-        </div>
-      </body>
-      </html>
-    `,
-    text: `
-      Password Reset Request - DoFlow Academy
-      
-      Hello ${name},
-      
-      We received a request to reset your password. Click the link below to reset it:
-      ${resetUrl}
-      
-      This link will expire in 1 hour.
-      
-      If you didn't request a password reset, please ignore this email.
-      
-      Best regards,
-      The DoFlow Team
-    `
+    subject: 'Reset your DoFlow password',
+    html: renderEmailLayout({
+      preheader: 'Reset your DoFlow password securely',
+      badge: 'Password Reset',
+      title: 'Password reset request',
+      subtitle: 'Use the secure link below to choose a new password.',
+      bodyHtml: passwordResetBodyHtml({ name, resetUrl }),
+      footerHtml: defaultFooterHtml(),
+    }),
+    text: `Reset your password using this link: ${resetUrl}\n\nThis link expires in 1 hour. If you did not request this, ignore this email.`,
   };
 
   try {
     await transporter.sendMail(mailOptions);
-    console.log('✅ Password reset email sent to:', email);
+    console.log('Password reset email sent to:', email);
     return { success: true, message: 'Password reset email sent' };
   } catch (error) {
-    console.error('❌ Error sending password reset email:', error);
+    console.error('Error sending password reset email:', error);
     return { success: false, message: 'Failed to send password reset email', error: error.message };
   }
 };
@@ -552,111 +467,32 @@ export const sendPasswordResetEmail = async (email, name, resetToken) => {
 // Send welcome email after verification
 export const sendWelcomeEmail = async (email, name) => {
   const transporter = createTransporter();
-  
+
   if (!transporter) {
     return { success: false, message: 'Email service not configured' };
   }
 
   const mailOptions = {
-    from: `"${process.env.EMAIL_FROM_NAME || 'DoFlow Academy'}" <${process.env.EMAIL_USER}>`,
+    from: `"${getSenderName()}" <${process.env.EMAIL_USER}>`,
     to: email,
-    subject: 'Welcome to DoFlow Academy! 🎉',
-    html: `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <style>
-          body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-          }
-          .container {
-            max-width: 600px;
-            margin: 20px auto;
-            background: #ffffff;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-          }
-          .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 40px;
-            text-align: center;
-            color: white;
-          }
-          .content {
-            padding: 30px;
-          }
-          .button {
-            display: inline-block;
-            padding: 12px 30px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            font-weight: bold;
-            margin: 20px 0;
-          }
-          .feature-box {
-            background: #f8f9fa;
-            padding: 15px;
-            margin: 10px 0;
-            border-radius: 5px;
-            border-left: 4px solid #667eea;
-          }
-        </style>
-      </head>
-      <body>
-        <div class="container">
-          <div class="header">
-            <h1>🎉 Welcome to DoFlow!</h1>
-          </div>
-          <div class="content">
-            <h2>Your Learning Journey Begins Now, ${name}! 🚀</h2>
-            <p>Your email has been verified successfully. You're all set to start learning!</p>
-            
-            <h3>What You Can Do Now:</h3>
-            
-            <div class="feature-box">
-              <strong>📚 Browse Courses</strong><br>
-              Explore our extensive library of courses in web development, data science, and more.
-            </div>
-            
-            <div class="feature-box">
-              <strong>💻 Practice DSA</strong><br>
-              Access our Data Structures & Algorithms roadmap with 180+ practice problems.
-            </div>
-            
-            <div class="feature-box">
-              <strong>🎓 Earn Certificates</strong><br>
-              Complete courses and earn industry-recognized certificates.
-            </div>
-            
-            <div style="text-align: center; margin: 30px 0;">
-              <a href="${process.env.FRONTEND_URL || 'http://localhost:5173'}/#/courses" class="button">Start Learning Now</a>
-            </div>
-            
-            <p>Need help? Our support team is here for you 24/7 at support@doflow.academy</p>
-            
-            <p>Happy Learning!<br>The DoFlow Team 💜</p>
-          </div>
-        </div>
-      </body>
-      </html>
-    `
+    subject: 'Welcome to DoFlow',
+    html: renderEmailLayout({
+      preheader: 'Your DoFlow account is ready',
+      badge: 'Welcome',
+      title: 'Your account is ready',
+      subtitle: 'You can now start learning with DoFlow.',
+      bodyHtml: welcomeBodyHtml({ name }),
+      footerHtml: defaultFooterHtml(),
+    }),
+    text: `Welcome to DoFlow, ${name || 'there'}! Your account is ready. Start learning here: ${getFrontendUrl()}/#/courses`,
   };
 
   try {
     await transporter.sendMail(mailOptions);
-    console.log('✅ Welcome email sent to:', email);
+    console.log('Welcome email sent to:', email);
     return { success: true };
   } catch (error) {
-    console.error('❌ Error sending welcome email:', error);
+    console.error('Error sending welcome email:', error);
     return { success: false };
   }
 };
-
