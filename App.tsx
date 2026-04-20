@@ -10,6 +10,13 @@ import HomePage from './pages/HomePage';
 import AuthPage from './pages/AuthPageNew';
 import CoursesPage from './pages/CoursesPage';
 import CourseDetailsPage from './pages/CourseDetailsPage';
+import AboutPage from './pages/AboutPage';
+import BlogPage from './pages/BlogPage';
+import BecomeInstructorPage from './pages/BecomeInstructorPage';
+import HelpCenterPage from './pages/HelpCenterPage';
+import FaqPage from './pages/FaqPage';
+import TermsPage from './pages/TermsPage';
+import PrivacyPage from './pages/PrivacyPage';
 
 // Lazy load heavy components
 const AdminDashboard = React.lazy(() => import('./pages/AdminDashboard'));
@@ -149,6 +156,20 @@ const App: React.FC = () => {
                 return <ForgotPasswordPage />;
             case '/courses':
                 return <CoursesPage />;
+            case '/about':
+                return <AboutPage />;
+            case '/blog':
+                return <BlogPage />;
+            case '/become-instructor':
+                return <BecomeInstructorPage />;
+            case '/help':
+                return <HelpCenterPage />;
+            case '/faq':
+                return <FaqPage />;
+            case '/terms':
+                return <TermsPage />;
+            case '/privacy':
+                return <PrivacyPage />;
             case '/cart':
                 return <CartPage />;
             case '/checkout':
