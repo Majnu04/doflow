@@ -19,8 +19,18 @@ interface AuthState {
   error: string | null;
 }
 
+const getInitialUser = (): User | null => {
+  try {
+    const stored = localStorage.getItem('user');
+    return stored ? JSON.parse(stored) : null;
+  } catch {
+    localStorage.removeItem('user');
+    return null;
+  }
+};
+
 const initialState: AuthState = {
-  user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')!) : null,
+  user: getInitialUser(),
   token: localStorage.getItem('token') || null,
   isLoading: false,
   isAuthenticated: !!localStorage.getItem('token'),
@@ -100,12 +110,12 @@ const authSlice = createSlice({
     builder.addCase(register.fulfilled, (state, action) => {
       state.isLoading = false;
       state.isAuthenticated = true;
-      // Handle new response format with nested user and token
-      const { token, user } = action.payload;
-      state.user = user || action.payload;
+      // Consistent handling with login: destructure token separately from user fields
+      const { token, ...user } = action.payload;
+      state.user = user as User;
       state.token = token;
       localStorage.setItem('token', token);
-      localStorage.setItem('user', JSON.stringify(user || action.payload));
+      localStorage.setItem('user', JSON.stringify(user));
     });
     builder.addCase(register.rejected, (state, action) => {
       state.isLoading = false;

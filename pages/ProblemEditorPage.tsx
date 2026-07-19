@@ -703,7 +703,13 @@ const ProblemEditorPage: React.FC<ProblemEditorPageProps> = ({ problemId }) => {
   }, [visibleTestCases, publicResults, displayedResults]);
   const sanitizedDescription = useMemo(() => {
     if (!problem?.description) return null;
-    return /<[^>]+>/.test(problem.description) ? { __html: problem.description } : null;
+    if (!/<[^>]+>/.test(problem.description)) return null;
+    // Strip script tags and event handlers to prevent XSS
+    const sanitized = problem.description
+      .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+      .replace(/\son\w+\s*=\s*["']?[^"'\s>]+["']?/gi, '')
+      .replace(/javascript\s*:/gi, '');
+    return { __html: sanitized };
   }, [problem]);
   const plainDescription = useMemo(() => (problem?.description ? problem.description.replace(/<[^>]+>/g, '') : ''), [problem]);
   const activeSignature = useMemo(() => {

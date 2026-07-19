@@ -79,10 +79,21 @@ export const getCourse = async (req, res) => {
 // @access  Private/Admin/Instructor
 export const createCourse = async (req, res) => {
   try {
-    const course = await Course.create({
-      ...req.body,
-      instructor: req.user._id
-    });
+    const allowedFields = [
+      'title', 'description', 'shortDescription', 'category', 'level',
+      'price', 'discountPrice', 'thumbnail', 'promoVideo', 'tags',
+      'whatYouWillLearn', 'prerequisites', 'targetAudience', 'isFeatured',
+      'isDSA', 'estimatedDuration', 'sections', 'totalDuration', 'totalLessons'
+    ];
+    const courseData = {};
+    for (const field of allowedFields) {
+      if (req.body[field] !== undefined) {
+        courseData[field] = req.body[field];
+      }
+    }
+    courseData.instructor = req.user._id;
+
+    const course = await Course.create(courseData);
 
     res.status(201).json(course);
   } catch (error) {
@@ -106,7 +117,20 @@ export const updateCourse = async (req, res) => {
       return res.status(403).json({ message: 'Not authorized to update this course' });
     }
 
-    course = await Course.findByIdAndUpdate(req.params.id, req.body, {
+    const allowedFields = [
+      'title', 'description', 'shortDescription', 'category', 'level',
+      'price', 'discountPrice', 'thumbnail', 'promoVideo', 'tags',
+      'whatYouWillLearn', 'prerequisites', 'targetAudience', 'isFeatured',
+      'isDSA', 'estimatedDuration', 'sections', 'totalDuration', 'totalLessons'
+    ];
+    const updateData = {};
+    for (const field of allowedFields) {
+      if (req.body[field] !== undefined) {
+        updateData[field] = req.body[field];
+      }
+    }
+
+    course = await Course.findByIdAndUpdate(req.params.id, updateData, {
       new: true,
       runValidators: true
     });

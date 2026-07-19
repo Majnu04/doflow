@@ -60,7 +60,7 @@ const CartPage: React.FC = () => {
     );
   };
 
-  const total = items.reduce((sum, item) => sum + (item.discountPrice || item.price), 0);
+  const total = items.reduce((sum, item) => sum + (item.discountPrice ?? item.price), 0);
   const originalTotal = items.reduce((sum, item) => sum + item.price, 0);
   const savings = originalTotal - total;
 
@@ -135,7 +135,7 @@ const CartPage: React.FC = () => {
                   </button>
                   
                   <div className="text-right">
-                    {course.discountPrice ? (
+                    {course.discountPrice != null && course.discountPrice > 0 ? (
                       <>
                         <div className="text-2xl font-bold text-elite-gold">
                           ₹{course.discountPrice}
@@ -144,6 +144,10 @@ const CartPage: React.FC = () => {
                           ₹{course.price}
                         </div>
                       </>
+                    ) : course.discountPrice === 0 ? (
+                      <div className="text-2xl font-bold text-green-400">
+                        Free
+                      </div>
                     ) : (
                       <div className="text-2xl font-bold text-white">
                         ₹{course.price}

@@ -23,18 +23,14 @@ const themeSlice = createSlice({
   initialState,
   reducers: {
     toggleTheme: (state) => {
-      console.log('toggleTheme called, current mode:', state.mode);
       state.mode = state.mode === 'light' ? 'dark' : 'light';
-      console.log('toggleTheme new mode:', state.mode);
       if (typeof window !== 'undefined') {
         localStorage.setItem('theme', state.mode);
-        console.log('Setting dark class:', state.mode === 'dark');
         if (state.mode === 'dark') {
           document.documentElement.classList.add('dark');
         } else {
           document.documentElement.classList.remove('dark');
         }
-        console.log('HTML classes:', document.documentElement.className);
       }
     },
     setTheme: (state, action) => {

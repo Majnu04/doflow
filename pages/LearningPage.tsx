@@ -743,7 +743,9 @@ const LearningPage: React.FC<LearningPageProps> = ({ courseId }) => {
       });
 
       toast.success('Lesson marked as complete!');
-      fetchCourseData(); // Refresh progress
+      // Refresh only progress, not the entire course data (which would reset current lesson)
+      const progressRes = await api.get(`/progress/${courseId}`);
+      setProgress(progressRes.data);
     } catch (error) {
       console.error('Failed to mark lesson complete:', error);
       toast.error('Failed to update progress');

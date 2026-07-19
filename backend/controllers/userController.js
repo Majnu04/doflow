@@ -13,7 +13,7 @@ export const addToWishlist = async (req, res) => {
       return res.status(404).json({ message: 'Course not found' });
     }
 
-    const alreadyInWishlist = user.wishlist.includes(req.params.courseId);
+    const alreadyInWishlist = user.wishlist.some(id => id.toString() === req.params.courseId);
 
     if (alreadyInWishlist) {
       return res.status(400).json({ message: 'Course already in wishlist' });
@@ -75,7 +75,7 @@ export const addToCart = async (req, res) => {
       return res.status(404).json({ message: 'Course not found' });
     }
 
-    const alreadyInCart = user.cart.includes(req.params.courseId);
+    const alreadyInCart = user.cart.some(id => id.toString() === req.params.courseId);
 
     if (alreadyInCart) {
       return res.status(400).json({ message: 'Course already in cart' });

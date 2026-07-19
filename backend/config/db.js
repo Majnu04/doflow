@@ -60,6 +60,20 @@ const connectDB = async () => {
       console.error(`    Resolve-DnsName -Type A ${safeHost}`);
     }
 
+    if (
+      error &&
+      error.message &&
+      (error.message.includes('Could not connect to any servers in your MongoDB Atlas cluster') ||
+        error.message.toLowerCase().includes('whitelist') ||
+        error.message.toLowerCase().includes('server selection timed out'))
+    ) {
+      console.error(
+        'Atlas connection was refused or timed out. The most common cause is that your current IP address is not allowed in the MongoDB Atlas Network Access list.'
+      );
+      console.error('  - In Atlas: Security -> Network Access -> Add IP Address -> allow your current IP or temporarily use 0.0.0.0/0 for local development.');
+      console.error('  - If you recently changed networks, update the whitelist and retry.');
+    }
+
     // Log the original error for debugging
     console.error('Original error:', error && error.message ? error.message : error);
 

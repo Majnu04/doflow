@@ -285,11 +285,12 @@ export const handleWebhook = async (req, res) => {
 
     // Verify webhook signature
     const signature = req.headers['x-razorpay-signature'];
-    const body = JSON.stringify(req.body);
+    // req.body is a Buffer because the route uses express.raw()
+    const rawBody = Buffer.isBuffer(req.body) ? req.body.toString() : JSON.stringify(req.body);
     
     const expectedSignature = crypto
       .createHmac('sha256', webhookSecret)
-      .update(body)
+      .update(rawBody)
       .digest('hex');
 
     if (signature !== expectedSignature) {
@@ -297,8 +298,12 @@ export const handleWebhook = async (req, res) => {
       return res.status(400).json({ message: 'Invalid signature' });
     }
 
-    const event = req.body.event;
-    const payload = req.body.payload.payment.entity;
+    // Parse the raw body to access event data
+    const parsedBody = typeof req.body === 'object' && !Buffer.isBuffer(req.body)
+      ? req.body
+      : JSON.parse(rawBody);
+    const event = parsedBody.event;
+    const payload = parsedBody.payload.payment.entity;
 
     logger.info('Webhook received', { event: event, paymentId: payload.id });
 

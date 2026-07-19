@@ -5,6 +5,7 @@ import { protect } from '../middleware/auth.js';
 const router = express.Router();
 
 // Webhook route (must be public, but verified via signature)
+// Use express.raw() to get the raw Buffer for HMAC verification
 router.post('/webhook', express.raw({ type: 'application/json' }), handleWebhook);
 
 router.post('/create-order', protect, createOrder);

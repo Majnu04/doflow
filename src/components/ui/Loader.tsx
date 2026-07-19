@@ -24,11 +24,11 @@ const Loader: React.FC<LoaderProps> = ({
         <div
           className={`
             ${sizes[size]}
-            border-4 border-white/20 border-t-elite-purple
+            border-4 border-light-border/20 dark:border-dark-border/20 border-t-brand-primary
             rounded-full animate-spin
           `}
         />
-        {text && <p className="text-gray-400 text-sm">{text}</p>}
+        {text && <p className="text-light-textMuted dark:text-dark-muted text-sm">{text}</p>}
       </div>
     );
   }
@@ -37,11 +37,11 @@ const Loader: React.FC<LoaderProps> = ({
     return (
       <div className="flex flex-col items-center justify-center gap-4">
         <div className="flex gap-2">
-          <div className="w-3 h-3 bg-elite-purple rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-          <div className="w-3 h-3 bg-elite-blue rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-          <div className="w-3 h-3 bg-elite-gold rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+          <div className="w-3 h-3 bg-brand-primary rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+          <div className="w-3 h-3 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+          <div className="w-3 h-3 bg-brand-accent rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
         </div>
-        {text && <p className="text-gray-400 text-sm">{text}</p>}
+        {text && <p className="text-light-textMuted dark:text-dark-muted text-sm">{text}</p>}
       </div>
     );
   }
@@ -49,10 +49,10 @@ const Loader: React.FC<LoaderProps> = ({
   return (
     <div className="flex flex-col items-center justify-center gap-4">
       <div className={`${sizes[size]} relative`}>
-        <div className="absolute inset-0 bg-elite-purple rounded-full animate-ping opacity-75" />
-        <div className="relative bg-elite-purple rounded-full w-full h-full animate-pulse" />
+        <div className="absolute inset-0 bg-brand-primary rounded-full animate-ping opacity-75" />
+        <div className="relative bg-brand-primary rounded-full w-full h-full animate-pulse" />
       </div>
-      {text && <p className="text-gray-400 text-sm">{text}</p>}
+      {text && <p className="text-light-textMuted dark:text-dark-muted text-sm">{text}</p>}
     </div>
   );
 };

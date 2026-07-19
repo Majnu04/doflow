@@ -86,14 +86,12 @@ const cartSlice = createSlice({
 
     // Add to cart
     builder.addCase(addToCart.pending, (state) => {
-      state.isLoading = true;
+      state.error = null;
     });
-    builder.addCase(addToCart.fulfilled, (state, action) => {
-      state.isLoading = false;
-      // The getCart() thunk will be dispatched from the component to get the updated cart
+    builder.addCase(addToCart.fulfilled, (state) => {
+      // The component should dispatch getCart() to refetch the full cart
     });
     builder.addCase(addToCart.rejected, (state, action) => {
-      state.isLoading = false;
       state.error = action.payload as string;
     });
 

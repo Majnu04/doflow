@@ -26,6 +26,7 @@ import roadmapProgressRoutes from './routes/roadmapProgressRoutes.js';
 import dsaRoutes from './routes/dsaRoutes.js';
 import aiRoutes from './routes/aiRoutes.js';
 import playgroundRoutes from './routes/playgroundRoutes.js';
+import { verifyTransporter } from './utils/emailService.js';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 
@@ -38,6 +39,9 @@ dotenv.config({ path: join(__dirname, '.env') });
 logger.info('=== ENVIRONMENT CHECK ===');
 logger.info('RAZORPAY_KEY_ID: ' + (process.env.RAZORPAY_KEY_ID ? 'LOADED' : 'NOT FOUND'));
 logger.info('RAZORPAY_KEY_SECRET: ' + (process.env.RAZORPAY_KEY_SECRET ? 'LOADED' : 'NOT FOUND'));
+
+verifyTransporter();
+
 logger.info('========================');
 
 // Connect to database
@@ -83,9 +87,25 @@ app.options('*', cors(corsOptions));
 app.use(helmet());
 
 // Rate limiting
+const isLocalIp = (ip = '') => {
+  const value = String(ip);
+  return value === '127.0.0.1' || value === '::1' || value.endsWith('127.0.0.1');
+};
+
+const rateLimitWindowMs = Number(process.env.RATE_LIMIT_WINDOW_MS) || 15 * 60 * 1000;
+const rateLimitMax = Number(process.env.RATE_LIMIT_MAX) || (isDev ? 2000 : 100);
+
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100 // limit each IP to 100 requests per windowMs
+  windowMs: rateLimitWindowMs,
+  max: rateLimitMax,
+  standardHeaders: true,
+  legacyHeaders: false,
+  // Do not throttle local dev traffic, which often includes many parallel startup calls.
+  skip: (req) => isDev && isLocalIp(req.ip),
+  message: {
+    success: false,
+    message: 'Too many requests. Please try again in a few minutes.'
+  }
 });
 app.use('/api', limiter);
 
@@ -154,6 +174,11 @@ server.on('error', (err) => {
 
   logger.error(err);
   process.exit(1);
+});
+
+// Handle unhandled promise rejections
+process.on('unhandledRejection', (err) => {
+  logger.error('Unhandled Rejection:', err);
 });
 
 export default app;

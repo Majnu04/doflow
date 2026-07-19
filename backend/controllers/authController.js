@@ -92,10 +92,6 @@ export const sendOTP = async (req, res) => {
     // Generate 6-digit OTP
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
     
-    // Hash password before storing
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
-
     // Delete any existing pending registration for this email
     await PendingRegistration.deleteMany({
       email,
@@ -103,11 +99,12 @@ export const sendOTP = async (req, res) => {
     });
 
     // Store pending registration with OTP (expires in 10 minutes)
+    // Store plain password — User model pre('save') hook will hash it on create
     await PendingRegistration.create({
       purpose: 'register',
       name,
       email,
-      password: hashedPassword,
+      password, // plain text; User.pre('save') will hash when User.create() is called
       otp,
       otpExpire: Date.now() + 10 * 60 * 1000 // 10 minutes
     });
@@ -392,8 +389,11 @@ export const login = async (req, res) => {
 export const getMe = async (req, res) => {
   try {
     const user = await User.findById(req.user._id)
-      .populate('enrolledCourses.course', 'title thumbnail price')
       .populate('wishlist', 'title thumbnail price discountPrice');
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
 
     res.json(user);
   } catch (error) {
@@ -408,30 +408,40 @@ export const updateProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
 
-    if (user) {
-      user.name = req.body.name || user.name;
-      user.email = req.body.email || user.email;
-      user.bio = req.body.bio || user.bio;
-      user.phone = req.body.phone || user.phone;
-      user.avatar = req.body.avatar || user.avatar;
-
-      if (req.body.password) {
-        user.password = req.body.password;
-      }
-
-      const updatedUser = await user.save();
-
-      res.json({
-        _id: updatedUser._id,
-        name: updatedUser.name,
-        email: updatedUser.email,
-        role: updatedUser.role,
-        avatar: updatedUser.avatar,
-        bio: updatedUser.bio,
-        phone: updatedUser.phone,
-        token: generateToken(updatedUser._id)
-      });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
     }
+
+    user.name = req.body.name || user.name;
+    user.email = req.body.email || user.email;
+    user.bio = req.body.bio || user.bio;
+    user.phone = req.body.phone || user.phone;
+    user.avatar = req.body.avatar || user.avatar;
+
+    // Check if email is already taken by another user
+    if (req.body.email && req.body.email !== user.email) {
+      const existingUser = await User.findOne({ email: req.body.email, _id: { $ne: req.user._id } });
+      if (existingUser) {
+        return res.status(400).json({ message: 'Email already in use' });
+      }
+    }
+
+    if (req.body.password) {
+      user.password = req.body.password;
+    }
+
+    const updatedUser = await user.save();
+
+    res.json({
+      _id: updatedUser._id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+      role: updatedUser.role,
+      avatar: updatedUser.avatar,
+      bio: updatedUser.bio,
+      phone: updatedUser.phone,
+      token: generateToken(updatedUser._id)
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

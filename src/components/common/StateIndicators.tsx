@@ -9,13 +9,13 @@ export const CourseGridSkeleton: React.FC<SkeletonCardProps> = ({ count = 6 }) =
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
       {Array.from({ length: count }).map((_, i) => (
-        <div key={i} className="bg-brand-dark/20 border border-gray-700 rounded-lg p-4 animate-pulse">
-          <div className="bg-gray-700 h-48 rounded-lg mb-4"></div>
-          <div className="bg-gray-700 h-6 rounded w-3/4 mb-3"></div>
-          <div className="bg-gray-700 h-4 rounded w-1/2 mb-4"></div>
+        <div key={i} className="bg-dark-cardAlt/50 border border-dark-border rounded-lg p-4 animate-pulse">
+          <div className="bg-dark-cardAlt h-48 rounded-lg mb-4"></div>
+          <div className="bg-dark-cardAlt h-6 rounded w-3/4 mb-3"></div>
+          <div className="bg-dark-cardAlt h-4 rounded w-1/2 mb-4"></div>
           <div className="flex justify-between items-center">
-            <div className="bg-gray-700 h-8 w-1/4 rounded"></div>
-            <div className="bg-gray-700 h-8 w-1/4 rounded"></div>
+            <div className="bg-dark-cardAlt h-8 w-1/4 rounded"></div>
+            <div className="bg-dark-cardAlt h-8 w-1/4 rounded"></div>
           </div>
         </div>
       ))}
@@ -37,11 +37,11 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
   action,
 }) => {
   return (
-    <div className="text-center py-16 px-6 bg-brand-dark/20 border border-dashed border-gray-700 rounded-lg">
+    <div className="text-center py-16 px-6 bg-dark-cardAlt/50 border border-dashed border-dark-border rounded-lg">
       <div className="max-w-md mx-auto">
         <div className="mb-6 flex justify-center">{icon}</div>
-        <h2 className="text-2xl font-bold text-white mb-2">{title}</h2>
-        <p className="text-gray-400 mb-6">{message}</p>
+        <h2 className="text-2xl font-bold text-light-text dark:text-dark-text mb-2">{title}</h2>
+        <p className="text-light-textMuted dark:text-dark-muted mb-6">{message}</p>
         {action}
       </div>
     </div>

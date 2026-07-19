@@ -7,6 +7,7 @@ import dashboardReducer from './slices/dashboardSlice';
 import adminReducer from './slices/adminSlice';
 import dsaReducer from './slices/dsaSlice';
 import problemEditorReducer from './slices/problemEditorSlice';
+import themeReducer from './slices/themeSlice';
 
 const store = configureStore({
   reducer: {
@@ -18,6 +19,7 @@ const store = configureStore({
     admin: adminReducer,
     dsa: dsaReducer,
     problemEditor: problemEditorReducer,
+    theme: themeReducer,
   },
 });
 

@@ -1,4 +1,5 @@
 import Progress from '../models/Progress.js';
+import Course from '../models/Course.js';
 
 /**
  * Calculate video course progress for a user
@@ -12,15 +13,18 @@ export const buildVideoCourseProgress = async (userId, courseId) => {
   }
 
   // Fetch all progress records for this user and course
-  const progressRecords = await Progress.find({
-    user: userId,
-    course: courseId
-  }).lean();
+  const [progressRecords, course] = await Promise.all([
+    Progress.find({ user: userId, course: courseId }).lean(),
+    Course.findById(courseId).select('totalLessons').lean()
+  ]);
 
-  if (progressRecords.length === 0) {
+  // Get actual total lesson count from the course document
+  const totalLessons = course?.totalLessons || 0;
+
+  if (progressRecords.length === 0 || totalLessons === 0) {
     return {
       courseId: courseId.toString(),
-      totalLessons: 0,
+      totalLessons,
       completedLessons: 0,
       percentage: 0,
       completedLessonIds: [],
@@ -31,12 +35,11 @@ export const buildVideoCourseProgress = async (userId, courseId) => {
   // Calculate completed lessons
   const completedLessons = progressRecords.filter(record => record.isCompleted);
   const completedLessonIds = completedLessons.map(record => record.lesson.toString());
-  
+
   // Calculate total watch time (in seconds)
   const totalWatchTime = progressRecords.reduce((sum, record) => sum + (record.watchTime || 0), 0);
 
-  // Get total lessons count from the course (we'll need to fetch this)
-  const totalLessons = progressRecords.length; // This counts lessons the user has started
+  // Use actual total lesson count from course, not just started lessons
   const percentage = totalLessons > 0 
     ? Math.min(100, Math.round((completedLessons.length / totalLessons) * 100))
     : 0;

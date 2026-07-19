@@ -4,7 +4,7 @@ import { verifyToken } from '../utils/jwt.js';
 export const protect = async (req, res, next) => {
   let token;
 
-  if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+  if (req.headers.authorization && req.headers.authorization.startsWith('Bearer ')) {
     try {
       // Get token from header
       token = req.headers.authorization.split(' ')[1];

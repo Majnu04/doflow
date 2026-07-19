@@ -1,22 +1,62 @@
 import nodemailer from 'nodemailer';
+import logger from './logger.js';
 
-// Create transporter
+let transporter = null;
+
+const GMAIL_APP_PASSWORD_HINT = `
+  ─────────────────────────────────────────────────────────────
+  Gmail SMTP Authentication Failed
+  ─────────────────────────────────────────────────────────────
+  Gmail no longer accepts regular passwords for SMTP.
+  You MUST use an App Password:
+
+  1. Go to https://myaccount.google.com/security
+  2. Enable 2-Step Verification (if not already enabled)
+  3. Go to https://myaccount.google.com/apppasswords
+  4. Generate a new App Password for "Mail"
+  5. Copy the 16-character password (spaces optional)
+  6. Update EMAIL_PASSWORD in your .env file
+
+  Or switch to a transactional email service like SendGrid,
+  Mailgun, or Amazon SES for more reliable delivery.
+  ─────────────────────────────────────────────────────────────
+`;
+
 const createTransporter = () => {
-  // Check if email service is configured
   if (!process.env.EMAIL_HOST || !process.env.EMAIL_USER || !process.env.EMAIL_PASSWORD) {
-    console.warn('⚠️ Email service not configured. Set EMAIL_HOST, EMAIL_USER, and EMAIL_PASSWORD in .env');
     return null;
   }
 
-  return nodemailer.createTransport({
-    host: process.env.EMAIL_HOST,
-    port: process.env.EMAIL_PORT || 587,
-    secure: process.env.EMAIL_SECURE === 'true', // true for 465, false for other ports
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASSWORD,
-    },
-  });
+  if (!transporter) {
+    transporter = nodemailer.createTransport({
+      host: process.env.EMAIL_HOST,
+      port: parseInt(process.env.EMAIL_PORT) || 587,
+      secure: process.env.EMAIL_SECURE === 'true',
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASSWORD,
+      },
+    });
+  }
+
+  return transporter;
+};
+
+export const verifyTransporter = async () => {
+  if (!process.env.EMAIL_HOST) return false;
+  const t = createTransporter();
+  if (!t) return false;
+  try {
+    await t.verify();
+    logger.info('Email transporter verified successfully');
+    return true;
+  } catch (err) {
+    logger.warn(`Email transporter verification FAILED: ${err.message}`);
+    if (process.env.EMAIL_HOST?.includes('gmail')) {
+      logger.warn(GMAIL_APP_PASSWORD_HINT.trim());
+    }
+    return false;
+  }
 };
 
 // Send OTP for password reset
@@ -147,7 +187,8 @@ export const sendPasswordResetOTP = async (email, name, otp) => {
     console.log(`✅ Password reset OTP sent to: ${email}`);
     return { success: true, message: 'Password reset OTP sent successfully' };
   } catch (error) {
-    console.error('❌ Error sending password reset OTP:', error);
+    console.error('❌ Error sending password reset OTP:', error.message);
+    if (process.env.EMAIL_HOST?.includes('gmail')) console.warn(GMAIL_APP_PASSWORD_HINT.trim());
     return { success: false, message: 'Failed to send password reset OTP email' };
   }
 };
@@ -268,7 +309,8 @@ export const sendRegistrationOTP = async (email, name, otp) => {
     console.log(`✅ Registration OTP sent to: ${email}`);
     return { success: true, message: 'OTP sent successfully' };
   } catch (error) {
-    console.error('❌ Error sending OTP:', error);
+    console.error('❌ Error sending OTP:', error.message);
+    if (process.env.EMAIL_HOST?.includes('gmail')) console.warn(GMAIL_APP_PASSWORD_HINT.trim());
     return { success: false, message: 'Failed to send OTP email' };
   }
 };
@@ -402,7 +444,8 @@ export const sendVerificationEmail = async (email, name, verificationToken) => {
     console.log('✅ Verification email sent to:', email);
     return { success: true, message: 'Verification email sent' };
   } catch (error) {
-    console.error('❌ Error sending verification email:', error);
+    console.error('❌ Error sending verification email:', error.message);
+    if (process.env.EMAIL_HOST?.includes('gmail')) console.warn(GMAIL_APP_PASSWORD_HINT.trim());
     return { success: false, message: 'Failed to send verification email', error: error.message };
   }
 };
@@ -544,7 +587,8 @@ export const sendPasswordResetEmail = async (email, name, resetToken) => {
     console.log('✅ Password reset email sent to:', email);
     return { success: true, message: 'Password reset email sent' };
   } catch (error) {
-    console.error('❌ Error sending password reset email:', error);
+    console.error('❌ Error sending password reset email:', error.message);
+    if (process.env.EMAIL_HOST?.includes('gmail')) console.warn(GMAIL_APP_PASSWORD_HINT.trim());
     return { success: false, message: 'Failed to send password reset email', error: error.message };
   }
 };
@@ -655,7 +699,8 @@ export const sendWelcomeEmail = async (email, name) => {
     console.log('✅ Welcome email sent to:', email);
     return { success: true };
   } catch (error) {
-    console.error('❌ Error sending welcome email:', error);
+    console.error('❌ Error sending welcome email:', error.message);
+    if (process.env.EMAIL_HOST?.includes('gmail')) console.warn(GMAIL_APP_PASSWORD_HINT.trim());
     return { success: false };
   }
 };

@@ -82,16 +82,15 @@ const AuthPageNew: React.FC = () => {
       if (data.success) {
         toast.success('🎉 Registration successful! Welcome to DoFlow!');
         
-        // Store token and user data
+        // Store token and user data via Redux (which also persists to localStorage)
         if (data.token) {
           localStorage.setItem('token', data.token);
           localStorage.setItem('user', JSON.stringify(data.user));
         }
 
-        // Redirect to home
+        // Redirect to home (no full reload — Redux state is already set)
         setTimeout(() => {
           window.location.hash = '/';
-          window.location.reload();
         }, 1000);
       } else {
         toast.error(data.message || 'Invalid OTP');

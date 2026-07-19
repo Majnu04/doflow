@@ -160,7 +160,7 @@ const WishlistPage: React.FC = () => {
                   >
                     <FiHeart className="w-5 h-5 text-white fill-current" />
                   </button>
-                  {course.discountPrice && (
+                  {course.discountPrice != null && course.discountPrice > 0 && course.price > 0 && (
                     <div className="absolute top-3 left-3">
                       <Badge variant="gold">
                         {Math.round((1 - course.discountPrice / course.price) * 100)}% OFF
@@ -185,7 +185,7 @@ const WishlistPage: React.FC = () => {
                   </div>
 
                   <div className="flex items-center justify-between mb-4">
-                    {course.discountPrice ? (
+                    {course.discountPrice != null && course.discountPrice > 0 ? (
                       <div className="flex items-center gap-2">
                         <span className="text-2xl font-bold text-elite-gold">
                           ₹{course.discountPrice}
@@ -194,6 +194,8 @@ const WishlistPage: React.FC = () => {
                           ₹{course.price}
                         </span>
                       </div>
+                    ) : course.discountPrice === 0 ? (
+                      <span className="text-2xl font-bold text-green-400">Free</span>
                     ) : (
                       <span className="text-2xl font-bold text-white">
                         ₹{course.price}

@@ -1,24 +1,25 @@
-import AWS from 'aws-sdk';
+import { S3, GetObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import multer from 'multer';
 import multerS3 from 'multer-s3';
 import path from 'path';
 
-// Configure AWS S3 or DigitalOcean Spaces only if credentials exist
 let s3 = null;
 let bucketName = null;
 
 if (process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY) {
-  const spacesEndpoint = new AWS.Endpoint(process.env.DO_SPACES_ENDPOINT || 's3.amazonaws.com');
-  s3 = new AWS.S3({
-    endpoint: spacesEndpoint,
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-    region: process.env.AWS_REGION || 'us-east-1'
+  s3 = new S3({
+    endpoint: process.env.DO_SPACES_ENDPOINT || 's3.amazonaws.com',
+    credentials: {
+      accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    },
+    region: process.env.AWS_REGION || 'us-east-1',
+    forcePathStyle: !!process.env.DO_SPACES_ENDPOINT,
   });
   bucketName = process.env.DO_SPACES_BUCKET || process.env.S3_BUCKET_NAME;
 }
 
-// File filter for uploads
 const fileFilter = (req, file, cb) => {
   const allowedTypes = /jpeg|jpg|png|gif|mp4|mov|avi|pdf|doc|docx/;
   const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
@@ -31,7 +32,6 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
-// Multer S3 upload configuration
 export const upload = s3 && bucketName ? multer({
   storage: multerS3({
     s3: s3,
@@ -49,7 +49,7 @@ export const upload = s3 && bucketName ? multer({
   }),
   fileFilter: fileFilter,
   limits: {
-    fileSize: 500 * 1024 * 1024 // 500MB limit
+    fileSize: 500 * 1024 * 1024
   }
 }) : multer({
   storage: multer.diskStorage({
@@ -66,9 +66,6 @@ export const upload = s3 && bucketName ? multer({
   }
 });
 
-// @desc    Upload file
-// @route   POST /api/upload
-// @access  Private/Admin/Instructor
 export const uploadFile = async (req, res) => {
   try {
     if (!s3 || !bucketName) {
@@ -91,10 +88,7 @@ export const uploadFile = async (req, res) => {
   }
 };
 
-// @desc    Get signed URL for secure video streaming
-// @route   GET /api/upload/signed-url
-// @access  Private
-export const getSignedUrl = async (req, res) => {
+export const getSignedUrlHandler = async (req, res) => {
   try {
     if (!s3 || !bucketName) {
       return res.status(503).json({ message: 'File service not configured. Please contact administrator.' });
@@ -106,13 +100,12 @@ export const getSignedUrl = async (req, res) => {
       return res.status(400).json({ message: 'File key is required' });
     }
 
-    const params = {
+    const command = new GetObjectCommand({
       Bucket: bucketName,
       Key: key,
-      Expires: 3600 // URL expires in 1 hour
-    };
+    });
 
-    const signedUrl = await s3.getSignedUrlPromise('getObject', params);
+    const signedUrl = await getSignedUrl(s3, command, { expiresIn: 3600 });
 
     res.json({ url: signedUrl });
   } catch (error) {
@@ -120,9 +113,6 @@ export const getSignedUrl = async (req, res) => {
   }
 };
 
-// @desc    Delete file
-// @route   DELETE /api/upload
-// @access  Private/Admin
 export const deleteFile = async (req, res) => {
   try {
     if (!s3 || !bucketName) {
@@ -135,12 +125,12 @@ export const deleteFile = async (req, res) => {
       return res.status(400).json({ message: 'File key is required' });
     }
 
-    const params = {
+    const command = new DeleteObjectCommand({
       Bucket: bucketName,
-      Key: key
-    };
+      Key: key,
+    });
 
-    await s3.deleteObject(params).promise();
+    await s3.send(command);
 
     res.json({ message: 'File deleted successfully' });
   } catch (error) {

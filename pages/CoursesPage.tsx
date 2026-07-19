@@ -122,11 +122,13 @@ const CoursesPage: React.FC = () => {
 
             <div className="flex items-center justify-between">
               <div>
-                {discountPrice ? (
+                {discountPrice != null && discountPrice > 0 ? (
                   <>
                     <span className="text-xl font-semibold text-brand-primary">₹{discountPrice}</span>
                     <span className="text-light-textMuted line-through ml-2">₹{priceLabel}</span>
                   </>
+                ) : discountPrice === 0 ? (
+                  <span className="text-xl font-semibold text-brand-accent">Free</span>
                 ) : priceLabel > 0 ? (
                   <span className="text-xl font-semibold text-brand-primary">₹{priceLabel}</span>
                 ) : (

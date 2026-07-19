@@ -97,7 +97,7 @@ export const fetchDsaCourseData = createAsyncThunk(
 
       const isEnrolled = enrollmentsRes.data && Array.isArray(enrollmentsRes.data)
         ? enrollmentsRes.data.some((enrollment: any) => 
-            enrollment.course._id === courseId || enrollment.course === courseId
+            enrollment?.course?._id === courseId || enrollment?.course === courseId
           )
         : false;
 
