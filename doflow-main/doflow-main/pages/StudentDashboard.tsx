@@ -7,7 +7,7 @@ import { StreakCard, XPCard, DailyGoalsCard, ActivityTimeline, WeeklyStatsCard, 
 import { StatCard, Badge, Button, Avatar, ProgressBar } from '../src/components/ui';
 import { CourseGridSkeleton, EmptyState, ErrorState } from '../src/components/common/StateIndicators';
 import { isDsaCourse } from '../src/utils/courseUtils';
-import { FiBook, FiAward, FiTrendingUp, FiClock, FiHeart, FiBookOpen, FiCode, FiChevronRight, FiTarget, FiStar } from 'react-icons/fi';
+import { FiBook, FiAward, FiTrendingUp, FiClock, FiHeart, FiBookOpen, FiChevronRight, FiTarget, FiStar } from 'react-icons/fi';
 
 const StudentDashboard: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -68,38 +68,49 @@ const StudentDashboard: React.FC = () => {
 
         {/* Stats Row */}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 mb-8 stagger-children">
-          <StatCard
-            title="Enrolled Courses"
-            value={stats.totalCourses}
-            icon={<FiBookOpen className="w-5 h-5" />}
-            accent="bg-sky-50 text-sky-600"
-          />
-          <StatCard
-            title="In Progress"
-            value={stats.inProgressCourses}
-            icon={<FiTrendingUp className="w-5 h-5" />}
-            accent="bg-amber-50 text-amber-600"
-            change={stats.inProgressCourses > 0 ? 12 : undefined}
-          />
-          <StatCard
-            title="Completed"
-            value={stats.completedCourses}
-            icon={<FiTarget className="w-5 h-5" />}
-            accent="bg-emerald-50 text-emerald-600"
-            change={stats.completedCourses > 0 ? 8 : undefined}
-          />
-          <StatCard
-            title="Certificates"
-            value={stats.certificatesEarned}
-            icon={<FiAward className="w-5 h-5" />}
-            accent="bg-violet-50 text-violet-600"
-          />
-          <StatCard
-            title="Hours Learned"
-            value={stats.totalHoursLearned}
-            icon={<FiClock className="w-5 h-5" />}
-            accent="bg-cyan-50 text-cyan-600"
-          />
+          {status === 'failed' ? (
+            <div className="col-span-full bg-red-50 border border-red-200 rounded-2xl p-4 text-center">
+              <p className="text-sm text-red-600 font-medium mb-2">{error || 'Failed to load dashboard data'}</p>
+              <Button variant="outline" size="sm" onClick={() => dispatch(getStudentDashboardData())}>
+                Retry
+              </Button>
+            </div>
+          ) : (
+            <>
+              <StatCard
+                title="Enrolled Courses"
+                value={stats.totalCourses}
+                icon={<FiBookOpen className="w-5 h-5" />}
+                accent="bg-sky-50 text-sky-600"
+              />
+              <StatCard
+                title="In Progress"
+                value={stats.inProgressCourses}
+                icon={<FiTrendingUp className="w-5 h-5" />}
+                accent="bg-amber-50 text-amber-600"
+                change={stats.inProgressCourses > 0 ? 12 : undefined}
+              />
+              <StatCard
+                title="Completed"
+                value={stats.completedCourses}
+                icon={<FiTarget className="w-5 h-5" />}
+                accent="bg-emerald-50 text-emerald-600"
+                change={stats.completedCourses > 0 ? 8 : undefined}
+              />
+              <StatCard
+                title="Certificates"
+                value={stats.certificatesEarned}
+                icon={<FiAward className="w-5 h-5" />}
+                accent="bg-violet-50 text-violet-600"
+              />
+              <StatCard
+                title="Hours Learned"
+                value={stats.totalHoursLearned}
+                icon={<FiClock className="w-5 h-5" />}
+                accent="bg-cyan-50 text-cyan-600"
+              />
+            </>
+          )}
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
@@ -128,6 +139,13 @@ const StudentDashboard: React.FC = () => {
                       </div>
                     </div>
                   ))}
+                </div>
+              ) : status === 'failed' ? (
+                <div className="bg-red-50 border border-red-200 rounded-2xl p-8 text-center">
+                  <p className="text-sm text-red-600 font-medium mb-3">{error || 'Unable to load your courses'}</p>
+                  <Button variant="outline" size="sm" onClick={() => dispatch(getStudentDashboardData())}>
+                    Retry
+                  </Button>
                 </div>
               ) : continueLearning.length === 0 ? (
                 <div className="bg-light-card border border-border-subtle rounded-2xl p-8 text-center">

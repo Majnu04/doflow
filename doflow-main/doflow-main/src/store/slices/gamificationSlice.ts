@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import api from '../../utils/api';
+import { retryWithBackoff } from '../../utils/retryUtil';
 
 export interface StreakData {
   currentStreak: number;
@@ -84,30 +85,11 @@ export const getGamificationData = createAsyncThunk(
   'gamification/getData',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await api.get('/gamification/me');
+      const response = await retryWithBackoff(() => api.get('/gamification/me'), 2, 1000);
       return response.data;
     } catch (error: any) {
-      return {
-        streak: {
-          currentStreak: 0, longestStreak: 0, lastActivityDate: null,
-          streakHistory: Array.from({ length: 7 }, (_, i) => ({
-            date: new Date(Date.now() - (6 - i) * 86400000).toISOString().split('T')[0],
-            active: false,
-          })),
-        },
-        xp: { totalXP: 0, level: 1, xpToNextLevel: 100, xpThisWeek: 0, recentXPGains: [] },
-        achievements: [],
-        dailyGoals: [
-          { id: '1', title: 'Complete Lessons', target: 3, current: 0, unit: 'lessons', type: 'lessons' },
-          { id: '2', title: 'Solve Problems', target: 2, current: 0, unit: 'problems', type: 'problems' },
-          { id: '3', title: 'Study Time', target: 30, current: 0, unit: 'min', type: 'minutes' },
-        ],
-        activities: [],
-        leaderboard: [],
-        weeklyStats: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map(day => ({
-          day, lessons: 0, problems: 0, minutes: 0,
-        })),
-      };
+      const message = error.response?.data?.message || error.message || 'Failed to load gamification data';
+      return rejectWithValue(message);
     }
   }
 );
@@ -140,10 +122,10 @@ export const getLeaderboard = createAsyncThunk(
   'gamification/getLeaderboard',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await api.get('/gamification/leaderboard');
+      const response = await retryWithBackoff(() => api.get('/gamification/leaderboard'), 2, 1000);
       return response.data;
     } catch (error: any) {
-      return [];
+      return rejectWithValue(error.response?.data?.message || 'Failed to load leaderboard');
     }
   }
 );
@@ -171,6 +153,22 @@ const gamificationSlice = createSlice({
       .addCase(getGamificationData.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload as string;
+        state.streak = state.streak || {
+          currentStreak: 0, longestStreak: 0, lastActivityDate: null,
+          streakHistory: Array.from({ length: 7 }, (_, i) => ({
+            date: new Date(Date.now() - (6 - i) * 86400000).toISOString().split('T')[0],
+            active: false,
+          })),
+        };
+        state.xp = state.xp || { totalXP: 0, level: 1, xpToNextLevel: 100, xpThisWeek: 0, recentXPGains: [] };
+        state.dailyGoals = state.dailyGoals.length ? state.dailyGoals : [
+          { id: '1', title: 'Complete Lessons', target: 3, current: 0, unit: 'lessons', type: 'lessons' as const },
+          { id: '2', title: 'Solve Problems', target: 2, current: 0, unit: 'problems', type: 'problems' as const },
+          { id: '3', title: 'Study Time', target: 30, current: 0, unit: 'min', type: 'minutes' as const },
+        ];
+        state.weeklyStats = state.weeklyStats.length ? state.weeklyStats : ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map(day => ({
+          day, lessons: 0, problems: 0, minutes: 0,
+        }));
       })
       .addCase(recordLessonCompletion.fulfilled, (state, action) => {
         if (state.xp) {
@@ -192,6 +190,9 @@ const gamificationSlice = createSlice({
       })
       .addCase(getLeaderboard.fulfilled, (state, action) => {
         state.leaderboard = action.payload;
+      })
+      .addCase(getLeaderboard.rejected, (state) => {
+        state.leaderboard = [];
       });
   },
 });
