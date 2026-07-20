@@ -36,6 +36,7 @@ const CertificateVerificationPage = React.lazy(() => import('./pages/Certificate
 const CheckoutPage = React.lazy(() => import('./pages/CheckoutPage'));
 const ForgotPasswordPage = React.lazy(() => import('./pages/ForgotPasswordPage'));
 const RoadmapsPage = React.lazy(() => import('./src/components/RoadmapsPage'));
+const RoadmapDetailPage = React.lazy(() => import('./src/components/RoadmapDetailPage'));
 
 const LoadingFallback: React.FC = () => (
     <div className="min-h-screen flex items-center justify-center bg-light-bg dark:bg-dark-bg">
@@ -138,6 +139,13 @@ const App: React.FC = () => {
         const certVerifyMatch = path.match(/^\/verify-certificate\/([\w-]+)$/);
         if (certVerifyMatch) {
             return <CertificateVerificationPage />;
+        }
+
+        // Roadmap detail route
+        const roadmapMatch = path.match(/^\/roadmaps\/([\w-]+)$/);
+        if (roadmapMatch) {
+            const roadmapId = roadmapMatch[1];
+            return <RoadmapDetailPage roadmapId={roadmapId} />;
         }
 
         switch (path) {

@@ -628,6 +628,20 @@ html {
     transform-origin: top center;
   }
 
+  /* ── Scrollbar Hide ── */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* ── Progress Ring ── */
+  .progress-ring-circle {
+    transition: stroke-dashoffset 0.7s cubic-bezier(0.33, 1, 0.68, 1);
+  }
+
   .company-logo {
     user-select: none;
   }
