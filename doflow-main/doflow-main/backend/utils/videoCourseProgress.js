@@ -1,4 +1,5 @@
 import Progress from '../models/Progress.js';
+import Course from '../models/Course.js';
 
 /**
  * Calculate video course progress for a user
@@ -11,13 +12,18 @@ export const buildVideoCourseProgress = async (userId, courseId) => {
     return null;
   }
 
-  // Fetch all progress records for this user and course
-  const progressRecords = await Progress.find({
-    user: userId,
-    course: courseId
-  }).lean();
+  // Fetch the actual course to get the real total lesson count
+  const course = await Course.findById(courseId).lean();
+  if (!course) {
+    return null;
+  }
 
-  if (progressRecords.length === 0) {
+  // Count actual total lessons from course sections
+  const totalLessons = (course.sections || []).reduce(
+    (sum, section) => sum + (section.lessons?.length || 0), 0
+  );
+
+  if (totalLessons === 0) {
     return {
       courseId: courseId.toString(),
       totalLessons: 0,
@@ -28,6 +34,12 @@ export const buildVideoCourseProgress = async (userId, courseId) => {
     };
   }
 
+  // Fetch all progress records for this user and course
+  const progressRecords = await Progress.find({
+    user: userId,
+    course: courseId
+  }).lean();
+
   // Calculate completed lessons
   const completedLessons = progressRecords.filter(record => record.isCompleted);
   const completedLessonIds = completedLessons.map(record => record.lesson.toString());
@@ -35,11 +47,7 @@ export const buildVideoCourseProgress = async (userId, courseId) => {
   // Calculate total watch time (in seconds)
   const totalWatchTime = progressRecords.reduce((sum, record) => sum + (record.watchTime || 0), 0);
 
-  // Get total lessons count from the course (we'll need to fetch this)
-  const totalLessons = progressRecords.length; // This counts lessons the user has started
-  const percentage = totalLessons > 0 
-    ? Math.min(100, Math.round((completedLessons.length / totalLessons) * 100))
-    : 0;
+  const percentage = Math.min(100, Math.round((completedLessons.length / totalLessons) * 100));
 
   return {
     courseId: courseId.toString(),

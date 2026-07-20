@@ -166,33 +166,48 @@ html {
   scroll-behavior: smooth;
 }
 
-/* Scrollbar */
+/* Scrollbar - Premium minimal */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(148, 163, 184, 0.1);
-  border-radius: 10px;
-}
-
-.dark ::-webkit-scrollbar-track {
-  background: rgba(15, 23, 42, 0.9);
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(224, 100, 56, 0.3);
+  background: rgba(148, 163, 184, 0.25);
   border-radius: 10px;
   transition: background 200ms;
 }
 
 .dark ::-webkit-scrollbar-thumb {
-  background: rgba(224, 100, 56, 0.35);
+  background: rgba(148, 163, 184, 0.15);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(224, 100, 56, 0.5);
+  background: rgba(224, 100, 56, 0.4);
+}
+
+/* Thin scrollbar for panels */
+.scrollbar-thin::-webkit-scrollbar {
+  width: 4px;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.15);
+}
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: rgba(224, 100, 56, 0.3);
+}
+
+/* Hide scrollbar utility */
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -457,6 +472,27 @@ html {
     transform: scale(0.98);
   }
 
+  /* === 8px Spacing System === */
+  .gap-1 { gap: 0.5rem; } /* 8px */
+  .gap-2 { gap: 1rem; }   /* 16px */
+  .gap-3 { gap: 1.5rem; } /* 24px */
+  .gap-4 { gap: 2rem; }   /* 32px */
+  .gap-5 { gap: 2.5rem; } /* 40px */
+  .gap-6 { gap: 3rem; }   /* 48px */
+  .p-1 { padding: 0.5rem; }
+  .p-2 { padding: 1rem; }
+  .p-3 { padding: 1.5rem; }
+  .p-4 { padding: 2rem; }
+  .px-1 { padding-left: 0.5rem; padding-right: 0.5rem; }
+  .px-2 { padding-left: 1rem; padding-right: 1rem; }
+  .px-3 { padding-left: 1.5rem; padding-right: 1.5rem; }
+  .py-1 { padding-top: 0.5rem; padding-bottom: 0.5rem; }
+  .py-2 { padding-top: 1rem; padding-bottom: 1rem; }
+  .space-y-1 > * + * { margin-top: 0.5rem; }
+  .space-y-2 > * + * { margin-top: 1rem; }
+  .space-y-3 > * + * { margin-top: 1.5rem; }
+  .space-x-1 > * + * { margin-left: 0.5rem; }
+
   /* === Keyframes === */
   @keyframes fadeIn {
     from { opacity: 0; }
@@ -515,6 +551,81 @@ html {
 
   .animate-pulse-glow {
     animation: pulse-glow 2s ease-in-out infinite;
+  }
+
+    /* === Workspace-specific utilities === */
+  .workspace-card {
+    @apply bg-light-card dark:bg-dark-card border border-border-subtle dark:border-dark-border;
+    border-radius: 12px;
+    box-shadow: 0 1px 2px rgba(32, 29, 25, 0.04);
+    transition: all 250ms cubic-bezier(0.33, 1, 0.68, 1);
+  }
+
+  .workspace-card-hover {
+    @apply workspace-card;
+  }
+  .workspace-card-hover:hover {
+    box-shadow: 0 4px 16px rgba(32, 29, 25, 0.08);
+    border-color: rgba(224, 100, 56, 0.2);
+  }
+
+  .workspace-section-title {
+    @apply text-[11px] font-bold uppercase tracking-widest text-light-textMuted dark:text-dark-muted;
+  }
+
+  .workspace-text {
+    @apply text-[13px] text-light-text dark:text-dark-text leading-relaxed;
+  }
+
+  .workspace-text-secondary {
+    @apply text-[12px] text-light-textSecondary dark:text-dark-muted leading-relaxed;
+  }
+
+  .workspace-label {
+    @apply text-[10px] font-semibold uppercase tracking-wider text-light-textMuted dark:text-dark-muted;
+  }
+
+  /* Floating AI button */
+  .floating-ai-btn {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 50;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #E06438, #F3A45C);
+    color: white;
+    box-shadow: 0 4px 20px rgba(224, 100, 56, 0.35);
+    border: none;
+    cursor: pointer;
+    transition: all 300ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .floating-ai-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 8px 32px rgba(224, 100, 56, 0.45);
+  }
+  .floating-ai-btn:active {
+    transform: scale(0.95);
+  }
+
+  /* Progress ring */
+  .progress-ring {
+    transform: rotate(-90deg);
+  }
+  .progress-ring-circle {
+    transition: stroke-dashoffset 1s cubic-bezier(0.33, 1, 0.68, 1);
+  }
+
+  /* Monaco editor overrides */
+  .monaco-editor .margin {
+    background-color: transparent !important;
+  }
+  .monaco-editor .monaco-editor-background {
+    background-color: transparent !important;
   }
 
   /* === Mobile Touch Improvements === */

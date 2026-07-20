@@ -12,7 +12,7 @@ import { ProgressBar } from '../src/components/ui';
 import {
   FaPlay, FaCheck, FaClock, FaUsers, FaStar, FaHeart, FaRegHeart,
   FaLock, FaDownload, FaChevronDown, FaChevronUp,
-  FaBookmark, FaGlobe, FaAward, FaMobile, FaBullseye, FaLayerGroup,
+  FaBookmark, FaBookOpen, FaGlobe, FaAward, FaMobile, FaBullseye, FaLayerGroup,
   FaGraduationCap, FaSuitcase, FaQuestionCircle, FaChevronRight,
   FaTrophy, FaLightbulb, FaChartLine, FaShieldAlt, FaLaptopCode,
   FaCertificate, FaRocket, FaClipboardList, FaCode

@@ -1,5 +1,5 @@
 import Certificate from '../models/Certificate.js';
-import Progress from '../models/Progress.js';
+import Enrollment from '../models/Enrollment.js';
 import Course from '../models/Course.js';
 import { v4 as uuidv4 } from 'uuid';
 import QRCode from 'qrcode';
@@ -16,9 +16,13 @@ export const generateCertificate = async (req, res) => {
       return res.status(404).json({ message: 'Course not found' });
     }
 
-    // Check if course is completed
-    const progress = await Progress.findOne({ user: userId, course: courseId });
-    if (!progress || progress.progress < 100) {
+    // Check if course is completed via enrollment
+    const enrollment = await Enrollment.findOne({
+      user: userId,
+      course: courseId,
+      'paymentInfo.status': 'completed'
+    });
+    if (!enrollment || enrollment.progress < 100) {
       return res.status(400).json({ message: 'Course not completed yet' });
     }
 
@@ -47,7 +51,7 @@ export const generateCertificate = async (req, res) => {
       certificateId,
       studentName: req.user.name,
       courseName: course.title,
-      completionDate: progress.lastAccessedAt || new Date(),
+      completionDate: enrollment.completedAt || new Date(),
       verificationUrl,
     });
 

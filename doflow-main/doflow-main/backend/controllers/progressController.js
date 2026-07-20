@@ -71,7 +71,7 @@ export const updateProgress = async (req, res) => {
               const user = await User.findById(req.user._id);
               
               if (course && user) {
-                if (!course.certificateEligible) {
+                if (course.certificateEligible === false) {
                   logger.info('Certificate not eligible for this course', { courseId });
                 } else {
                 const certificateId = `DOFLOW-${uuidv4().split('-')[0].toUpperCase()}`;

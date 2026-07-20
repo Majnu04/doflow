@@ -6,7 +6,9 @@ import { getAdminDashboardData, getRevenueAnalytics } from '../src/store/slices/
 import { generateCourseOutline } from '../services/geminiService';
 import { StatCard, Badge, Button, Tabs, Input } from '../src/components/ui';
 import { EmptyState, ErrorState } from '../src/components/common/StateIndicators';
-import { FiUsers, FiBookOpen, FiDollarSign, FiBarChart2, FiCode, FiTrendingUp, FiActivity, FiSettings, FiSend } from 'react-icons/fi';
+import { FiUsers, FiBookOpen, FiDollarSign, FiBarChart2, FiCode, FiTrendingUp, FiActivity, FiSettings, FiSend, FiSave, FiRotateCcw } from 'react-icons/fi';
+import { setWorkspaceTitle, setWorkspaceSubtitle, setWorkspaceCompanies, resetWorkspaceConfig } from '../src/store/slices/dsaWorkspaceSlice';
+import toast from 'react-hot-toast';
 
 const MONTH_FILTER_OPTIONS = [
   { value: 'all', label: 'All Months' },
@@ -110,10 +112,14 @@ const CourseOutlineGenerator: React.FC = () => {
 const AdminDashboard: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { data, status, error, revenueAnalytics, revenueStatus, revenueError } = useSelector((state: RootState) => state.admin);
+  const dsaWorkspaceConfig = useSelector((state: RootState) => state.dsaWorkspace);
   const currentYear = new Date().getFullYear();
   const [selectedYear, setSelectedYear] = useState<string>(currentYear.toString());
   const [selectedMonth, setSelectedMonth] = useState<string>('all');
   const [selectedCourse, setSelectedCourse] = useState<string>('all');
+  const [wsTitle, setWsTitle] = useState(dsaWorkspaceConfig.title);
+  const [wsSubtitle, setWsSubtitle] = useState(dsaWorkspaceConfig.subtitle);
+  const [wsCompanies, setWsCompanies] = useState(dsaWorkspaceConfig.companies.join(', '));
 
   const triggerRevenueFetch = useCallback(() => {
     dispatch(getRevenueAnalytics({
@@ -399,6 +405,70 @@ const AdminDashboard: React.FC = () => {
                 </div>
               ))}
             </div>
+          </div>
+        </div>
+
+        {/* DSA Workspace Settings */}
+        <div className="bg-light-card border border-border-subtle rounded-2xl p-6 mb-6 shadow-card">
+          <div className="flex items-center gap-3 mb-5">
+            <div className="p-2 bg-brand-primary/10 rounded-xl">
+              <FiSettings className="w-5 h-5 text-brand-primary" />
+            </div>
+            <div>
+              <h3 className="text-base font-bold">DSA Workspace Settings</h3>
+              <p className="text-xs text-light-textMuted">Configures the DSA problem listing page</p>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div>
+              <label className="block text-xs font-semibold text-light-text mb-1.5">Workspace Title</label>
+              <input
+                type="text"
+                value={wsTitle}
+                onChange={(e) => setWsTitle(e.target.value)}
+                placeholder="e.g. Top 50 DSA Problems for Product Companies"
+                className="w-full px-3 py-2 bg-light-cardAlt/60 border border-border-subtle/40 rounded-lg text-xs text-light-text placeholder:text-light-textMuted/60 focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary transition-all"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-semibold text-light-text mb-1.5">Companies (comma-separated)</label>
+              <input
+                type="text"
+                value={wsCompanies}
+                onChange={(e) => setWsCompanies(e.target.value)}
+                placeholder="e.g. Google, Amazon, Microsoft, Meta"
+                className="w-full px-3 py-2 bg-light-cardAlt/60 border border-border-subtle/40 rounded-lg text-xs text-light-text placeholder:text-light-textMuted/60 focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary transition-all"
+              />
+            </div>
+          </div>
+          <div className="mb-4">
+            <label className="block text-xs font-semibold text-light-text mb-1.5">Workspace Subtitle</label>
+            <textarea
+              value={wsSubtitle}
+              onChange={(e) => setWsSubtitle(e.target.value)}
+              placeholder="e.g. Master data structures and algorithms..."
+              rows={2}
+              className="w-full px-3 py-2 bg-light-cardAlt/60 border border-border-subtle/40 rounded-lg text-xs text-light-text placeholder:text-light-textMuted/60 focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary transition-all resize-none"
+            />
+          </div>
+          <div className="flex items-center gap-2">
+            <Button variant="primary" size="sm" icon={<FiSave className="w-4 h-4" />} onClick={() => {
+              dispatch(setWorkspaceTitle(wsTitle));
+              dispatch(setWorkspaceSubtitle(wsSubtitle));
+              dispatch(setWorkspaceCompanies(wsCompanies.split(',').map(s => s.trim()).filter(Boolean)));
+              toast.success('Workspace settings saved');
+            }}>
+              Save Settings
+            </Button>
+            <Button variant="outline" size="sm" icon={<FiRotateCcw className="w-4 h-4" />} onClick={() => {
+              dispatch(resetWorkspaceConfig());
+              setWsTitle('Top 50 DSA Problems for Product Companies');
+              setWsSubtitle('Master data structures and algorithms through curated problem sets designed for top-tier product company interviews.');
+              setWsCompanies('Google, Amazon, Microsoft, Meta, Apple, Netflix, Uber, Stripe, Twitter, Atlassian, Salesforce, Adobe, Bloomberg, LinkedIn, Walmart');
+              toast.success('Workspace settings reset to defaults');
+            }}>
+              Reset Defaults
+            </Button>
           </div>
         </div>
 

@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import api from '../../utils/api';
 import { Problem, DsaProgress, fetchDsaProgress } from './dsaSlice';
 import { getStudentDashboardData } from './dashboardSlice';
+import { recordProblemCompletion } from './gamificationSlice';
 
 export interface PerformanceSummary {
   averageMs: number | null;
@@ -138,6 +139,11 @@ export const submitCode = createAsyncThunk(
       if (progressSnapshot?.courseId && payload.courseId) {
         dispatch(fetchDsaProgress(payload.courseId));
         dispatch(getStudentDashboardData());
+      }
+
+      const submission = response.data?.submission;
+      if (submission?.allPassed) {
+        dispatch(recordProblemCompletion({ problemTitle: payload.problemTitle }));
       }
 
       return response.data;

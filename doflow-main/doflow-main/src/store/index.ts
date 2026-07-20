@@ -8,6 +8,8 @@ import adminReducer from './slices/adminSlice';
 import dsaReducer from './slices/dsaSlice';
 import problemEditorReducer from './slices/problemEditorSlice';
 import gamificationReducer from './slices/gamificationSlice';
+import workspaceReducer from './slices/workspaceSlice';
+import dsaWorkspaceReducer from './slices/dsaWorkspaceSlice';
 
 const store = configureStore({
   reducer: {
@@ -20,6 +22,8 @@ const store = configureStore({
     dsa: dsaReducer,
     problemEditor: problemEditorReducer,
     gamification: gamificationReducer,
+    workspace: workspaceReducer,
+    dsaWorkspace: dsaWorkspaceReducer,
   },
 });
 

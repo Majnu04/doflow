@@ -31,12 +31,12 @@ export default {
           border: '#E5DDD2',
         },
         dark: {
-          bg: '#FDFBF8',
-          card: '#FFFFFF',
-          cardAlt: '#F6F0E8',
-          text: '#1F232E',
-          muted: '#5A6072',
-          border: '#E5DDD2',
+          bg: '#111111',
+          card: '#1A1A1A',
+          cardAlt: '#222222',
+          text: '#EDEDEF',
+          muted: '#8B8A91',
+          border: '#2A2A2A',
         },
         brand: {
           primary: '#E06438',

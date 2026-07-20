@@ -37,19 +37,19 @@ const CheckoutPage = React.lazy(() => import('./pages/CheckoutPage'));
 const ForgotPasswordPage = React.lazy(() => import('./pages/ForgotPasswordPage'));
 
 const LoadingFallback: React.FC = () => (
-    <div className="min-h-screen flex items-center justify-center bg-light-bg">
+    <div className="min-h-screen flex items-center justify-center bg-light-bg dark:bg-dark-bg">
         <div className="text-center">
             <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-brand-primary mx-auto"></div>
-            <p className="mt-4 text-light-textSecondary">Loading...</p>
+            <p className="mt-4 text-light-textSecondary dark:text-dark-textMuted">Loading...</p>
         </div>
     </div>
 );
 
 const NotFound: React.FC = () => (
-    <div className="min-h-screen flex items-center justify-center text-light-text text-center">
+    <div className="min-h-screen flex items-center justify-center text-light-text dark:text-dark-text text-center">
         <div>
             <h1 className="text-6xl font-bold text-brand-primary">404</h1>
-            <p className="text-2xl mt-4 text-light-textSecondary">Page Not Found</p>
+            <p className="text-2xl mt-4 text-light-textSecondary dark:text-dark-textMuted">Page Not Found</p>
             <a href="/#" className="mt-8 inline-block bg-brand-primary hover:bg-brand-primaryHover text-white font-semibold py-3 px-6 rounded-lg transition">Go Home</a>
         </div>
     </div>
@@ -67,8 +67,8 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode; requireAdmin?: boole
         return (
             <div className="min-h-screen flex items-center justify-center">
                 <div className="text-center">
-                    <h2 className="text-2xl font-bold mb-4 text-light-text">Access Denied</h2>
-                    <p className="text-light-textSecondary mb-4">You don't have permission to access this page</p>
+                    <h2 className="text-2xl font-bold mb-4 text-light-text dark:text-dark-text">Access Denied</h2>
+                    <p className="text-light-textSecondary dark:text-dark-textMuted mb-4">You don't have permission to access this page</p>
                     <a href="/#" className="inline-block bg-brand-primary hover:bg-brand-primaryHover text-white font-semibold py-3 px-6 rounded-lg transition">Go Home</a>
                 </div>
             </div>
@@ -225,10 +225,10 @@ const App: React.FC = () => {
         }
     };
 
-    const hideHeaderFooter = route.includes('/learn/');
+    const hideHeaderFooter = route.includes('/learn/') || route.includes('/dsa/');
 
     return (
-        <div className="min-h-screen bg-light-bg text-light-text font-sans transition-colors duration-300">
+        <div className="min-h-screen bg-light-bg dark:bg-dark-bg text-light-text dark:text-dark-text font-sans transition-colors duration-300">
             <Toaster
                 position="top-center"
                 reverseOrder={false}

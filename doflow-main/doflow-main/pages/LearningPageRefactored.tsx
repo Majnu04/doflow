@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react';
-import { useSelector } from 'react-redux';
-import { RootState } from '../src/store';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState, AppDispatch } from '../src/store';
+import { recordLessonCompletion } from '../src/store/slices/gamificationSlice';
 import api from '../src/utils/api';
 import Editor from '@monaco-editor/react';
 import { 
@@ -15,6 +16,9 @@ import { executeCode } from '../services/codeExecutionService';
 import AITutor from '../src/components/AITutor';
 import PremiumContentLock from '../src/components/PremiumContentLock';
 import MilestoneBadge from '../src/components/MilestoneBadge';
+import RichTextRenderer from '../src/components/learning/RichTextRenderer';
+import LearningSidebar from '../src/components/learning/LearningSidebar';
+import AIFloatingPanel from '../src/components/learning/AIFloatingPanel';
 import { 
   SidebarSkeleton, 
   LessonContentSkeleton,
@@ -44,6 +48,7 @@ interface LessonContent {
  */
 const LearningPage: React.FC<LearningPageProps> = ({ courseId }) => {
   const { user } = useSelector((state: RootState) => state.auth);
+  const dispatch = useDispatch<AppDispatch>();
   const [course, setCourse] = useState<any>(null);
   const [currentLesson, setCurrentLesson] = useState<any>(null);
   const [currentModuleIndex, setCurrentModuleIndex] = useState<number>(-1);
@@ -184,7 +189,7 @@ const LearningPage: React.FC<LearningPageProps> = ({ courseId }) => {
     fetchCourseData();
   }, [courseId]);
 
-  const fetchCourseData = async () => {
+  const fetchCourseData = async (keepLesson = false) => {
     try {
       const [courseRes, progressRes, purchasesRes] = await Promise.all([
         api.get(`/courses/${courseId}`),
@@ -192,12 +197,19 @@ const LearningPage: React.FC<LearningPageProps> = ({ courseId }) => {
         api.get('/users/purchases').catch(() => ({ data: { purchases: [] } }))
       ]);
 
-      setCourse(courseRes.data);
-      setProgress(progressRes.data);
+      if (!keepLesson) setCourse(courseRes.data);
+
+      const progressData = progressRes.data || {};
+      const completedLessonIds = (progressData.enrollment?.completedLessons || [])
+        .map((cl: any) => cl.lessonId?.toString?.() || cl.lessonId);
+      setProgress({ ...progressData, completedLessons: completedLessonIds });
       setUserPurchases(purchasesRes.data.purchases || []);
-      setCurrentLesson(null);
-      setCurrentModuleIndex(-1);
-      setCurrentLessonIndex(-1);
+
+      if (!keepLesson) {
+        setCurrentLesson(null);
+        setCurrentModuleIndex(-1);
+        setCurrentLessonIndex(-1);
+      }
       setIsLoading(false);
     } catch (error) {
       console.error('Failed to fetch course data:', error);
@@ -301,8 +313,10 @@ const LearningPage: React.FC<LearningPageProps> = ({ courseId }) => {
   const markLessonComplete = async () => {
     if (!currentLesson) return;
     try {
-      await api.post(`/progress/${courseId}/lesson`, {
-        lessonId: currentLesson._id
+      await api.post('/progress', {
+        courseId,
+        lessonId: currentLesson._id,
+        isCompleted: true
       });
       toast.success('Lesson marked complete!');
 
@@ -332,7 +346,9 @@ const LearningPage: React.FC<LearningPageProps> = ({ courseId }) => {
         }
       }
 
-      await fetchCourseData();
+      await fetchCourseData(true);
+
+      dispatch(recordLessonCompletion({ courseId, lessonTitle: currentLesson.title }));
     } catch (error) {
       toast.error('Failed to mark lesson complete');
     }
@@ -595,7 +611,9 @@ const LearningPage: React.FC<LearningPageProps> = ({ courseId }) => {
                   <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mt-1">{currentLesson?.title}</h1>
                 </div>
               </div>
-              <p className="text-lg text-gray-600 leading-relaxed max-w-3xl">{content.explanation || currentLesson?.description}</p>
+              <p className="text-lg text-gray-600 leading-relaxed max-w-3xl">
+                {content.explanation ? <RichTextRenderer content={content.explanation} /> : currentLesson?.description ? <RichTextRenderer content={currentLesson.description} /> : null}
+              </p>
             </div>
           </div>
           
@@ -1202,10 +1220,10 @@ const LearningPage: React.FC<LearningPageProps> = ({ courseId }) => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--page-bg)' }}>
         <div className="text-center">
-          <div className="animate-spin w-12 h-12 border-4 border-orange-500 border-t-transparent rounded-full mx-auto mb-4"></div>
-          <p className="text-gray-600 font-medium">Loading course...</p>
+          <div className="animate-spin w-12 h-12 border-4 border-[var(--page-accent)] border-t-transparent rounded-full mx-auto mb-4"></div>
+          <p className="text-[var(--page-text-muted)] font-medium">Loading course...</p>
         </div>
       </div>
     );
@@ -1258,10 +1276,10 @@ const LearningPage: React.FC<LearningPageProps> = ({ courseId }) => {
   
   if (!course) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--page-bg)' }}>
         <div className="text-center">
-          <h2 className="text-xl font-semibold text-gray-800 mb-4">Course not found</h2>
-          <a href="/#/dashboard" className="text-orange-500 hover:underline">Back to Dashboard</a>
+          <h2 className="text-xl font-semibold text-[var(--page-text)] mb-4" style={{ fontFamily: 'Plus Jakarta Sans, system-ui' }}>Course not found</h2>
+          <a href="/#/dashboard" className="text-[var(--page-accent)] hover:underline">Back to Dashboard</a>
         </div>
       </div>
     );
@@ -1281,173 +1299,22 @@ const LearningPage: React.FC<LearningPageProps> = ({ courseId }) => {
    * ========================================
    */
   const renderSidebar = () => (
-    <>
-      {/* Mobile Overlay */}
-      {isSidebarOpen && (
-        <div 
-          className="lg:hidden fixed inset-0 bg-black/40 z-40 transition-opacity"
-          onClick={() => setIsSidebarOpen(false)}
-        />
-      )}
-
-      {/* Sidebar */}
-      <aside
-        className={`
-          fixed top-0 left-0 h-screen bg-white border-r border-gray-200 z-50
-          transform transition-transform duration-300 ease-out
-          w-80 overflow-hidden flex flex-col
-          ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
-        `}
-      >
-        {/* Header */}
-        <div className="p-4 border-b border-gray-200 bg-gradient-to-b from-gray-50 to-white">
-          <div className="flex items-center justify-between mb-3">
-            <button
-              onClick={() => window.location.hash = `/course/${courseId}`}
-              className="text-sm text-gray-600 hover:text-gray-900 font-medium transition-colors flex items-center gap-2"
-            >
-              <FaChevronLeft className="w-3 h-3" />
-              Course Overview
-            </button>
-            <button
-              onClick={() => setIsSidebarOpen(false)}
-              className="lg:hidden p-2 hover:bg-gray-100 rounded-lg transition-colors"
-            >
-              <FaTimes className="w-4 h-4 text-gray-600" />
-            </button>
-          </div>
-          
-          <div className="mb-3">
-            <div className="flex items-start gap-2 mb-2">
-              <h2 className="font-bold text-gray-900 text-base leading-tight flex-1 line-clamp-2">
-                {course.title}
-              </h2>
-              {course.isPremium && !hasCoursePurchase() && (
-                <FaCrown className="w-4 h-4 text-orange-500 flex-shrink-0 mt-0.5" />
-              )}
-            </div>
-            {course.isPremium && !hasCoursePurchase() && (
-              <div className="flex items-center gap-2 text-xs">
-                <span className="font-bold text-orange-600">₹{course.discountPrice}</span>
-                <span className="text-gray-400 line-through">₹{course.price}</span>
-                <span className="px-2 py-0.5 bg-green-500 text-white rounded-full font-semibold">
-                  {Math.round((1 - course.discountPrice/course.price) * 100)}% OFF
-                </span>
-              </div>
-            )}
-          </div>
-          
-          {/* Progress Bar */}
-          <div>
-            <div className="flex items-center justify-between text-xs text-gray-600 mb-2">
-              <span className="font-medium">Course Progress</span>
-              <span className="font-semibold">{progressPercent}%</span>
-            </div>
-            <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
-              <div 
-                className="h-full bg-gradient-to-r from-orange-500 to-orange-600 rounded-full transition-all duration-500 ease-out"
-                style={{ width: `${progressPercent}%` }}
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* Module List */}
-        <div className="flex-1 overflow-y-auto">
-          <div className="p-3 space-y-2">
-            {course.sections.map((module: any, moduleIndex: number) => {
-              const isExpanded = expandedModules.has(moduleIndex);
-              const moduleProgress = module.lessons?.filter((l: any) => 
-                isLessonCompleted(l._id)
-              ).length || 0;
-              const totalLessons = module.lessons?.length || 0;
-
-              return (
-                <div key={module._id || moduleIndex} className="rounded-xl overflow-hidden">
-                  {/* Module Header */}
-                  <button
-                    onClick={() => toggleModule(moduleIndex)}
-                    className="w-full px-4 py-3 flex items-center justify-between bg-gray-50 hover:bg-gray-100 transition-colors text-left border border-gray-200 rounded-xl"
-                  >
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className="text-xs font-bold text-orange-600 uppercase tracking-wider">
-                          Module {moduleIndex + 1}
-                        </span>
-                        {moduleProgress === totalLessons && totalLessons > 0 && (
-                          <FaCheck className="w-3 h-3 text-green-600" />
-                        )}
-                      </div>
-                      <h3 className="text-sm font-semibold text-gray-900 leading-tight line-clamp-2">
-                        {module.title}
-                      </h3>
-                      <p className="text-xs text-gray-500 mt-1">
-                        {moduleProgress}/{totalLessons} lessons
-                      </p>
-                    </div>
-                    <div className="ml-3">
-                      {isExpanded ? (
-                        <FaChevronUp className="w-4 h-4 text-gray-400" />
-                      ) : (
-                        <FaChevronDown className="w-4 h-4 text-gray-400" />
-                      )}
-                    </div>
-                  </button>
-
-                  {/* Lessons List */}
-                  {isExpanded && (
-                    <div className="mt-1 space-y-1">
-                      {module.lessons?.map((lesson: any, lessonIndex: number) => {
-                        const isActive = currentModuleIndex === moduleIndex && 
-                                        currentLessonIndex === lessonIndex;
-                        const isCompleted = isLessonCompleted(lesson._id);
-                        const locked = isLessonLocked(lesson);
-
-                        return (
-                          <button
-                            key={lesson._id || lessonIndex}
-                            onClick={() => selectLesson(lesson, moduleIndex, lessonIndex)}
-                            className={`w-full px-4 py-3 flex items-center gap-3 text-left rounded-lg transition-all duration-200 group ${isActive ? 'bg-orange-50 border-l-4 border-orange-500 pl-3' : 'hover:bg-gray-50 border-l-4 border-transparent pl-3'} ${locked ? 'opacity-75' : ''}`}
-                          >
-                            {/* Icon */}
-                            <div className={`flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center ${isCompleted ? 'bg-green-100 text-green-600' : locked ? 'bg-orange-100 text-orange-500' : isActive ? 'bg-orange-100 text-orange-600' : 'bg-gray-100 text-gray-400 group-hover:text-gray-600'}`}>
-                              {isCompleted ? (
-                                <FaCheck className="w-4 h-4" />
-                              ) : locked ? (
-                                <FaLock className="w-3 h-3" />
-                              ) : (
-                                getLessonIcon(lesson.description)
-                              )}
-                            </div>
-                            
-                            {/* Lesson Info */}
-                            <div className="flex-1 min-w-0">
-                              <div className="flex items-center gap-2">
-                                <p className={`text-sm font-medium leading-tight line-clamp-2 ${isActive ? 'text-orange-600' : 'text-gray-700'}`}>
-                                  {lesson.title}
-                                </p>
-                                {locked && (
-                                  <FaCrown className="w-3 h-3 text-orange-500 flex-shrink-0" />
-                                )}
-                              </div>
-                              {lesson.duration && (
-                                <p className="text-xs text-gray-500 mt-1">
-                                  {lesson.duration} min {locked && '• Premium'}
-                                </p>
-                              )}
-                            </div>
-                          </button>
-                        );
-                      })}
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </aside>
-    </>
+    <LearningSidebar
+      course={course}
+      currentModuleIndex={currentModuleIndex}
+      currentLessonIndex={currentLessonIndex}
+      expandedModules={expandedModules}
+      isSidebarOpen={isSidebarOpen}
+      progress={progress}
+      progressPercent={progressPercent}
+      sessionSeconds={sessionSeconds}
+      formatSessionTime={formatSessionTime}
+      onSelectLesson={selectLesson}
+      onToggleModule={toggleModule}
+      onCloseSidebar={() => setIsSidebarOpen(false)}
+      onBack={() => window.location.hash = `/course/${courseId}`}
+      hasCoursePurchase={hasCoursePurchase}
+    />
   );
 
   /**
@@ -1456,43 +1323,45 @@ const LearningPage: React.FC<LearningPageProps> = ({ courseId }) => {
    * ========================================
    */
   const renderMobileNav = () => (
-    <div className="lg:hidden fixed top-0 left-0 right-0 bg-white border-b border-gray-200 z-30">
-      <div className="px-4 py-3 flex items-center justify-between">
-        <button
-          onClick={() => setIsSidebarOpen(true)}
-          className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-        >
-          <HiOutlineMenu className="w-6 h-6 text-gray-700" />
-        </button>
-        
-        <div className="flex-1 mx-4">
-          <div className="text-sm font-semibold text-gray-900 truncate">
-            {currentLesson ? currentLesson.title : course.title}
+    <div className="lg:hidden fixed top-0 left-0 right-0 z-30">
+      <div className="bg-white/80 backdrop-blur-xl border-b border-gray-200/60">
+        <div className="px-4 py-3 flex items-center justify-between">
+          <button
+            onClick={() => setIsSidebarOpen(true)}
+            className="p-2 hover:bg-gray-100 rounded-xl transition-colors"
+          >
+            <HiOutlineMenu className="w-5 h-5 text-gray-700" />
+          </button>
+          
+          <div className="flex-1 mx-3">
+            <div className="text-sm font-semibold text-gray-900 truncate" style={{ fontFamily: 'Plus Jakarta Sans, system-ui' }}>
+              {currentLesson ? currentLesson.title : course.title}
+            </div>
+            {currentLesson && (
+              <div className="text-[11px] text-[var(--page-text-muted)] font-medium">
+                Module {currentModuleIndex + 1} · Lesson {currentLessonIndex + 1}
+              </div>
+            )}
           </div>
+
           {currentLesson && (
-            <div className="text-xs text-gray-500">
-              Module {currentModuleIndex + 1} · Lesson {currentLessonIndex + 1}
+            <div className="flex items-center gap-1">
+              <button
+                onClick={() => navigateLesson('prev')}
+                disabled={currentModuleIndex === 0 && currentLessonIndex === 0}
+                className="p-2 text-gray-600 hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed rounded-xl"
+              >
+                <FaChevronLeft className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => navigateLesson('next')}
+                className="p-2 text-gray-600 hover:bg-gray-100 rounded-xl"
+              >
+                <FaChevronRight className="w-4 h-4" />
+              </button>
             </div>
           )}
         </div>
-
-        {currentLesson && (
-          <div className="flex items-center gap-1">
-            <button
-              onClick={() => navigateLesson('prev')}
-              disabled={currentModuleIndex === 0 && currentLessonIndex === 0}
-              className="p-2 text-gray-600 hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed rounded-lg"
-            >
-              <FaChevronLeft className="w-4 h-4" />
-            </button>
-            <button
-              onClick={() => navigateLesson('next')}
-              className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg"
-            >
-              <FaChevronRight className="w-4 h-4" />
-            </button>
-          </div>
-        )}
       </div>
     </div>
   );
@@ -1506,20 +1375,20 @@ const LearningPage: React.FC<LearningPageProps> = ({ courseId }) => {
     const milestone = getMilestoneBadge();
     return (
     <div className="max-w-4xl mx-auto">
-      <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+      <div className="bg-white rounded-2xl border border-[var(--page-border)] shadow-[var(--shadow-sm)] overflow-hidden">
         {/* Header */}
-        <div className="p-8 border-b border-gray-100">
+        <div className="p-8 border-b border-[var(--page-border)]" style={{ background: 'var(--page-gradient)' }}>
           <button
             onClick={() => window.location.hash = `/course/${courseId}`}
-            className="mb-4 px-4 py-2 text-sm text-gray-600 hover:text-gray-900 bg-gray-50 hover:bg-gray-100 rounded-lg flex items-center gap-2 font-medium transition-all"
+            className="mb-4 px-4 py-2 text-sm text-[var(--page-text-muted)] hover:text-[var(--page-text)] bg-white/60 hover:bg-white rounded-xl flex items-center gap-2 font-medium transition-all border border-[var(--page-border)]"
           >
             <FaChevronLeft className="w-3 h-3" /> Back to Course Details
           </button>
           
           <div className="flex items-start justify-between flex-wrap gap-4">
             <div className="flex-1">
-              <h1 className="text-3xl font-bold text-gray-900 mb-3">{course.title}</h1>
-              <p className="text-gray-600 leading-relaxed">
+              <h1 className="text-3xl font-bold text-[var(--page-text)] mb-3" style={{ fontFamily: 'Plus Jakarta Sans, system-ui' }}>{course.title}</h1>
+              <p className="text-[var(--page-text-muted)] leading-relaxed">
                 {course.description || 'Welcome to this course. Select a lesson from the sidebar to begin learning.'}
               </p>
             </div>
@@ -1533,33 +1402,33 @@ const LearningPage: React.FC<LearningPageProps> = ({ courseId }) => {
 
           {/* Session time in overview */}
           {sessionSeconds > 60 && (
-            <div className="mt-4 flex items-center gap-2 text-sm text-gray-500">
-              <FaClock className="w-3.5 h-3.5" />
+            <div className="mt-4 flex items-center gap-2 text-sm text-[var(--page-text-muted)]">
+              <FaClock className="w-3.5 h-3.5 text-[var(--page-accent)]" />
               <span>This session: {formatSessionTime(sessionSeconds)}</span>
             </div>
           )}
         </div>
 
         {/* Progress Section */}
-        <div className="p-8 bg-gradient-to-br from-orange-50 to-orange-100/50">
+        <div className="p-8" style={{ background: 'var(--page-gradient)' }}>
           <div className="flex items-center justify-between mb-3">
-            <span className="text-sm font-semibold text-gray-700">Your Progress</span>
-            <span className="text-2xl font-bold text-orange-600">{progressPercent}%</span>
+            <span className="text-sm font-semibold text-[var(--page-text)]">Your Progress</span>
+            <span className="text-2xl font-bold text-[var(--page-accent)]" style={{ fontFamily: 'Plus Jakarta Sans, system-ui' }}>{progressPercent}%</span>
           </div>
-          <div className="h-3 bg-white rounded-full overflow-hidden shadow-inner">
+          <div className="h-3 bg-white/60 rounded-full overflow-hidden shadow-inner">
             <div 
-              className="h-full bg-gradient-to-r from-orange-500 to-orange-600 rounded-full transition-all duration-500"
+              className="h-full bg-gradient-to-r from-[var(--page-accent)] to-[var(--page-accent-secondary)] rounded-full transition-all duration-500"
               style={{ width: `${progressPercent}%` }}
             />
           </div>
-          <p className="text-sm text-gray-600 mt-3">
+          <p className="text-sm text-[var(--page-text-muted)] mt-3">
             Keep going! You're {progressPercent >= 50 ? 'more than halfway' : 'making great progress'}.
           </p>
         </div>
 
         {/* Modules Overview */}
         <div className="p-8">
-          <h2 className="text-xl font-bold text-gray-900 mb-6">Course Modules</h2>
+          <h2 className="text-xl font-bold text-[var(--page-text)] mb-6" style={{ fontFamily: 'Plus Jakarta Sans, system-ui' }}>Course Modules</h2>
           <div className="space-y-4">
             {course.sections.map((module: any, idx: number) => {
               const moduleProgress = module.lessons?.filter((l: any) => 
@@ -1569,30 +1438,30 @@ const LearningPage: React.FC<LearningPageProps> = ({ courseId }) => {
               const progressPct = totalLessons > 0 ? (moduleProgress / totalLessons) * 100 : 0;
 
               return (
-                <div key={idx} className="p-6 bg-gray-50 rounded-xl border border-gray-200 hover:border-orange-200 hover:shadow-md transition-all">
+                <div key={idx} className="p-6 bg-[var(--page-section)]/50 rounded-2xl border border-[var(--page-border)] hover:border-[var(--page-accent)]/20 hover:shadow-md transition-all">
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-2">
-                        <span className="text-xs font-bold text-orange-600 uppercase tracking-wider">
+                        <span className="text-xs font-bold text-[var(--page-accent)] uppercase tracking-wider">
                           Module {idx + 1}
                         </span>
                         {progressPct === 100 && (
-                          <span className="px-2 py-0.5 bg-green-100 text-green-700 text-xs font-semibold rounded-full">
+                          <span className="px-2 py-0.5 bg-emerald-100 text-emerald-700 text-xs font-semibold rounded-full">
                             Completed
                           </span>
                         )}
                       </div>
-                      <h3 className="text-lg font-bold text-gray-900 mb-2">{module.title}</h3>
-                      <p className="text-sm text-gray-600">
+                      <h3 className="text-lg font-bold text-[var(--page-text)] mb-2" style={{ fontFamily: 'Plus Jakarta Sans, system-ui' }}>{module.title}</h3>
+                      <p className="text-sm text-[var(--page-text-muted)]">
                         {moduleProgress}/{totalLessons} lessons completed
                       </p>
                     </div>
                   </div>
                   
                   {/* Progress bar */}
-                  <div className="h-2 bg-gray-200 rounded-full overflow-hidden mb-3">
+                  <div className="h-2 bg-[var(--page-border)] rounded-full overflow-hidden mb-3">
                     <div 
-                      className="h-full bg-orange-500 rounded-full transition-all duration-500"
+                      className="h-full bg-[var(--page-accent)] rounded-full transition-all duration-500"
                       style={{ width: `${progressPct}%` }}
                     />
                   </div>
@@ -1603,7 +1472,7 @@ const LearningPage: React.FC<LearningPageProps> = ({ courseId }) => {
                         selectLesson(module.lessons[0], idx, 0);
                       }
                     }}
-                    className="text-sm text-orange-600 hover:text-orange-700 font-semibold flex items-center gap-2 group"
+                    className="text-sm text-[var(--page-accent)] hover:text-[var(--page-accent)]/80 font-semibold flex items-center gap-2 group"
                   >
                     {progressPct === 0 ? 'Start Module' : 'Continue Learning'}
                     <FaChevronRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
@@ -1615,14 +1484,14 @@ const LearningPage: React.FC<LearningPageProps> = ({ courseId }) => {
         </div>
 
         {/* CTA */}
-        <div className="p-8 bg-gray-50 border-t border-gray-100 text-center">
+        <div className="p-8 bg-[var(--page-section)] border-t border-[var(--page-border)] text-center">
           <button
             onClick={() => {
               if (course.sections?.[0]?.lessons?.[0]) {
                 selectLesson(course.sections[0].lessons[0], 0, 0);
               }
             }}
-            className="px-8 py-4 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all transform hover:scale-105"
+            className="px-8 py-4 bg-gradient-to-r from-[var(--page-accent)] to-[var(--page-accent-secondary)] hover:from-[var(--page-accent)]/90 hover:to-[var(--page-accent-secondary)]/90 text-white rounded-2xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all transform hover:scale-105"
           >
             {progressPercent > 0 ? 'Continue Learning' : 'Start Learning'}
           </button>
@@ -1638,7 +1507,7 @@ const LearningPage: React.FC<LearningPageProps> = ({ courseId }) => {
    * ========================================
    */
   return (
-    <div className="min-h-screen bg-gray-50 font-['Inter',system-ui,sans-serif]">
+    <div className="min-h-screen font-['Inter',system-ui,sans-serif]" style={{ background: 'var(--page-bg)', backgroundImage: 'var(--page-gradient)', backgroundAttachment: 'fixed' }}>
       {/* Sidebar */}
       {showSidebar && renderSidebar()}
 
@@ -1662,27 +1531,27 @@ const LearningPage: React.FC<LearningPageProps> = ({ courseId }) => {
           {/* Desktop Breadcrumb & Navigation */}
           {currentLesson && (
             <div className="hidden lg:flex items-center justify-between mb-6">
-              <div className="flex items-center gap-2 text-sm text-gray-500">
+              <div className="flex items-center gap-2 text-sm">
                 <button
                   onClick={() => {
                     setCurrentLesson(null);
                     setCurrentModuleIndex(-1);
                     setCurrentLessonIndex(-1);
                   }}
-                  className="hover:text-gray-700 font-medium transition-colors"
+                  className="text-[var(--page-text-muted)] hover:text-[var(--page-accent)] font-medium transition-colors"
                 >
                   Course Overview
                 </button>
-                <FaChevronRight className="w-3 h-3" />
-                <span>Module {currentModuleIndex + 1}</span>
-                <FaChevronRight className="w-3 h-3" />
-                <span className="text-gray-900 font-medium">Lesson {currentLessonIndex + 1}</span>
+                <FaChevronRight className="w-3 h-3 text-[var(--page-text-muted)]/40" />
+                <span className="text-[var(--page-text-muted)]">Module {currentModuleIndex + 1}</span>
+                <FaChevronRight className="w-3 h-3 text-[var(--page-text-muted)]/40" />
+                <span className="text-[var(--page-text)] font-semibold">Lesson {currentLessonIndex + 1}</span>
               </div>
 
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2.5">
                 {/* Session Timer */}
-                <div className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-100 rounded-lg text-xs font-medium text-gray-600" title="Session time">
-                  <FaClock className="w-3 h-3" />
+                <div className="flex items-center gap-1.5 px-3 py-1.5 bg-[var(--page-section)] rounded-xl text-xs font-semibold text-[var(--page-text-muted)]" title="Session time">
+                  <FaClock className="w-3 h-3 text-[var(--page-accent)]" />
                   <span>{formatSessionTime(sessionSeconds)}</span>
                 </div>
 
@@ -1692,7 +1561,7 @@ const LearningPage: React.FC<LearningPageProps> = ({ courseId }) => {
                     setIsFocusMode(prev => !prev);
                     toast.success(isFocusMode ? 'Focus mode off' : 'Focus mode on — distractions hidden');
                   }}
-                  className={`p-2 rounded-lg transition-all ${isFocusMode ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/30' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
+                  className={`p-2 rounded-xl transition-all ${isFocusMode ? 'bg-[var(--page-accent)] text-white shadow-lg shadow-[var(--page-accent)]/30' : 'bg-[var(--page-section)] text-[var(--page-text-muted)] hover:bg-[var(--page-border)]'}`}
                   title={isFocusMode ? 'Exit Focus Mode (F)' : 'Focus Mode (F)'}
                 >
                   {isFocusMode ? <FaMoon className="w-4 h-4" /> : <FaSun className="w-4 h-4" />}
@@ -1701,23 +1570,25 @@ const LearningPage: React.FC<LearningPageProps> = ({ courseId }) => {
                 {/* Keyboard Shortcuts */}
                 <button
                   onClick={() => setShowShortcuts(prev => !prev)}
-                  className="p-2 bg-gray-100 text-gray-600 hover:bg-gray-200 rounded-lg transition-all relative"
+                  className="p-2 bg-[var(--page-section)] text-[var(--page-text-muted)] hover:bg-[var(--page-border)] rounded-xl transition-all"
                   title="Keyboard Shortcuts (?)"
                 >
                   <FaKeyboard className="w-4 h-4" />
                 </button>
 
+                <div className="w-px h-5 bg-[var(--page-border)]" />
+
                 <button
                   onClick={() => navigateLesson('prev')}
                   disabled={currentModuleIndex === 0 && currentLessonIndex === 0}
-                  className="px-4 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed rounded-lg transition-all font-medium text-sm flex items-center gap-2"
+                  className="px-3.5 py-2 text-[var(--page-text-muted)] hover:text-[var(--page-text)] hover:bg-[var(--page-section)] disabled:opacity-30 disabled:cursor-not-allowed rounded-xl transition-all font-medium text-sm flex items-center gap-1.5"
                 >
                   <FaChevronLeft className="w-3 h-3" />
-                  Previous
+                  Prev
                 </button>
                 <button
                   onClick={() => navigateLesson('next')}
-                  className="px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-all font-medium text-sm flex items-center gap-2"
+                  className="px-3.5 py-2 bg-[var(--page-accent)] hover:bg-[var(--page-accent)]/90 text-white rounded-xl transition-all font-medium text-sm flex items-center gap-1.5 shadow-sm"
                 >
                   Next
                   <FaChevronRight className="w-3 h-3" />
@@ -1758,35 +1629,35 @@ const LearningPage: React.FC<LearningPageProps> = ({ courseId }) => {
               }}
             />
           ) : (
-            <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+            <div className="bg-white rounded-2xl border border-[var(--page-border)] shadow-[var(--shadow-sm)] overflow-hidden">
               {/* Lesson Header */}
-              <div className="p-6 lg:p-8 border-b border-gray-100">
+              <div className="p-6 lg:p-8 border-b border-[var(--page-border)]" style={{ background: 'var(--page-gradient)' }}>
                 <div className="flex items-start gap-4">
-                  <div className="flex-shrink-0 w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center">
-                    {getLessonIcon(currentLesson.description)}
+                  <div className="flex-shrink-0 w-12 h-12 rounded-2xl bg-gradient-to-br from-[var(--page-accent)] to-[var(--page-accent-secondary)] flex items-center justify-center shadow-lg">
+                    <span className="text-white">{getLessonIcon(currentLesson.description)}</span>
                   </div>
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
-                      <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 leading-tight">
+                      <h1 className="text-2xl lg:text-3xl font-bold text-[var(--page-text)] leading-tight" style={{ fontFamily: 'Plus Jakarta Sans, system-ui' }}>
                         {currentLesson.title}
                       </h1>
                       {currentLesson.isPreview && (
-                        <span className="px-3 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded-full">
+                        <span className="px-3 py-1 bg-emerald-100 text-emerald-700 text-xs font-semibold rounded-full">
                           FREE PREVIEW
                         </span>
                       )}
                     </div>
                     {currentLesson.description && (
-                      <p className="text-gray-600 leading-relaxed">
-                        {currentLesson.description}
-                      </p>
+                      <div className="text-[var(--page-text-muted)] leading-relaxed">
+                        <RichTextRenderer content={currentLesson.description} />
+                      </div>
                     )}
                   </div>
                 </div>
               </div>
 
               {/* Lesson Content */}
-              <div className="p-6 lg:p-8">
+              <div className="p-4 sm:p-6 lg:p-8">
                 {lessonType === 'concept' && renderConceptLesson()}
                 {lessonType === 'mcq' && renderMCQLesson()}
                 {(lessonType === 'coding' || lessonType === 'codingTask') && renderCodingLesson()}
@@ -1819,8 +1690,8 @@ const LearningPage: React.FC<LearningPageProps> = ({ courseId }) => {
         </div>
       )}
 
-      {/* AI Tutor */}
-      <AITutor defaultTopic={currentLesson?.title || ''} />
+      {/* AI Floating Panel */}
+      {currentLesson && <AIFloatingPanel currentLesson={currentLesson} />}
 
       {/* Milestone Badge */}
       {milestone && (
@@ -1844,18 +1715,18 @@ const LearningPage: React.FC<LearningPageProps> = ({ courseId }) => {
 
       {/* Keyboard Shortcuts Panel */}
       {showShortcuts && (
-        <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4" onClick={() => setShowShortcuts(false)}>
-          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 animate-fadeIn" onClick={(e) => e.stopPropagation()}>
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
-                <FaKeyboard className="text-orange-500" />
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={() => setShowShortcuts(false)}>
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 border border-[var(--page-border)]" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-5">
+              <h3 className="text-lg font-bold text-[var(--page-text)] flex items-center gap-2" style={{ fontFamily: 'Plus Jakarta Sans, system-ui' }}>
+                <FaKeyboard className="text-[var(--page-accent)]" />
                 Keyboard Shortcuts
               </h3>
-              <button onClick={() => setShowShortcuts(false)} className="p-1 hover:bg-gray-100 rounded-lg transition-colors">
-                <FaTimes className="w-4 h-4 text-gray-500" />
+              <button onClick={() => setShowShortcuts(false)} className="p-1.5 hover:bg-[var(--page-section)] rounded-lg transition-colors">
+                <FaTimes className="w-4 h-4 text-[var(--page-text-muted)]" />
               </button>
             </div>
-            <div className="space-y-2">
+            <div className="space-y-1.5">
               {[
                 { keys: ['Alt', '←'], desc: 'Previous lesson' },
                 { keys: ['Alt', '→'], desc: 'Next lesson' },
@@ -1864,11 +1735,11 @@ const LearningPage: React.FC<LearningPageProps> = ({ courseId }) => {
                 { keys: ['Esc'], desc: 'Close panel / exit focus' },
                 { keys: ['?'], desc: 'Toggle this panel' },
               ].map(({ keys, desc }) => (
-                <div key={desc} className="flex items-center justify-between py-2 px-3 rounded-lg hover:bg-gray-50">
-                  <span className="text-sm text-gray-700">{desc}</span>
+                <div key={desc} className="flex items-center justify-between py-2.5 px-3 rounded-xl hover:bg-[var(--page-section)] transition-colors">
+                  <span className="text-sm text-[var(--page-text)]">{desc}</span>
                   <div className="flex items-center gap-1">
                     {keys.map((k, i) => (
-                      <kbd key={i} className="px-2 py-1 bg-gray-100 border border-gray-200 rounded-md text-xs font-mono font-medium text-gray-600">
+                      <kbd key={i} className="px-2.5 py-1 bg-[var(--page-section)] border border-[var(--page-border)] rounded-lg text-xs font-mono font-semibold text-[var(--page-text-muted)]">
                         {k}
                       </kbd>
                     ))}
@@ -1876,7 +1747,9 @@ const LearningPage: React.FC<LearningPageProps> = ({ courseId }) => {
                 </div>
               ))}
             </div>
-            <p className="mt-4 text-xs text-gray-400 text-center">Press <kbd className="px-1.5 py-0.5 bg-gray-100 rounded text-gray-500 font-mono">?</kbd> anytime to toggle this panel</p>
+            <p className="mt-5 text-xs text-[var(--page-text-muted)]/60 text-center">
+              Press <kbd className="px-1.5 py-0.5 bg-[var(--page-section)] rounded text-[var(--page-text-muted)] font-mono">?</kbd> anytime to toggle this panel
+            </p>
           </div>
         </div>
       )}
