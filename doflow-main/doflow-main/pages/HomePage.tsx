@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState, AppDispatch } from '../src/store';
 import { getCourses } from '../src/store/slices/coursesSlice';
+import { getStudentDashboardData } from '../src/store/slices/dashboardSlice';
 import { CourseGridSkeleton, EmptyState, ErrorState } from '../src/components/common/StateIndicators';
 import { Button, Card, Badge, ProgressBar } from '../src/components/ui';
 import { Course } from '../src/store/slices/coursesSlice';
@@ -20,6 +21,7 @@ const HomePage: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
   const { courses, isLoading, error } = useSelector((state: RootState) => state.courses);
+  const { enrollments } = useSelector((state: RootState) => state.dashboard);
   const [isVisible, setIsVisible] = useState(false);
   const [statProgress, setStatProgress] = useState(0);
 
@@ -28,6 +30,12 @@ const HomePage: React.FC = () => {
   useEffect(() => {
     if (!courses.length && !isLoading) dispatch(getCourses({}));
   }, [courses.length, isLoading, dispatch]);
+
+  useEffect(() => {
+    if (isAuthenticated && enrollments.length === 0) {
+      dispatch(getStudentDashboardData());
+    }
+  }, [isAuthenticated, enrollments.length, dispatch]);
 
   useEffect(() => {
     if (!isVisible) return;
@@ -65,6 +73,10 @@ const HomePage: React.FC = () => {
     const topCourses = dsaCourse ? [dsaCourse, ...otherCourses] : otherCourses;
     return topCourses.slice(0, 4);
   }, [courses]);
+
+  const enrolledCourseIds = useMemo(() => {
+    return new Set(enrollments.map(e => e.course?._id || e.course));
+  }, [enrollments]);
 
   const features = [
     { icon: <FiPlay className="w-5 h-5" />, title: 'HD Video Lessons', description: 'Crystal clear video content at your own pace' },
@@ -345,7 +357,11 @@ const HomePage: React.FC = () => {
 
                     <div className="flex items-center justify-between pt-3 border-t border-border-subtle/40">
                       <div>
-                        {course.price === 0 ? (
+                        {enrolledCourseIds.has(course._id) ? (
+                          <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-emerald-500">
+                            <FiCheckCircle className="w-4 h-4" /> Enrolled
+                          </span>
+                        ) : course.price === 0 ? (
                           <span className="text-lg font-bold text-emerald-500">Free</span>
                         ) : (
                           <div className="flex items-baseline gap-2">

@@ -1,8 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCourses } from '../src/store/slices/coursesSlice';
+import { getStudentDashboardData } from '../src/store/slices/dashboardSlice';
 import { AppDispatch, RootState } from '../src/store';
-import { FaStar, FaUsers, FaClock } from 'react-icons/fa';
+import { FaStar, FaUsers, FaClock, FaCheckCircle } from 'react-icons/fa';
 import { CourseGridSkeleton, EmptyState, ErrorState } from '../src/components/common/StateIndicators';
 import { Button } from '../src/components/ui';
 
@@ -11,6 +12,8 @@ const COURSE_PLACEHOLDER = '/images/course-placeholder.svg';
 const CoursesPage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { courses, isLoading, error } = useSelector((state: RootState) => state.courses);
+  const { isAuthenticated } = useSelector((state: RootState) => state.auth);
+  const { enrollments } = useSelector((state: RootState) => state.dashboard);
   const [filters, setFilters] = React.useState({
     category: '',
     level: '',
@@ -21,6 +24,16 @@ const CoursesPage: React.FC = () => {
   useEffect(() => {
     dispatch(getCourses(filters));
   }, [dispatch, filters]);
+
+  useEffect(() => {
+    if (isAuthenticated && enrollments.length === 0) {
+      dispatch(getStudentDashboardData());
+    }
+  }, [isAuthenticated, enrollments.length, dispatch]);
+
+  const enrolledCourseIds = useMemo(() => {
+    return new Set(enrollments.map(e => e.course?._id || e.course));
+  }, [enrollments]);
 
   const handleRetry = () => {
     dispatch(getCourses(filters));
@@ -122,7 +135,11 @@ const CoursesPage: React.FC = () => {
 
             <div className="flex items-center justify-between">
               <div>
-                {discountPrice ? (
+                {enrolledCourseIds.has(course._id) ? (
+                  <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-emerald-500">
+                    <FaCheckCircle /> Enrolled
+                  </span>
+                ) : discountPrice ? (
                   <>
                     <span className="text-xl font-semibold text-brand-primary">₹{discountPrice}</span>
                     <span className="text-light-textMuted line-through ml-2">₹{priceLabel}</span>
