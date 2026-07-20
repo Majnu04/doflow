@@ -52,9 +52,12 @@ const app = express();
 
 // CORS (placed before other middleware so every response inherits the headers)
 const allowedOrigins = new Set([
-  process.env.FRONTEND_URL || 'http://localhost:5173',
-  'http://localhost:5173'
-]);
+  process.env.FRONTEND_URL,
+  'http://localhost:5173',
+  'http://localhost:3000',
+  'https://doflow.tech',
+  'https://www.doflow.tech',
+].filter(Boolean));
 const corsOptions = {
   origin: (origin, callback) => {
     // In development, allow requests without origin (Postman, cURL)
