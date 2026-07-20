@@ -4,11 +4,13 @@ import { RootState, AppDispatch } from '../src/store';
 import { recordLessonCompletion } from '../src/store/slices/gamificationSlice';
 import api from '../src/utils/api';
 import Editor from '@monaco-editor/react';
-import { 
-  FaChevronDown, FaChevronUp, FaChevronLeft, FaChevronRight, FaCheck, 
-  FaPlay, FaBook, FaCode, FaQuestionCircle, FaLaptopCode, FaLightbulb, 
+import { motion, AnimatePresence } from 'framer-motion';
+import {
+  FaChevronDown, FaChevronUp, FaChevronLeft, FaChevronRight, FaCheck,
+  FaPlay, FaBook, FaCode, FaQuestionCircle, FaLaptopCode, FaLightbulb,
   FaClipboardList, FaBars, FaTimes, FaLock, FaCrown, FaMoon, FaSun,
-  FaKeyboard, FaTrophy, FaClock
+  FaKeyboard, FaTrophy, FaClock, FaSearch, FaFire, FaStar, FaRocket,
+  FaGraduationCap, FaArrowRight, FaCheckDouble
 } from 'react-icons/fa';
 import { HiOutlineMenu } from 'react-icons/hi';
 import toast from 'react-hot-toast';
@@ -19,11 +21,14 @@ import MilestoneBadge from '../src/components/MilestoneBadge';
 import RichTextRenderer from '../src/components/learning/RichTextRenderer';
 import LearningSidebar from '../src/components/learning/LearningSidebar';
 import AIFloatingPanel from '../src/components/learning/AIFloatingPanel';
-import { 
-  SidebarSkeleton, 
+import {
+  SidebarSkeleton,
   LessonContentSkeleton,
-  useMinimumLoadingTime 
+  useMinimumLoadingTime
 } from '../src/components/Skeleton';
+import {
+  fadeIn, slideUp, slideDown, slideInLeft, scaleIn, popIn, staggerContainer
+} from '../src/styles/motion';
 
 interface LearningPageProps {
   courseId: string;
@@ -35,17 +40,6 @@ interface LessonContent {
   hideSidebar?: boolean;
 }
 
-/**
- * PROFESSIONAL LEARNING PAGE
- * Design Principles:
- * - Clean SaaS design with strong visual hierarchy
- * - Mobile-first responsive with sidebar→drawer on mobile
- * - Inter font family for professional typography
- * - 8px spacing system for consistency
- * - Accessible contrast (WCAG AA compliant)
- * - Smooth animations and transitions
- * - Touch-friendly interactive elements (min 44x44px)
- */
 const LearningPage: React.FC<LearningPageProps> = ({ courseId }) => {
   const { user } = useSelector((state: RootState) => state.auth);
   const dispatch = useDispatch<AppDispatch>();
@@ -56,43 +50,32 @@ const LearningPage: React.FC<LearningPageProps> = ({ courseId }) => {
   const [progress, setProgress] = useState<any>({});
   const [isLoading, setIsLoading] = useState(true);
   const [expandedModules, setExpandedModules] = useState<Set<number>>(new Set([0]));
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Mobile drawer state
-  const [userPurchases, setUserPurchases] = useState<string[]>([]); // Courses user has purchased
-  
-  // Skeleton loading with minimum display time (prevents flash)
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [userPurchases, setUserPurchases] = useState<string[]>([]);
+
   const showSkeleton = useMinimumLoadingTime(isLoading, 500);
-  
-  // MCQ State
+
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [mcqSubmitted, setMcqSubmitted] = useState(false);
   const [mcqCorrect, setMcqCorrect] = useState<boolean | null>(null);
-  
-  // Module Test State
-  const [testAnswers, setTestAnswers] = useState<{[key: number]: number}>({});
+
+  const [testAnswers, setTestAnswers] = useState<{ [key: number]: number }>({});
   const [testSubmitted, setTestSubmitted] = useState(false);
   const [testScore, setTestScore] = useState(0);
 
-  // Coding State
   const [code, setCode] = useState('# Write your Python code here\n');
   const [output, setOutput] = useState('');
   const [isRunning, setIsRunning] = useState(false);
-  
-  // UI State
-  const [copiedCode, setCopiedCode] = useState(false);
 
-  // Session timer
+  const [copiedCode, setCopiedCode] = useState(false);
   const [sessionSeconds, setSessionSeconds] = useState(0);
   const sessionStartRef = useRef<number>(Date.now());
   const timerIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  // Focus mode
   const [isFocusMode, setIsFocusMode] = useState(false);
-
-  // Keyboard shortcuts visibility
   const [showShortcuts, setShowShortcuts] = useState(false);
-
-  // Milestone badge trigger
   const [milestone, setMilestone] = useState<{ type: 'lesson-complete' | 'module-complete' | 'course-complete' } | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const analyticsSessionId = React.useMemo(() => {
     const key = 'doflow_session_id';
@@ -103,7 +86,6 @@ const LearningPage: React.FC<LearningPageProps> = ({ courseId }) => {
     return newId;
   }, []);
 
-  // ── Session Timer ────────────────────────────────────────────────────────
   useEffect(() => {
     timerIntervalRef.current = setInterval(() => {
       setSessionSeconds(Math.floor((Date.now() - sessionStartRef.current) / 1000));
@@ -121,21 +103,17 @@ const LearningPage: React.FC<LearningPageProps> = ({ courseId }) => {
     return `${m}:${s.toString().padStart(2, '0')}`;
   }, []);
 
-  // ── Keyboard Shortcuts ───────────────────────────────────────────────────
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Don't trigger shortcuts when typing in inputs
       const target = e.target as HTMLElement;
       if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable) return;
 
-      // ? — toggle shortcuts panel
       if (e.key === '?' && !e.ctrlKey && !e.metaKey) {
         e.preventDefault();
         setShowShortcuts(prev => !prev);
         return;
       }
 
-      // Escape — close sidebar / shortcuts panel / focus mode
       if (e.key === 'Escape') {
         if (showShortcuts) { setShowShortcuts(false); return; }
         if (isSidebarOpen) { setIsSidebarOpen(false); return; }
@@ -143,7 +121,6 @@ const LearningPage: React.FC<LearningPageProps> = ({ courseId }) => {
         return;
       }
 
-      // Arrow keys — navigate lessons
       if (e.key === 'ArrowLeft' && (e.altKey || e.metaKey)) {
         e.preventDefault();
         navigateLesson('prev');
@@ -155,15 +132,13 @@ const LearningPage: React.FC<LearningPageProps> = ({ courseId }) => {
         return;
       }
 
-      // F — toggle focus mode
       if (e.key === 'f' && !e.ctrlKey && !e.metaKey) {
         e.preventDefault();
         setIsFocusMode(prev => !prev);
-        toast.success(isFocusMode ? 'Focus mode off' : 'Focus mode on — distractions hidden');
+        toast.success(isFocusMode ? 'Focus mode off' : 'Focus mode on \u2014 distractions hidden');
         return;
       }
 
-      // S — toggle sidebar (desktop)
       if (e.key === 's' && !e.ctrlKey && !e.metaKey && window.innerWidth >= 1024) {
         e.preventDefault();
         setIsSidebarOpen(prev => !prev);
@@ -175,7 +150,6 @@ const LearningPage: React.FC<LearningPageProps> = ({ courseId }) => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isSidebarOpen, isFocusMode, showShortcuts, currentModuleIndex, currentLessonIndex, course]);
 
-  // Detect programming language
   const programmingLanguage = React.useMemo(() => {
     const tags = course?.tags || [];
     if (tags.some((tag: string) => tag.toLowerCase() === 'java')) return 'Java';
@@ -218,7 +192,6 @@ const LearningPage: React.FC<LearningPageProps> = ({ courseId }) => {
     }
   };
 
-  // Parse lesson content
   const getLessonContent = (lesson: any): LessonContent | null => {
     if (!lesson?.resources?.[0]?.url) return null;
     try {
@@ -228,11 +201,10 @@ const LearningPage: React.FC<LearningPageProps> = ({ courseId }) => {
     }
   };
 
-  // Get lesson type
   const getLessonType = (lesson: any): string => {
     const content = getLessonContent(lesson);
     if (content?.type) return content.type;
-    
+
     const title = lesson?.title?.toLowerCase() || '';
     if (title.includes('mcq') || title.includes('quiz')) return 'mcq';
     if (title.includes('coding task') || title.includes('challenge')) return 'codingTask';
@@ -241,19 +213,17 @@ const LearningPage: React.FC<LearningPageProps> = ({ courseId }) => {
     return 'concept';
   };
 
-  // Get lesson icon
   const getLessonIcon = (description: string) => {
     const lower = description?.toLowerCase() || '';
-    if (lower.includes('quiz') || lower.includes('mcq')) 
+    if (lower.includes('quiz') || lower.includes('mcq'))
       return <FaQuestionCircle className="w-4 h-4" />;
-    if (lower.includes('code') || lower.includes('challenge')) 
+    if (lower.includes('code') || lower.includes('challenge'))
       return <FaCode className="w-4 h-4" />;
-    if (lower.includes('test')) 
+    if (lower.includes('test'))
       return <FaClipboardList className="w-4 h-4" />;
     return <FaPlay className="w-4 h-4" />;
   };
 
-  // Calculate progress
   const calculateProgress = (): number => {
     if (!course?.sections || !progress?.completedLessons) return 0;
     const totalLessons = course.sections.reduce(
@@ -265,7 +235,6 @@ const LearningPage: React.FC<LearningPageProps> = ({ courseId }) => {
     return Math.round((completedCount / totalLessons) * 100);
   };
 
-  // Select lesson
   const selectLesson = (lesson: any, moduleIdx: number, lessonIdx: number) => {
     setCurrentLesson(lesson);
     setCurrentModuleIndex(moduleIdx);
@@ -273,13 +242,12 @@ const LearningPage: React.FC<LearningPageProps> = ({ courseId }) => {
     setSelectedAnswer(null);
     setMcqSubmitted(false);
     setMcqCorrect(null);
-    setIsSidebarOpen(false); // Close mobile drawer
+    setIsSidebarOpen(false);
   };
 
-  // Navigate lessons
   const navigateLesson = (direction: 'prev' | 'next') => {
     if (!course?.sections) return;
-    
+
     let newModuleIdx = currentModuleIndex;
     let newLessonIdx = currentLessonIndex;
 
@@ -309,7 +277,6 @@ const LearningPage: React.FC<LearningPageProps> = ({ courseId }) => {
     selectLesson(newLesson, newModuleIdx, newLessonIdx);
   };
 
-  // Mark lesson complete
   const markLessonComplete = async () => {
     if (!currentLesson) return;
     try {
@@ -320,7 +287,6 @@ const LearningPage: React.FC<LearningPageProps> = ({ courseId }) => {
       });
       toast.success('Lesson marked complete!');
 
-      // Determine milestone type
       const newCompletedCount = (progress?.completedLessons?.length || 0) + 1;
       const totalLessons = course?.sections?.reduce(
         (acc: number, s: any) => acc + (s.lessons?.length || 0), 0
@@ -329,7 +295,6 @@ const LearningPage: React.FC<LearningPageProps> = ({ courseId }) => {
       if (newCompletedCount >= totalLessons) {
         setMilestone({ type: 'course-complete' });
       } else {
-        // Check if current module is now complete
         const currentModule = course?.sections?.[currentModuleIndex];
         if (currentModule) {
           const moduleLessons = currentModule.lessons || [];
@@ -354,7 +319,6 @@ const LearningPage: React.FC<LearningPageProps> = ({ courseId }) => {
     }
   };
 
-  // Toggle module expansion
   const toggleModule = (idx: number) => {
     const newExpanded = new Set(expandedModules);
     if (newExpanded.has(idx)) {
@@ -365,46 +329,33 @@ const LearningPage: React.FC<LearningPageProps> = ({ courseId }) => {
     setExpandedModules(newExpanded);
   };
 
-  // Check if lesson is completed
   const isLessonCompleted = (lessonId: string): boolean => {
     return progress?.completedLessons?.includes(lessonId) || false;
   };
 
-  // Milestone badges based on progress
   const getMilestoneBadge = (): { label: string; color: string; icon: React.ReactNode } | null => {
     const pct = calculateProgress();
-    if (pct >= 100) return { label: 'Course Complete!', color: 'bg-gradient-to-r from-yellow-400 to-orange-500 text-white', icon: <FaTrophy className="w-4 h-4" /> };
-    if (pct >= 75) return { label: 'Almost There!', color: 'bg-gradient-to-r from-orange-400 to-red-500 text-white', icon: <FaTrophy className="w-4 h-4" /> };
-    if (pct >= 50) return { label: 'Halfway Hero', color: 'bg-gradient-to-r from-green-400 to-emerald-500 text-white', icon: <FaTrophy className="w-4 h-4" /> };
-    if (pct >= 25) return { label: 'Good Start', color: 'bg-gradient-to-r from-blue-400 to-indigo-500 text-white', icon: <FaTrophy className="w-4 h-4" /> };
-    if (pct > 0) return { label: 'First Steps', color: 'bg-gradient-to-r from-purple-400 to-pink-500 text-white', icon: <FaTrophy className="w-4 h-4" /> };
+    if (pct >= 100) return { label: 'Course Complete!', color: 'from-yellow-400 to-orange-500 text-white', icon: <FaTrophy className="w-4 h-4" /> };
+    if (pct >= 75) return { label: 'Almost There!', color: 'from-orange-400 to-red-500 text-white', icon: <FaRocket className="w-4 h-4" /> };
+    if (pct >= 50) return { label: 'Halfway Hero', color: 'from-green-400 to-emerald-500 text-white', icon: <FaStar className="w-4 h-4" /> };
+    if (pct >= 25) return { label: 'Good Start', color: 'from-blue-400 to-indigo-500 text-white', icon: <FaFire className="w-4 h-4" /> };
+    if (pct > 0) return { label: 'First Steps', color: 'from-purple-400 to-pink-500 text-white', icon: <FaGraduationCap className="w-4 h-4" /> };
     return null;
   };
 
-  // ============================================================================
-  // PREMIUM ACCESS CONTROL - MONETIZATION LOGIC
-  // ============================================================================
-  
-  // Check if user has purchased the course
   const hasCoursePurchase = (): boolean => {
     if (!course) return false;
-    // If course is free, everyone has access
     if (!course.isPremium && course.price === 0) return true;
-    // Check if course is in user's purchases
     return userPurchases.includes(courseId) || userPurchases.includes(course._id);
   };
 
-  // Check if lesson requires premium access
   const isLessonLocked = (lesson: any): boolean => {
     if (!lesson) return false;
-    // If lesson is marked as preview, it's always accessible
     if (lesson.isPreview) return false;
-    // If lesson is premium-only and user hasn't purchased
     if (lesson.isPremiumOnly && !hasCoursePurchase()) return true;
     return false;
   };
 
-  // Get lesson content and type
   const lessonType = currentLesson ? getLessonType(currentLesson) : null;
   const lessonContent = currentLesson ? getLessonContent(currentLesson) : null;
   const isCurrentLessonLocked = currentLesson ? isLessonLocked(currentLesson) : false;
@@ -423,15 +374,10 @@ const LearningPage: React.FC<LearningPageProps> = ({ courseId }) => {
     }
   }, [isCurrentLessonLocked, courseId, analyticsSessionId, currentLesson?._id]);
 
-  // ============================================================================
-  // INTERACTION HANDLERS
-  // ============================================================================
-
-  // Handle MCQ submit
   const handleMCQSubmit = () => {
     if (!selectedAnswer) return;
     const content = lessonContent?.content || {};
-    const correctAnswerLetter = typeof content.correctAnswer === 'number' 
+    const correctAnswerLetter = typeof content.correctAnswer === 'number'
       ? String.fromCharCode(65 + content.correctAnswer)
       : content.correctAnswer;
     const correct = selectedAnswer === correctAnswerLetter;
@@ -443,7 +389,6 @@ const LearningPage: React.FC<LearningPageProps> = ({ courseId }) => {
     }
   };
 
-  // Handle Module Test submit
   const handleTestSubmit = () => {
     const content = lessonContent?.content || {};
     const questions = content.questions || [];
@@ -460,7 +405,6 @@ const LearningPage: React.FC<LearningPageProps> = ({ courseId }) => {
     }
   };
 
-  // Handle code run
   const handleRunCode = async () => {
     if (!code.trim()) {
       toast.error('Please write some code first');
@@ -481,9 +425,9 @@ const LearningPage: React.FC<LearningPageProps> = ({ courseId }) => {
         } else {
           setOutput('Code executed successfully (no output).');
         }
-      
+
         if (result.executionTime) {
-          setOutput(prev => prev + `\n\n⏱️ Execution time: ${result.executionTime}ms`);
+          setOutput(prev => prev + `\n\n\u23F1\uFE0F Execution time: ${result.executionTime}ms`);
         }
       } else {
         setOutput(`Execution Failed:\n${result.error || result.message || 'Unknown error occurred'}`);
@@ -497,7 +441,6 @@ const LearningPage: React.FC<LearningPageProps> = ({ courseId }) => {
     }
   };
 
-  // Handle code submit
   const handleSubmitCode = async () => {
     if (!code.trim()) {
       toast.error('Please write some code first');
@@ -533,25 +476,25 @@ const LearningPage: React.FC<LearningPageProps> = ({ courseId }) => {
 
           if (result.success && !result.error) {
             const actualOutput = result.output.trim();
-          
+
             if (actualOutput === expectedOutput) {
               passed++;
-              results += `✅ Passed\n`;
+              results += `\u2705 Passed\n`;
               results += `Output: ${actualOutput}\n\n`;
             } else {
               failed++;
-              results += `❌ Failed\n`;
+              results += `\u274C Failed\n`;
               results += `Expected: ${expectedOutput}\n`;
               results += `Got: ${actualOutput}\n\n`;
             }
           } else {
             failed++;
-            results += `❌ Runtime Error\n`;
+            results += `\u274C Runtime Error\n`;
             results += `Error: ${result.error || 'Unknown error'}\n\n`;
           }
         } catch (error: any) {
           failed++;
-          results += `❌ Execution Error\n`;
+          results += `\u274C Execution Error\n`;
           results += `Error: ${error.message}\n\n`;
         }
       }
@@ -560,11 +503,11 @@ const LearningPage: React.FC<LearningPageProps> = ({ courseId }) => {
       results += `Results: ${passed}/${testCases.length} test cases passed\n`;
 
       if (passed === testCases.length) {
-        results += `\n🎉 All test cases passed! Your solution has been accepted.`;
+        results += `\n\uD83C\uDF89 All test cases passed! Your solution has been accepted.`;
         markLessonComplete();
         toast.success('Congratulations! All test cases passed!');
       } else {
-        results += `\n⚠️ Some test cases failed. Keep trying!`;
+        results += `\n\u26A0\uFE0F Some test cases failed. Keep trying!`;
         toast.error(`${failed} test case(s) failed`);
       }
 
@@ -577,16 +520,11 @@ const LearningPage: React.FC<LearningPageProps> = ({ courseId }) => {
     }
   };
 
-  // ============================================================================
-  // LESSON RENDER FUNCTIONS
-  // ============================================================================
+  // ── RENDER: CONCEPT LESSON ─────────────────────────────────────────────────
 
-  /**
-   * Render Concept Lesson - Enhanced UI with hero header, code blocks, analogies
-   */
   const renderConceptLesson = () => {
     const content = lessonContent?.content || {};
-    
+
     const copyCode = () => {
       if (content.syntax?.code) {
         navigator.clipboard.writeText(content.syntax.code);
@@ -594,500 +532,470 @@ const LearningPage: React.FC<LearningPageProps> = ({ courseId }) => {
         setTimeout(() => setCopiedCode(false), 2000);
       }
     };
-    
+
     return (
-      <div className="max-w-5xl mx-auto animate-fadeIn px-2 sm:px-0">
-        <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
-          {/* Hero Header with Gradient */}
-          <div className="relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-orange-500/10 via-amber-500/5 to-transparent"></div>
-            <div className="relative p-5 sm:p-8 md:p-10">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center shadow-lg flex-shrink-0">
-                  <FaBook className="text-white text-lg sm:text-xl" />
-                </div>
-                <div>
-                  <span className="text-xs font-semibold text-orange-600 uppercase tracking-wider">Concept Lesson</span>
-                  <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mt-1">{currentLesson?.title}</h1>
-                </div>
+      <motion.div
+        variants={staggerContainer}
+        initial="hidden"
+        animate="visible"
+        className="max-w-4xl mx-auto space-y-6"
+      >
+        {/* Hero Header */}
+        <motion.div variants={slideUp} className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[var(--page-accent)]/10 via-[var(--page-accent-secondary)]/5 to-transparent border border-[var(--page-border)]">
+          <div className="relative p-6 sm:p-8">
+            <div className="flex items-start gap-4">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[var(--page-accent)] to-[var(--page-accent-secondary)] flex items-center justify-center shadow-lg flex-shrink-0">
+                <FaBook className="text-white text-lg" />
               </div>
-              <p className="text-lg text-gray-600 leading-relaxed max-w-3xl">
-                {content.explanation ? <RichTextRenderer content={content.explanation} /> : currentLesson?.description ? <RichTextRenderer content={currentLesson.description} /> : null}
-              </p>
+              <div className="flex-1 min-w-0">
+                <span className="text-xs font-semibold text-[var(--page-accent)] uppercase tracking-wider">Concept Lesson</span>
+                <h1 className="text-xl sm:text-2xl font-bold text-[var(--page-text)] mt-1 leading-tight">{currentLesson?.title}</h1>
+              </div>
             </div>
+            {content.explanation && (
+              <div className="mt-4 text-[var(--page-text-muted)] leading-relaxed text-sm sm:text-base">
+                <RichTextRenderer content={content.explanation} />
+              </div>
+            )}
           </div>
-          
-          {/* Real-World Analogy */}
-          {content.analogy && (
-            <div className="relative group">
-              <div className="absolute inset-0 bg-gradient-to-r from-amber-100/50 to-orange-100/50 opacity-50"></div>
-              <div className="relative p-5 sm:p-8 md:p-10 bg-gradient-to-r from-amber-50/80 to-orange-50/80 backdrop-blur-sm border-y border-amber-200">
-                <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-5">
-                  <div className="relative mx-auto sm:mx-0">
-                    <div className="absolute inset-0 bg-amber-400 rounded-2xl blur-lg opacity-30 group-hover:opacity-50 transition-opacity"></div>
-                    <div className="relative w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-amber-400 to-orange-500 rounded-2xl flex items-center justify-center shadow-xl transform group-hover:scale-110 transition-transform">
-                      <FaLightbulb className="text-white text-2xl animate-pulse" />
-                    </div>
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="text-xl font-bold text-amber-900 mb-3 flex items-center gap-2">
-                      Real-World Analogy
-                      <span className="text-sm font-normal text-amber-600">(Understand it better!)</span>
-                    </h3>
-                    <div className="bg-white/60 backdrop-blur-sm rounded-xl p-5 border border-amber-200 shadow-sm">
-                      <h4 className="font-semibold text-amber-800 mb-2">{content.analogy.title}</h4>
-                      <p className="text-amber-900 leading-relaxed">{content.analogy.description}</p>
-                    </div>
+        </motion.div>
+
+        {/* Real-World Analogy */}
+        {content.analogy && (
+          <motion.div variants={slideUp} className="relative rounded-2xl border border-amber-200/60 dark:border-amber-800/30 overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-r from-amber-50/80 to-orange-50/80 dark:from-amber-900/10 dark:to-orange-900/10" />
+            <div className="relative p-6 sm:p-8">
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-md flex-shrink-0">
+                  <FaLightbulb className="text-white text-lg" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-lg font-bold text-amber-900 dark:text-amber-200 mb-3">Real-World Analogy</h3>
+                  <div className="bg-white/60 dark:bg-amber-900/20 backdrop-blur-sm rounded-xl p-5 border border-amber-200/60 dark:border-amber-700/30">
+                    <h4 className="font-semibold text-amber-800 dark:text-amber-300 mb-2">{content.analogy.title}</h4>
+                    <p className="text-amber-900 dark:text-amber-100 leading-relaxed text-sm">{content.analogy.description}</p>
                   </div>
                 </div>
               </div>
             </div>
-          )}
-          
-          {/* Syntax / Code Example */}
-          {content.syntax && (
-            <div className="p-5 sm:p-8 md:p-10">
-              <div className="flex items-center justify-between mb-5">
-                <h3 className="text-xl font-bold text-gray-800 flex items-center gap-3">
-                  <div className="w-10 h-10 bg-green-100 rounded-xl flex items-center justify-center">
-                    <FaCode className="text-green-600 text-lg" />
+          </motion.div>
+        )}
+
+        {/* Syntax / Code Example */}
+        {content.syntax && (
+          <motion.div variants={slideUp} className="rounded-2xl border border-[var(--page-border)] overflow-hidden">
+            <div className="p-5 sm:p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-bold text-[var(--page-text)] flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
+                    <FaCode className="text-green-600 dark:text-green-400" />
                   </div>
-                  {content.syntax.title || 'Python Syntax'}
+                  {content.syntax.title || 'Syntax'}
                 </h3>
                 <button
                   onClick={copyCode}
-                  className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-sm font-medium transition-all flex items-center gap-2 group"
+                  className="px-3 py-1.5 bg-[var(--page-section)] hover:bg-[var(--page-border)] text-[var(--page-text-muted)] rounded-lg text-xs font-medium transition-all flex items-center gap-1.5"
                 >
                   {copiedCode ? (
-                    <>
-                      <FaCheck className="text-green-500" />
-                      <span className="text-green-600">Copied!</span>
-                    </>
+                    <><FaCheck className="text-green-500" /> Copied!</>
                   ) : (
-                    <>
-                      <svg className="w-4 h-4 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-                      </svg>
-                      Copy Code
-                    </>
+                    <><svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg> Copy</>
                   )}
                 </button>
               </div>
-              <div className="relative group/code">
-                <div className="absolute inset-0 bg-gradient-to-r from-green-500/10 to-emerald-500/10 rounded-2xl blur-xl opacity-0 group-hover/code:opacity-100 transition-opacity"></div>
-                <div className="relative bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl overflow-hidden shadow-2xl border border-gray-700">
-                  {/* Code Editor Header */}
-                  <div className="flex items-center justify-between px-5 py-3 bg-gray-800/50 border-b border-gray-700">
-                    <div className="flex items-center gap-2">
-                      <div className="flex gap-1.5">
-                        <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                        <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-                        <div className="w-3 h-3 rounded-full bg-green-500"></div>
-                      </div>
-                      <span className="text-sm text-gray-400 ml-3 font-mono">main.py</span>
+              <div className="relative rounded-xl overflow-hidden border border-gray-700">
+                <div className="flex items-center justify-between px-4 py-2.5 bg-gray-800/80 border-b border-gray-700">
+                  <div className="flex items-center gap-2">
+                    <div className="flex gap-1.5">
+                      <div className="w-2.5 h-2.5 rounded-full bg-red-500" />
+                      <div className="w-2.5 h-2.5 rounded-full bg-yellow-500" />
+                      <div className="w-2.5 h-2.5 rounded-full bg-green-500" />
                     </div>
-                    <span className="text-xs text-gray-500 font-mono">{programmingLanguage}</span>
+                    <span className="text-xs text-gray-400 ml-2 font-mono">main.py</span>
                   </div>
-                  {/* Code Content */}
-                  <div className="p-6 overflow-x-auto">
-                    <pre className="text-sm text-gray-100 font-mono leading-relaxed">{content.syntax.code}</pre>
-                  </div>
+                  <span className="text-[10px] text-gray-500 font-mono">{programmingLanguage}</span>
                 </div>
+                <pre className="p-5 bg-gray-900 text-sm text-gray-100 font-mono leading-relaxed overflow-x-auto">{content.syntax.code}</pre>
               </div>
+            </div>
+          </motion.div>
+        )}
+
+        {/* Key Takeaways */}
+        {content.keyNotes && content.keyNotes.length > 0 && (
+          <motion.div variants={slideUp} className="rounded-2xl border border-[var(--page-border)] bg-[var(--page-section)]/50 p-6 sm:p-8">
+            <h3 className="text-lg font-bold text-[var(--page-text)] mb-5 flex items-center gap-2">
+              <FaCheckDouble className="text-[var(--page-accent)]" />
+              Key Takeaways
+            </h3>
+            <div className="grid gap-3">
+              {content.keyNotes.map((note: string, i: number) => (
+                <motion.div
+                  key={i}
+                  variants={slideInLeft}
+                  className="flex items-start gap-3 p-4 bg-[var(--page-card)] rounded-xl border border-[var(--page-border)] hover:border-[var(--page-accent)]/20 transition-colors"
+                >
+                  <div className="w-6 h-6 rounded-full bg-gradient-to-br from-[var(--page-accent)] to-[var(--page-accent-secondary)] flex items-center justify-center flex-shrink-0 mt-0.5 text-white text-xs font-bold">
+                    {i + 1}
+                  </div>
+                  <p className="text-[var(--page-text)] leading-relaxed text-sm flex-1">{note}</p>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        )}
+
+        {/* Navigation Footer */}
+        <motion.div variants={fadeIn} className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3 pt-2 pb-8">
+          <button
+            onClick={() => navigateLesson('prev')}
+            disabled={currentModuleIndex === 0 && currentLessonIndex === 0}
+            className="px-5 py-2.5 text-[var(--page-text-muted)] hover:text-[var(--page-text)] bg-[var(--page-card)] border border-[var(--page-border)] disabled:opacity-30 disabled:cursor-not-allowed rounded-xl flex items-center justify-center gap-2 font-medium transition-all hover:shadow-sm"
+          >
+            <FaChevronLeft className="text-xs" /> Previous
+          </button>
+
+          {!isLessonCompleted(currentLesson?._id) ? (
+            <button
+              onClick={() => markLessonComplete()}
+              className="px-8 py-3 bg-gradient-to-r from-[var(--page-accent)] to-[var(--page-accent-secondary)] text-white rounded-xl font-semibold shadow-lg shadow-[var(--page-accent)]/20 hover:shadow-xl hover:shadow-[var(--page-accent)]/30 transition-all flex items-center justify-center gap-2"
+            >
+              <FaCheck className="text-sm" />
+              Mark as Complete
+            </button>
+          ) : (
+            <div className="px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-xl flex items-center justify-center gap-2 font-semibold shadow-md">
+              <FaCheck className="text-lg" /> Completed
             </div>
           )}
-          
-          {/* Key Notes */}
-          {content.keyNotes && content.keyNotes.length > 0 && (
-            <div className="p-5 sm:p-8 md:p-10 bg-gradient-to-br from-orange-50 to-amber-50">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 bg-orange-500 rounded-xl flex items-center justify-center shadow-lg">
-                  <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path>
-                    <path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clipRule="evenodd"></path>
-                  </svg>
-                </div>
-                <h3 className="text-xl font-bold text-orange-900">Key Takeaways</h3>
-              </div>
-              <div className="grid gap-3">
-                {content.keyNotes.map((note: string, i: number) => (
-                  <div 
-                    key={i} 
-                    className="group bg-white rounded-xl p-4 border border-orange-200 shadow-sm hover:shadow-md hover:border-orange-300 transition-all transform hover:-translate-y-0.5"
-                    style={{ animationDelay: `${i * 100}ms` }}
-                  >
-                    <div className="flex items-start gap-3">
-                      <div className="w-6 h-6 rounded-full bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center flex-shrink-0 mt-0.5 group-hover:scale-110 transition-transform">
-                        <span className="text-white text-xs font-bold">{i + 1}</span>
-                      </div>
-                      <p className="text-orange-900 leading-relaxed flex-1">{note}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
 
-          {/* Navigation Footer */}
-          <div className="p-4 sm:p-6 bg-gradient-to-r from-gray-50 to-gray-100 border-t border-gray-200">
-            <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3 max-w-4xl mx-auto">
-              <div className="flex justify-between gap-2 sm:hidden">
-                <button
-                  onClick={() => navigateLesson('prev')}
-                  disabled={currentModuleIndex === 0 && currentLessonIndex === 0}
-                  className="px-4 py-2.5 text-gray-600 hover:text-gray-900 hover:bg-white disabled:opacity-40 disabled:cursor-not-allowed rounded-xl flex items-center gap-2 font-medium transition-all shadow-sm hover:shadow-md flex-1"
-                >
-                  <FaChevronLeft className="text-sm" /> Prev
-                </button>
-                <button
-                  onClick={() => navigateLesson('next')}
-                  className="px-4 py-2.5 text-gray-600 hover:text-gray-900 hover:bg-white rounded-xl flex items-center gap-2 font-medium transition-all shadow-sm hover:shadow-md flex-1"
-                >
-                  Next <FaChevronRight className="text-sm" />
-                </button>
-              </div>
-
-              <button
-                onClick={() => navigateLesson('prev')}
-                disabled={currentModuleIndex === 0 && currentLessonIndex === 0}
-                className="hidden sm:flex px-5 py-2.5 text-gray-600 hover:text-gray-900 hover:bg-white disabled:opacity-40 disabled:cursor-not-allowed rounded-xl items-center gap-2 font-medium transition-all shadow-sm hover:shadow-md"
-              >
-                <FaChevronLeft className="text-sm" /> Previous
-              </button>
-              
-              {!isLessonCompleted(currentLesson?._id) ? (
-                <button
-                  onClick={() => markLessonComplete()}
-                  className="px-6 sm:px-8 py-3 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white rounded-xl font-semibold shadow-lg shadow-orange-500/30 hover:shadow-xl hover:shadow-orange-500/40 transition-all transform hover:scale-105 flex items-center justify-center gap-2 w-full sm:w-auto"
-                >
-                  <FaCheck className="text-sm" />
-                  <span className="hidden sm:inline">Mark as Complete</span>
-                  <span className="sm:hidden">Complete</span>
-                </button>
-              ) : (
-                <div className="px-4 sm:px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-xl flex items-center justify-center gap-2 font-semibold shadow-lg w-full sm:w-auto">
-                  <FaCheck className="text-lg" /> Completed
-                </div>
-              )}
-
-              <button
-                onClick={() => navigateLesson('next')}
-                className="hidden sm:flex px-5 py-2.5 text-gray-600 hover:text-gray-900 hover:bg-white rounded-xl items-center gap-2 font-medium transition-all shadow-sm hover:shadow-md"
-              >
-                Next <FaChevronRight className="text-sm" />
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
+          <button
+            onClick={() => navigateLesson('next')}
+            className="px-5 py-2.5 text-[var(--page-text-muted)] hover:text-[var(--page-text)] bg-[var(--page-card)] border border-[var(--page-border)] rounded-xl flex items-center justify-center gap-2 font-medium transition-all hover:shadow-sm"
+          >
+            Next <FaChevronRight className="text-xs" />
+          </button>
+        </motion.div>
+      </motion.div>
     );
   };
 
-  /**
-   * Render MCQ Lesson - Multiple choice questions with radio selection
-   */
+  // ── RENDER: MCQ LESSON ─────────────────────────────────────────────────────
+
   const renderMCQLesson = () => {
     const content = lessonContent?.content || {};
     const options = content.options || [];
 
     return (
-      <div className="flex flex-col lg:flex-row h-auto lg:h-[calc(100vh-140px)] bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-        {/* LEFT: Problem Statement */}
-        <div className="w-full lg:w-1/2 border-b lg:border-b-0 lg:border-r border-gray-200 overflow-y-auto">
-          <div className="p-4 sm:p-6 lg:p-8">
-            <h1 className="text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6">{content.problemTitle || content.problem || currentLesson?.title}</h1>
+      <motion.div
+        variants={staggerContainer}
+        initial="hidden"
+        animate="visible"
+        className="max-w-5xl mx-auto"
+      >
+        <div className="grid lg:grid-cols-2 gap-6">
+          {/* LEFT: Problem */}
+          <motion.div variants={slideInLeft} className="space-y-4">
+            <div className="p-6 rounded-2xl border border-[var(--page-border)] bg-[var(--page-card)]">
+              <h1 className="text-lg font-bold text-[var(--page-text)] mb-4">{content.problemTitle || content.problem || currentLesson?.title}</h1>
 
-            {/* Question */}
-            <div className="mb-4 sm:mb-6">
-              <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 sm:mb-3">Question</h2>
-              <div className="p-3 sm:p-5 bg-gray-50 border border-gray-200 rounded-xl">
-                <pre className="text-gray-800 text-sm sm:text-base leading-relaxed whitespace-pre-wrap font-sans break-words">{content.question}</pre>
-              </div>
-            </div>
-
-            {/* Hint */}
-            {content.hint && (
-              <div className="mb-4 sm:mb-6">
-                <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 sm:mb-3">💡 Hint</h2>
-                <p className="text-gray-600 text-sm bg-amber-50 p-3 sm:p-4 rounded-xl border border-amber-100">{content.hint}</p>
-              </div>
-            )}
-
-            {/* Common Doubts */}
-            {content.commonDoubts && (
-              <div>
-                <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 sm:mb-3">🤔 Common Doubts</h2>
-                <div className="space-y-2 sm:space-y-3">
-                  {Array.isArray(content.commonDoubts) ? (
-                    content.commonDoubts.map((doubt: string, i: number) => (
-                      <div key={i} className="p-3 sm:p-4 bg-blue-50 border border-blue-100 rounded-xl">
-                        <p className="text-blue-700 text-sm break-words">{doubt}</p>
-                      </div>
-                    ))
-                  ) : (
-                    <div className="p-3 sm:p-4 bg-blue-50 border border-blue-100 rounded-xl">
-                      <p className="text-blue-700 text-sm break-words">{content.commonDoubts}</p>
-                    </div>
-                  )}
+              {content.question && (
+                <div>
+                  <span className="text-xs font-semibold text-[var(--page-text-muted)] uppercase tracking-wider mb-2 block">Question</span>
+                  <div className="p-4 bg-[var(--page-section)] rounded-xl border border-[var(--page-border)]">
+                    <pre className="text-[var(--page-text)] text-sm leading-relaxed whitespace-pre-wrap font-sans">{content.question}</pre>
+                  </div>
                 </div>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* RIGHT: MCQ Options */}
-        <div className="w-full lg:w-1/2 flex flex-col bg-gray-50">
-          <div className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto">
-            <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3 sm:mb-4">Select Your Answer</h2>
-
-            <div className="space-y-2 sm:space-y-3">
-              {options.map((option: string, index: number) => {
-                const hasLetterPrefix = /^[A-D]\)/.test(option);
-                const optionLetter = hasLetterPrefix ? option.charAt(0) : String.fromCharCode(65 + index);
-                const optionText = hasLetterPrefix ? option.substring(3).trim() : option.trim();
-                const isSelected = selectedAnswer === optionLetter;
-                
-                const correctAnswerLetter = typeof content.correctAnswer === 'number' 
-                  ? String.fromCharCode(65 + content.correctAnswer)
-                  : content.correctAnswer;
-                const isCorrectOption = optionLetter === correctAnswerLetter;
-                
-                let borderColor = 'border-gray-200';
-                let bgColor = 'bg-white';
-                
-                if (mcqSubmitted) {
-                  if (isCorrectOption) {
-                    borderColor = 'border-green-500';
-                    bgColor = 'bg-green-50';
-                  } else if (isSelected && !isCorrectOption) {
-                    borderColor = 'border-red-500';
-                    bgColor = 'bg-red-50';
-                  }
-                } else if (isSelected) {
-                  borderColor = 'border-orange-500';
-                  bgColor = 'bg-orange-50';
-                }
-
-                return (
-                  <button
-                    key={optionLetter}
-                    onClick={() => !mcqSubmitted && setSelectedAnswer(optionLetter)}
-                    disabled={mcqSubmitted}
-                    className={`w-full text-left p-3 sm:p-4 rounded-xl border-2 ${borderColor} ${bgColor} hover:border-orange-300 transition-all`}
-                  >
-                    <div className="flex items-center gap-3 sm:gap-4">
-                      <div className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full border-2 flex items-center justify-center text-sm sm:text-base font-medium flex-shrink-0 ${isSelected ? 'border-orange-500 bg-orange-500 text-white' : 'border-gray-300 text-gray-500'}`}>
-                        {optionLetter}
-                      </div>
-                      <span className="text-gray-800 text-sm sm:text-base break-words">{optionText}</span>
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
-
-            {/* Result */}
-            {mcqSubmitted && (
-              <div className={`mt-4 sm:mt-6 p-3 sm:p-4 rounded-xl border ${mcqCorrect ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50'}`}>
-                <p className={`text-sm sm:text-base font-medium ${mcqCorrect ? 'text-green-700' : 'text-red-700'}`}>
-                  {mcqCorrect ? '✅ Correct! Well done.' : `❌ Incorrect. The correct answer is ${content.correctAnswer}.`}
-                </p>
-                {content.explanation && (
-                  <p className="text-gray-600 text-sm mt-2 break-words">{content.explanation}</p>
-                )}
-              </div>
-            )}
-          </div>
-
-          {/* Buttons */}
-          <div className="p-4 sm:p-6 border-t border-gray-200 bg-white">
-            <div className="flex flex-col sm:flex-row justify-end gap-2 sm:gap-3">
-              {!mcqSubmitted ? (
-                <button
-                  onClick={handleMCQSubmit}
-                  disabled={!selectedAnswer}
-                  className={`w-full sm:w-auto px-4 sm:px-6 py-2 sm:py-2.5 text-sm sm:text-base rounded-lg font-medium transition-colors ${selectedAnswer ? 'bg-orange-500 hover:bg-orange-600 text-white' : 'bg-gray-200 text-gray-400 cursor-not-allowed'}`}
-                >
-                  Submit Answer
-                </button>
-              ) : (
-                <button
-                  onClick={() => { setSelectedAnswer(null); setMcqSubmitted(false); setMcqCorrect(null); }}
-                  className="w-full sm:w-auto px-4 sm:px-6 py-2 sm:py-2.5 text-sm sm:text-base rounded-lg font-medium border border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
-                >
-                  Try Again
-                </button>
               )}
-              <button
-                onClick={() => navigateLesson('next')}
-                className="w-full sm:w-auto px-4 sm:px-6 py-2 sm:py-2.5 text-sm sm:text-base rounded-lg font-medium bg-gray-800 text-white hover:bg-gray-900 flex items-center justify-center gap-2"
-              >
-                Next <FaChevronRight />
-              </button>
+
+              {content.hint && (
+                <div className="mt-4">
+                  <span className="text-xs font-semibold text-[var(--page-text-muted)] uppercase tracking-wider mb-2 block">Hint</span>
+                  <div className="p-3 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700/30 rounded-xl">
+                    <p className="text-amber-800 dark:text-amber-200 text-sm">{content.hint}</p>
+                  </div>
+                </div>
+              )}
+
+              {content.commonDoubts && (
+                <div className="mt-4">
+                  <span className="text-xs font-semibold text-[var(--page-text-muted)] uppercase tracking-wider mb-2 block">Common Doubts</span>
+                  <div className="space-y-2">
+                    {Array.isArray(content.commonDoubts) ? (
+                      content.commonDoubts.map((doubt: string, i: number) => (
+                        <div key={i} className="p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700/30 rounded-xl">
+                          <p className="text-blue-700 dark:text-blue-300 text-sm">{doubt}</p>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700/30 rounded-xl">
+                        <p className="text-blue-700 dark:text-blue-300 text-sm">{content.commonDoubts}</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
-          </div>
+          </motion.div>
+
+          {/* RIGHT: Options */}
+          <motion.div variants={slideInRight} className="space-y-4">
+            <div className="p-6 rounded-2xl border border-[var(--page-border)] bg-[var(--page-card)]">
+              <span className="text-xs font-semibold text-[var(--page-text-muted)] uppercase tracking-wider mb-4 block">Select Your Answer</span>
+
+              <div className="space-y-3">
+                {options.map((option: string, index: number) => {
+                  const hasLetterPrefix = /^[A-D]\)/.test(option);
+                  const optionLetter = hasLetterPrefix ? option.charAt(0) : String.fromCharCode(65 + index);
+                  const optionText = hasLetterPrefix ? option.substring(3).trim() : option.trim();
+                  const isSelected = selectedAnswer === optionLetter;
+
+                  const correctAnswerLetter = typeof content.correctAnswer === 'number'
+                    ? String.fromCharCode(65 + content.correctAnswer)
+                    : content.correctAnswer;
+                  const isCorrectOption = optionLetter === correctAnswerLetter;
+
+                  let stateClasses = 'border-[var(--page-border)] bg-[var(--page-card)]';
+                  if (mcqSubmitted) {
+                    if (isCorrectOption) stateClasses = 'border-green-500 bg-green-50 dark:bg-green-900/20';
+                    else if (isSelected && !isCorrectOption) stateClasses = 'border-red-500 bg-red-50 dark:bg-red-900/20';
+                  } else if (isSelected) {
+                    stateClasses = 'border-[var(--page-accent)] bg-[var(--page-accent-soft)]';
+                  }
+
+                  return (
+                    <button
+                      key={optionLetter}
+                      onClick={() => !mcqSubmitted && setSelectedAnswer(optionLetter)}
+                      disabled={mcqSubmitted}
+                      className={`w-full text-left p-4 rounded-xl border-2 ${stateClasses} hover:border-[var(--page-accent)]/40 transition-all`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center text-sm font-medium flex-shrink-0 ${isSelected && !mcqSubmitted ? 'border-[var(--page-accent)] bg-[var(--page-accent)] text-white' : 'border-[var(--page-border)] text-[var(--page-text-muted)]'}`}>
+                          {optionLetter}
+                        </div>
+                        <span className="text-[var(--page-text)] text-sm">{optionText}</span>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {mcqSubmitted && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className={`mt-5 p-4 rounded-xl border ${mcqCorrect ? 'border-green-500 bg-green-50 dark:bg-green-900/20' : 'border-red-500 bg-red-50 dark:bg-red-900/20'}`}
+                >
+                  <p className={`text-sm font-medium ${mcqCorrect ? 'text-green-700 dark:text-green-300' : 'text-red-700 dark:text-red-300'}`}>
+                    {mcqCorrect ? 'Correct! Well done.' : `Incorrect. The correct answer is ${content.correctAnswer}.`}
+                  </p>
+                  {content.explanation && (
+                    <p className="text-[var(--page-text-muted)] text-sm mt-2">{content.explanation}</p>
+                  )}
+                </motion.div>
+              )}
+
+              <div className="flex gap-3 mt-6">
+                {!mcqSubmitted ? (
+                  <button
+                    onClick={handleMCQSubmit}
+                    disabled={!selectedAnswer}
+                    className={`flex-1 py-2.5 rounded-xl font-medium text-sm transition-all ${selectedAnswer ? 'bg-gradient-to-r from-[var(--page-accent)] to-[var(--page-accent-secondary)] text-white shadow-md' : 'bg-[var(--page-section)] text-[var(--page-text-muted)] cursor-not-allowed'}`}
+                  >
+                    Submit Answer
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => { setSelectedAnswer(null); setMcqSubmitted(false); setMcqCorrect(null); }}
+                    className="flex-1 py-2.5 rounded-xl font-medium text-sm border border-[var(--page-border)] text-[var(--page-text)] hover:bg-[var(--page-section)] transition-all"
+                  >
+                    Try Again
+                  </button>
+                )}
+                <button
+                  onClick={() => navigateLesson('next')}
+                  className="flex-1 py-2.5 rounded-xl font-medium text-sm bg-[var(--page-text)] text-[var(--page-bg)] hover:opacity-90 transition-all flex items-center justify-center gap-2"
+                >
+                  Next <FaChevronRight className="text-xs" />
+                </button>
+              </div>
+            </div>
+          </motion.div>
         </div>
-      </div>
+      </motion.div>
     );
   };
 
-  /**
-   * Render Coding Lesson - Split screen with problem and Monaco editor
-   */
+  // ── RENDER: CODING LESSON ──────────────────────────────────────────────────
+
   const renderCodingLesson = () => {
     const content = lessonContent?.content || {};
     const problemTitle = content.problemTitle || content.problem || currentLesson?.title;
     const problemStatement = content.problemStatement || content.description || '';
 
     return (
-      <div className="flex flex-col lg:flex-row h-auto lg:h-[calc(100vh-140px)] bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-        {/* LEFT: Problem */}
-        <div className="w-full lg:w-2/5 border-b lg:border-b-0 lg:border-r border-gray-200 overflow-y-auto">
-          <div className="p-4 sm:p-6">
-            <h1 className="text-lg sm:text-xl font-bold text-gray-900 mb-4">{problemTitle}</h1>
-            
-            <div className="space-y-4">
+      <motion.div
+        variants={staggerContainer}
+        initial="hidden"
+        animate="visible"
+        className="max-w-7xl mx-auto"
+      >
+        <div className="grid lg:grid-cols-5 gap-6">
+          {/* LEFT: Problem */}
+          <motion.div variants={slideInLeft} className="lg:col-span-2 space-y-4">
+            <div className="p-6 rounded-2xl border border-[var(--page-border)] bg-[var(--page-card)]">
+              <h1 className="text-lg font-bold text-[var(--page-text)] mb-4">{problemTitle}</h1>
+
               {problemStatement && (
-                <div>
-                  <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Problem Statement</h2>
-                  <div className="p-4 bg-gray-50 border border-gray-200 rounded-lg">
-                    <pre className="text-gray-800 text-sm leading-relaxed whitespace-pre-wrap font-sans">{problemStatement}</pre>
+                <div className="mb-4">
+                  <span className="text-xs font-semibold text-[var(--page-text-muted)] uppercase tracking-wider mb-2 block">Problem Statement</span>
+                  <div className="p-4 bg-[var(--page-section)] rounded-xl border border-[var(--page-border)]">
+                    <pre className="text-[var(--page-text)] text-sm leading-relaxed whitespace-pre-wrap font-sans">{problemStatement}</pre>
                   </div>
                 </div>
               )}
 
               {content.examples && (
-                <div>
-                  <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Examples</h2>
-                  {content.examples.map((ex: any, i: number) => (
-                    <div key={i} className="mb-3 p-3 bg-blue-50 border border-blue-100 rounded-lg">
-                      <p className="text-xs text-blue-600 font-medium mb-1">Example {i + 1}</p>
-                      <p className="text-sm text-gray-700"><strong>Input:</strong> {ex.input}</p>
-                      <p className="text-sm text-gray-700"><strong>Output:</strong> {ex.output}</p>
-                    </div>
-                  ))}
+                <div className="mb-4">
+                  <span className="text-xs font-semibold text-[var(--page-text-muted)] uppercase tracking-wider mb-2 block">Examples</span>
+                  <div className="space-y-2">
+                    {content.examples.map((ex: any, i: number) => (
+                      <div key={i} className="p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700/30 rounded-xl">
+                        <p className="text-xs text-blue-600 dark:text-blue-400 font-medium mb-1">Example {i + 1}</p>
+                        <p className="text-sm text-[var(--page-text)]"><strong>Input:</strong> {ex.input}</p>
+                        <p className="text-sm text-[var(--page-text)]"><strong>Output:</strong> {ex.output}</p>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               )}
 
               {content.constraints && (
                 <div>
-                  <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Constraints</h2>
-                  <div className="p-3 bg-amber-50 border border-amber-100 rounded-lg">
-                    <pre className="text-amber-800 text-xs font-mono whitespace-pre-wrap">{content.constraints}</pre>
+                  <span className="text-xs font-semibold text-[var(--page-text-muted)] uppercase tracking-wider mb-2 block">Constraints</span>
+                  <div className="p-3 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700/30 rounded-xl">
+                    <pre className="text-amber-800 dark:text-amber-200 text-xs font-mono whitespace-pre-wrap">{content.constraints}</pre>
                   </div>
                 </div>
               )}
             </div>
-          </div>
-        </div>
+          </motion.div>
 
-        {/* RIGHT: Code Editor */}
-        <div className="w-full lg:w-3/5 flex flex-col">
-          <div className="flex-1 flex flex-col">
-            <div className="h-64 lg:flex-1">
-              <Editor
-                height="100%"
-                language={programmingLanguage}
-                theme="vs-dark"
-                value={code}
-                onChange={(value) => setCode(value || '')}
-                options={{
-                  minimap: { enabled: false },
-                  fontSize: 14,
-                  lineNumbers: 'on',
-                  scrollBeyondLastLine: false,
-                  automaticLayout: true,
-                }}
-              />
-            </div>
-
-            {output && (
-              <div className="border-t border-gray-200 p-4 bg-gray-900 text-green-400 font-mono text-sm overflow-y-auto max-h-48">
-                <pre className="whitespace-pre-wrap">{output}</pre>
+          {/* RIGHT: Editor */}
+          <motion.div variants={slideInRight} className="lg:col-span-3 flex flex-col">
+            <div className="flex-1 flex flex-col rounded-2xl border border-[var(--page-border)] bg-[var(--page-card)] overflow-hidden">
+              <div className="h-[400px] lg:flex-1 min-h-[300px]">
+                <Editor
+                  height="100%"
+                  language={programmingLanguage.toLowerCase()}
+                  theme="vs-dark"
+                  value={code}
+                  onChange={(value) => setCode(value || '')}
+                  options={{
+                    minimap: { enabled: false },
+                    fontSize: 14,
+                    lineNumbers: 'on',
+                    scrollBeyondLastLine: false,
+                    automaticLayout: true,
+                  }}
+                />
               </div>
-            )}
-          </div>
 
-          <div className="p-4 border-t border-gray-200 bg-gray-50 flex gap-3">
-            <button
-              onClick={handleRunCode}
-              disabled={isRunning}
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium disabled:opacity-50 flex items-center gap-2"
-            >
-              {isRunning ? 'Running...' : 'Run Code'}
-            </button>
-            <button
-              onClick={handleSubmitCode}
-              disabled={isRunning}
-              className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium disabled:opacity-50"
-            >
-              Submit
-            </button>
-          </div>
+              {output && (
+                <div className="border-t border-[var(--page-border)] p-4 bg-gray-900 text-green-400 font-mono text-sm overflow-y-auto max-h-40">
+                  <pre className="whitespace-pre-wrap">{output}</pre>
+                </div>
+              )}
+
+              <div className="p-4 border-t border-[var(--page-border)] bg-[var(--page-section)] flex gap-3">
+                <button
+                  onClick={handleRunCode}
+                  disabled={isRunning}
+                  className="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium text-sm disabled:opacity-50 flex items-center gap-2 transition-all"
+                >
+                  {isRunning ? 'Running...' : 'Run Code'}
+                </button>
+                <button
+                  onClick={handleSubmitCode}
+                  disabled={isRunning}
+                  className="px-5 py-2 bg-green-600 hover:bg-green-700 text-white rounded-xl font-medium text-sm disabled:opacity-50 transition-all"
+                >
+                  Submit
+                </button>
+              </div>
+            </div>
+          </motion.div>
         </div>
-      </div>
+      </motion.div>
     );
   };
 
-  /**
-   * Render Module Test - Multi-question test with scoring
-   */
+  // ── RENDER: MODULE TEST ────────────────────────────────────────────────────
+
   const renderModuleTest = () => {
     const content = lessonContent?.content || {};
     const questions = content.questions || [];
 
     return (
-      <div className="max-w-4xl mx-auto">
-        <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
-          <div className="p-6 bg-gradient-to-r from-purple-500 to-indigo-500">
-            <h1 className="text-2xl font-bold text-white mb-2">{content.title || currentLesson?.title}</h1>
-            <p className="text-purple-100">{questions.length} Questions • {content.duration || '30 minutes'}</p>
+      <motion.div
+        variants={staggerContainer}
+        initial="hidden"
+        animate="visible"
+        className="max-w-3xl mx-auto"
+      >
+        <motion.div variants={slideUp} className="rounded-2xl border border-[var(--page-border)] overflow-hidden">
+          {/* Test Header */}
+          <div className="p-6 bg-gradient-to-r from-purple-600 to-indigo-600">
+            <h1 className="text-xl font-bold text-white mb-1">{content.title || currentLesson?.title}</h1>
+            <p className="text-purple-200 text-sm">{questions.length} Questions</p>
           </div>
 
-          <div className="p-6">
+          <div className="p-6 bg-[var(--page-card)]">
             {testSubmitted ? (
-              <div className="text-center py-8">
-                <div className="text-5xl mb-4">{testScore >= 70 ? '🎉' : '📚'}</div>
-                <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                  Score: {testScore}%
-                </h2>
-                <p className="text-gray-600 mb-6">
-                  You got {Object.values(testAnswers).filter((ans, i) => ans === questions[i].correctAnswer).length} out of {questions.length} correct
+              <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="text-center py-8">
+                <div className="text-5xl mb-4">{testScore >= 70 ? '\uD83C\uDF89' : '\uD83D\uDCDA'}</div>
+                <h2 className="text-2xl font-bold text-[var(--page-text)] mb-2">Score: {testScore}%</h2>
+                <p className="text-[var(--page-text-muted)] mb-6">
+                  You got {Object.values(testAnswers).filter((ans, i) => ans === questions[i]?.correctAnswer).length} out of {questions.length} correct
                 </p>
                 <div className="flex justify-center gap-4">
                   <button
                     onClick={() => { setTestAnswers({}); setTestSubmitted(false); setTestScore(0); }}
-                    className="px-6 py-2.5 rounded-lg font-medium border border-purple-600 text-purple-600 hover:bg-purple-50"
+                    className="px-6 py-2.5 rounded-xl font-medium border border-purple-600 text-purple-600 hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-all"
                   >
                     Retry Test
                   </button>
                   <button
                     onClick={() => navigateLesson('next')}
-                    className="px-6 py-2.5 rounded-lg font-medium bg-purple-600 text-white hover:bg-purple-700"
+                    className="px-6 py-2.5 rounded-xl font-medium bg-purple-600 text-white hover:bg-purple-700 transition-all"
                   >
                     Continue
                   </button>
                 </div>
-              </div>
+              </motion.div>
             ) : (
               <>
-                <div className="space-y-6">
+                <div className="space-y-5">
                   {questions.map((q: any, idx: number) => (
-                    <div key={idx} className="p-4 border border-gray-200 rounded-lg">
-                      <h3 className="font-semibold text-gray-900 mb-3">
+                    <div key={idx} className="p-5 border border-[var(--page-border)] rounded-xl">
+                      <h3 className="font-semibold text-[var(--page-text)] mb-3 text-sm">
                         {idx + 1}. {q.question}
                       </h3>
                       <div className="space-y-2">
                         {q.options.map((opt: string, optIdx: number) => (
-                          <label key={optIdx} className="flex items-center gap-3 p-3 rounded-lg border border-gray-200 hover:bg-gray-50 cursor-pointer">
+                          <label
+                            key={optIdx}
+                            className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-all ${testAnswers[idx] === optIdx ? 'border-purple-500 bg-purple-50 dark:bg-purple-900/20' : 'border-[var(--page-border)] hover:bg-[var(--page-section)]'}`}
+                          >
                             <input
                               type="radio"
                               name={`question-${idx}`}
                               checked={testAnswers[idx] === optIdx}
                               onChange={() => setTestAnswers({ ...testAnswers, [idx]: optIdx })}
-                              className="w-4 h-4 text-purple-600"
+                              className="w-4 h-4 text-purple-600 accent-purple-600"
                             />
-                            <span className="text-gray-700">{opt}</span>
+                            <span className="text-[var(--page-text)] text-sm">{opt}</span>
                           </label>
                         ))}
                       </div>
@@ -1095,26 +1003,23 @@ const LearningPage: React.FC<LearningPageProps> = ({ courseId }) => {
                   ))}
                 </div>
 
-                <div className="flex justify-center mt-6">
-                  <button
-                    onClick={handleTestSubmit}
-                    disabled={Object.keys(testAnswers).length < questions.length}
-                    className={`px-8 py-3 rounded-lg font-medium transition-colors ${Object.keys(testAnswers).length === questions.length ? 'bg-purple-600 hover:bg-purple-700 text-white' : 'bg-gray-200 text-gray-400 cursor-not-allowed'}`}
-                  >
-                    Submit Test ({Object.keys(testAnswers).length}/{questions.length} answered)
-                  </button>
-                </div>
+                <button
+                  onClick={handleTestSubmit}
+                  disabled={Object.keys(testAnswers).length < questions.length}
+                  className={`w-full mt-6 py-3 rounded-xl font-medium transition-all ${Object.keys(testAnswers).length === questions.length ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md hover:shadow-lg' : 'bg-[var(--page-section)] text-[var(--page-text-muted)] cursor-not-allowed'}`}
+                >
+                  Submit Test ({Object.keys(testAnswers).length}/{questions.length} answered)
+                </button>
               </>
             )}
           </div>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     );
   };
 
-  /**
-   * Render Completion Screen - Congratulations message with celebration
-   */
+  // ── RENDER: COMPLETION SCREEN ──────────────────────────────────────────────
+
   const renderCompletionScreen = () => {
     const content = lessonContent?.content || {};
     const totalLessons = course?.sections?.reduce(
@@ -1122,10 +1027,15 @@ const LearningPage: React.FC<LearningPageProps> = ({ courseId }) => {
     ) || 0;
 
     return (
-      <div className="max-w-3xl mx-auto">
-        <div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden text-center">
+      <motion.div
+        variants={staggerContainer}
+        initial="hidden"
+        animate="visible"
+        className="max-w-2xl mx-auto"
+      >
+        <motion.div variants={scaleIn} className="rounded-2xl border border-[var(--page-border)] overflow-hidden text-center">
           {/* Hero */}
-          <div className="relative p-12 bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-400 overflow-hidden">
+          <div className="relative p-10 bg-gradient-to-r from-[var(--page-accent)] via-[var(--page-accent-secondary)] to-yellow-400 overflow-hidden">
             <div className="absolute inset-0 opacity-10">
               {Array.from({ length: 6 }).map((_, i) => (
                 <div key={i} className="absolute w-20 h-20 border-2 border-white rounded-full" style={{
@@ -1135,37 +1045,37 @@ const LearningPage: React.FC<LearningPageProps> = ({ courseId }) => {
               ))}
             </div>
             <div className="relative z-10">
-              <div className="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-4">
-                <FaTrophy className="text-white text-3xl" />
+              <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-4">
+                <FaTrophy className="text-white text-2xl" />
               </div>
-              <h1 className="text-3xl font-bold text-white mb-2">{content.message || 'Congratulations!'}</h1>
-              <p className="text-white/90 text-lg">You've completed this course!</p>
+              <h1 className="text-2xl font-bold text-white mb-1">{content.message || 'Congratulations!'}</h1>
+              <p className="text-white/80">You've completed this course!</p>
             </div>
           </div>
 
-          <div className="p-8">
-            {/* Stats row */}
-            <div className="grid grid-cols-3 gap-4 mb-8">
-              <div className="bg-orange-50 rounded-xl p-4 border border-orange-100">
-                <div className="text-2xl font-bold text-orange-600">{totalLessons}</div>
-                <div className="text-xs text-orange-700 font-medium">Lessons Done</div>
+          <div className="p-6 space-y-6">
+            {/* Stats */}
+            <div className="grid grid-cols-3 gap-3">
+              <div className="p-3 rounded-xl bg-[var(--page-section)] border border-[var(--page-border)]">
+                <div className="text-xl font-bold text-[var(--page-accent)]">{totalLessons}</div>
+                <div className="text-[10px] text-[var(--page-text-muted)] font-medium">Lessons</div>
               </div>
-              <div className="bg-green-50 rounded-xl p-4 border border-green-100">
-                <div className="text-2xl font-bold text-green-600">+{totalLessons * 50}</div>
-                <div className="text-xs text-green-700 font-medium">XP Earned</div>
+              <div className="p-3 rounded-xl bg-[var(--page-section)] border border-[var(--page-border)]">
+                <div className="text-xl font-bold text-green-600">+{Math.max(totalLessons * 50, 100)}</div>
+                <div className="text-[10px] text-[var(--page-text-muted)] font-medium">XP Earned</div>
               </div>
-              <div className="bg-blue-50 rounded-xl p-4 border border-blue-100">
-                <div className="text-2xl font-bold text-blue-600">{formatSessionTime(sessionSeconds)}</div>
-                <div className="text-xs text-blue-700 font-medium">Time Spent</div>
+              <div className="p-3 rounded-xl bg-[var(--page-section)] border border-[var(--page-border)]">
+                <div className="text-xl font-bold text-blue-600">{formatSessionTime(sessionSeconds)}</div>
+                <div className="text-[10px] text-[var(--page-text-muted)] font-medium">Time</div>
               </div>
             </div>
 
             {content.summary && (
-              <div className="text-left max-w-md mx-auto mb-8">
-                <h3 className="font-bold text-gray-800 mb-3">What you learned:</h3>
+              <div className="text-left">
+                <h3 className="font-bold text-[var(--page-text)] mb-3 text-sm">What you learned:</h3>
                 <ul className="space-y-2">
                   {content.summary.map((item: string, i: number) => (
-                    <li key={i} className="flex items-center gap-2 text-gray-700">
+                    <li key={i} className="flex items-center gap-2 text-[var(--page-text-muted)] text-sm">
                       <FaCheck className="text-green-500 flex-shrink-0" /> {item}
                     </li>
                   ))}
@@ -1174,26 +1084,26 @@ const LearningPage: React.FC<LearningPageProps> = ({ courseId }) => {
             )}
 
             {content.nextSteps && (
-              <div className="text-left max-w-md mx-auto mb-8">
-                <h3 className="font-bold text-gray-800 mb-3">Next Steps:</h3>
+              <div className="text-left">
+                <h3 className="font-bold text-[var(--page-text)] mb-3 text-sm">Next Steps:</h3>
                 <ul className="space-y-2">
                   {content.nextSteps.map((step: string, i: number) => (
-                    <li key={i} className="text-gray-600 flex items-start gap-2">
-                      <span className="text-orange-500 font-bold mt-0.5">→</span> {step}
+                    <li key={i} className="text-[var(--page-text-muted)] text-sm flex items-start gap-2">
+                      <span className="text-[var(--page-accent)] font-bold mt-0.5">\u2192</span> {step}
                     </li>
                   ))}
                 </ul>
               </div>
             )}
 
-            {/* Achievement badges */}
-            <div className="bg-gradient-to-r from-orange-50 to-amber-50 rounded-xl p-4 border border-orange-100 mb-6">
-              <p className="text-sm font-bold text-orange-800 mb-2 flex items-center justify-center gap-2">
-                <FaTrophy className="text-yellow-500" /> Achievements Unlocked
+            {/* Badges */}
+            <div className="p-4 rounded-xl bg-gradient-to-r from-[var(--page-accent-soft)] to-amber-50 dark:to-amber-900/10 border border-[var(--page-border)]">
+              <p className="text-xs font-bold text-[var(--page-accent)] mb-2 flex items-center justify-center gap-2">
+                <FaTrophy /> Achievements Unlocked
               </p>
               <div className="flex flex-wrap justify-center gap-2">
                 {['Course Graduate', 'Dedicated Learner'].map((badge) => (
-                  <span key={badge} className="px-3 py-1 bg-white text-orange-700 text-xs font-semibold rounded-full border border-orange-200 shadow-sm">
+                  <span key={badge} className="px-3 py-1 bg-[var(--page-card)] text-[var(--page-accent)] text-xs font-semibold rounded-full border border-[var(--page-border)] shadow-sm">
                     {badge}
                   </span>
                 ))}
@@ -1201,268 +1111,406 @@ const LearningPage: React.FC<LearningPageProps> = ({ courseId }) => {
             </div>
           </div>
 
-          <div className="p-6 bg-gray-50 border-t border-gray-200">
+          <div className="p-6 border-t border-[var(--page-border)] bg-[var(--page-section)]">
             <button
               onClick={() => markLessonComplete()}
-              className="px-8 py-3 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white rounded-xl font-semibold shadow-lg shadow-orange-500/30 transition-all transform hover:scale-105"
+              className="px-8 py-3 bg-gradient-to-r from-[var(--page-accent)] to-[var(--page-accent-secondary)] text-white rounded-xl font-semibold shadow-lg shadow-[var(--page-accent)]/20 hover:shadow-xl transition-all"
             >
               Complete Course
             </button>
           </div>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     );
   };
 
-  // ============================================================================
-  // RENDER: LOADING STATE
-  // ============================================================================
+  // ── RENDER: LOADING STATE ──────────────────────────────────────────────────
 
-  if (isLoading) {
+  if (isLoading && !showSkeleton) {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--page-bg)' }}>
         <div className="text-center">
-          <div className="animate-spin w-12 h-12 border-4 border-[var(--page-accent)] border-t-transparent rounded-full mx-auto mb-4"></div>
-          <p className="text-[var(--page-text-muted)] font-medium">Loading course...</p>
+          <div className="w-12 h-12 border-4 border-[var(--page-accent)] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-[var(--page-text-muted)] font-medium text-sm">Loading course...</p>
         </div>
       </div>
     );
   }
 
-  // ============================================================================
-  // RENDER: LOADING STATE
-  // ============================================================================
-  
+  // ── RENDER: SKELETON ───────────────────────────────────────────────────────
+
   if (showSkeleton) {
     return (
-      <div className="flex flex-col lg:flex-row h-screen bg-gray-50">
+      <div className="flex h-screen" style={{ background: 'var(--page-bg)' }}>
         {/* Desktop Sidebar Skeleton */}
-        <aside className="hidden lg:block w-80 bg-white border-r border-gray-200 flex-shrink-0 overflow-hidden">
-          <SidebarSkeleton />
+        <aside className="hidden lg:block w-72 border-r border-[var(--page-border)] flex-shrink-0 overflow-hidden bg-[var(--page-card)]">
+          <div className="p-4 space-y-4">
+            <div className="h-6 w-3/4 bg-[var(--page-section)] rounded-lg animate-pulse" />
+            <div className="h-3 w-1/2 bg-[var(--page-section)] rounded animate-pulse" />
+            <div className="h-2 w-full bg-[var(--page-section)] rounded-full animate-pulse" />
+            <div className="space-y-3 pt-4">
+              {[1, 2, 3, 4].map((i) => (
+                <div key={i} className="space-y-2">
+                  <div className="h-4 w-2/3 bg-[var(--page-section)] rounded animate-pulse" />
+                  <div className="h-3 w-full bg-[var(--page-section)] rounded animate-pulse ml-4" />
+                  <div className="h-3 w-3/4 bg-[var(--page-section)] rounded animate-pulse ml-4" />
+                </div>
+              ))}
+            </div>
+          </div>
         </aside>
-        
-        {/* Mobile Top Bar Skeleton */}
-        <div className="lg:hidden bg-white border-b border-gray-200 px-4 py-3 flex items-center gap-3">
-          <div className="w-10 h-10 bg-gray-200 rounded-md animate-pulse" />
-          <div className="flex-1 space-y-2">
-            <div className="h-4 bg-gray-200 rounded w-3/4 animate-pulse" />
-            <div className="h-3 bg-gray-200 rounded w-1/2 animate-pulse" />
+
+        {/* Mobile skeleton */}
+        <div className="lg:hidden w-full">
+          <div className="p-4 border-b border-[var(--page-border)] bg-[var(--page-card)] flex items-center gap-3">
+            <div className="w-9 h-9 bg-[var(--page-section)] rounded-xl animate-pulse" />
+            <div className="flex-1 space-y-2">
+              <div className="h-4 bg-[var(--page-section)] rounded w-3/4 animate-pulse" />
+              <div className="h-3 bg-[var(--page-section)] rounded w-1/2 animate-pulse" />
+            </div>
+          </div>
+          <div className="flex-1 p-6">
+            <LessonContentSkeleton />
           </div>
         </div>
-        
-        {/* Main Content Skeleton */}
-        <main className="flex-1 overflow-hidden">
+
+        {/* Main Content Skeleton (desktop) */}
+        <main className="hidden lg:block flex-1 p-6 overflow-hidden">
           <LessonContentSkeleton />
         </main>
-        
-        {/* Mobile Bottom Nav Skeleton */}
-        <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-3">
-          <div className="flex items-center justify-around">
-            {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="flex flex-col items-center gap-1">
-                <div className="w-6 h-6 bg-gray-200 rounded animate-pulse" />
-                <div className="w-12 h-2 bg-gray-200 rounded animate-pulse" />
-              </div>
-            ))}
-          </div>
-        </div>
       </div>
     );
   }
 
-  // ============================================================================
-  // RENDER: MAIN UI
-  // ============================================================================
-  
+  // ── DATA CHECKS ────────────────────────────────────────────────────────────
+
   if (!course) {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--page-bg)' }}>
         <div className="text-center">
-          <h2 className="text-xl font-semibold text-[var(--page-text)] mb-4" style={{ fontFamily: 'Plus Jakarta Sans, system-ui' }}>Course not found</h2>
-          <a href="/#/dashboard" className="text-[var(--page-accent)] hover:underline">Back to Dashboard</a>
+          <h2 className="text-xl font-semibold text-[var(--page-text)] mb-4">Course not found</h2>
+          <a href="/#/dashboard" className="text-[var(--page-accent)] hover:underline text-sm">Back to Dashboard</a>
         </div>
       </div>
     );
   }
 
   const progressPercent = calculateProgress();
-  
-  // Determine layout
   const showSidebar = !currentLesson || lessonType === 'concept' || lessonType === 'completion';
-  const isFullWidthLesson = lessonType === 'mcq' || lessonType === 'codingTask' || 
-                            lessonType === 'coding' || lessonType === 'moduleTest' || 
-                            lessonType === 'test';
+  const isFullWidthLesson = lessonType === 'mcq' || lessonType === 'codingTask' ||
+    lessonType === 'coding' || lessonType === 'moduleTest' ||
+    lessonType === 'test';
 
-  /**
-   * ========================================
-   * SIDEBAR COMPONENT (Desktop: Fixed Left, Mobile: Drawer)
-   * ========================================
-   */
+  // ── SIDEBAR ────────────────────────────────────────────────────────────────
+
   const renderSidebar = () => (
-    <LearningSidebar
-      course={course}
-      currentModuleIndex={currentModuleIndex}
-      currentLessonIndex={currentLessonIndex}
-      expandedModules={expandedModules}
-      isSidebarOpen={isSidebarOpen}
-      progress={progress}
-      progressPercent={progressPercent}
-      sessionSeconds={sessionSeconds}
-      formatSessionTime={formatSessionTime}
-      onSelectLesson={selectLesson}
-      onToggleModule={toggleModule}
-      onCloseSidebar={() => setIsSidebarOpen(false)}
-      onBack={() => window.location.hash = `/course/${courseId}`}
-      hasCoursePurchase={hasCoursePurchase}
-    />
+    <>
+      {/* Desktop sidebar */}
+      <aside className="hidden lg:block fixed top-0 left-0 w-72 h-screen border-r border-[var(--page-border)] bg-[var(--page-card)] z-30 overflow-hidden flex flex-col">
+        <div className="flex-1 overflow-y-auto">
+          <LearningSidebar
+            course={course}
+            currentModuleIndex={currentModuleIndex}
+            currentLessonIndex={currentLessonIndex}
+            expandedModules={expandedModules}
+            isSidebarOpen={isSidebarOpen}
+            progress={progress}
+            progressPercent={progressPercent}
+            sessionSeconds={sessionSeconds}
+            formatSessionTime={formatSessionTime}
+            onSelectLesson={selectLesson}
+            onToggleModule={toggleModule}
+            onCloseSidebar={() => setIsSidebarOpen(false)}
+            onBack={() => window.location.hash = `/course/${courseId}`}
+            hasCoursePurchase={hasCoursePurchase}
+          />
+        </div>
+      </aside>
+
+      {/* Mobile drawer overlay */}
+      <AnimatePresence>
+        {isSidebarOpen && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 lg:hidden"
+              onClick={() => setIsSidebarOpen(false)}
+            />
+            <motion.aside
+              initial={{ x: '-100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '-100%' }}
+              transition={{ type: 'spring', damping: 30, stiffness: 300 }}
+              className="fixed top-0 left-0 bottom-0 w-80 max-w-[85vw] bg-[var(--page-card)] z-50 shadow-2xl lg:hidden overflow-hidden flex flex-col"
+            >
+              <div className="flex items-center justify-between p-4 border-b border-[var(--page-border)]">
+                <span className="text-sm font-bold text-[var(--page-text)]">Course Content</span>
+                <button
+                  onClick={() => setIsSidebarOpen(false)}
+                  className="p-2 hover:bg-[var(--page-section)] rounded-xl transition-colors"
+                >
+                  <FaTimes className="w-4 h-4 text-[var(--page-text-muted)]" />
+                </button>
+              </div>
+              <div className="flex-1 overflow-y-auto">
+                <LearningSidebar
+                  course={course}
+                  currentModuleIndex={currentModuleIndex}
+                  currentLessonIndex={currentLessonIndex}
+                  expandedModules={expandedModules}
+                  isSidebarOpen={isSidebarOpen}
+                  progress={progress}
+                  progressPercent={progressPercent}
+                  sessionSeconds={sessionSeconds}
+                  formatSessionTime={formatSessionTime}
+                  onSelectLesson={selectLesson}
+                  onToggleModule={toggleModule}
+                  onCloseSidebar={() => setIsSidebarOpen(false)}
+                  onBack={() => window.location.hash = `/course/${courseId}`}
+                  hasCoursePurchase={hasCoursePurchase}
+                />
+              </div>
+            </motion.aside>
+          </>
+        )}
+      </AnimatePresence>
+    </>
   );
 
-  /**
-   * ========================================
-   * MOBILE TOP NAV WITH HAMBURGER
-   * ========================================
-   */
-  const renderMobileNav = () => (
-    <div className="lg:hidden fixed top-0 left-0 right-0 z-30">
-      <div className="bg-white/80 backdrop-blur-xl border-b border-gray-200/60">
-        <div className="px-4 py-3 flex items-center justify-between">
-          <button
-            onClick={() => setIsSidebarOpen(true)}
-            className="p-2 hover:bg-gray-100 rounded-xl transition-colors"
-          >
-            <HiOutlineMenu className="w-5 h-5 text-gray-700" />
-          </button>
-          
-          <div className="flex-1 mx-3">
-            <div className="text-sm font-semibold text-gray-900 truncate" style={{ fontFamily: 'Plus Jakarta Sans, system-ui' }}>
-              {currentLesson ? currentLesson.title : course.title}
-            </div>
-            {currentLesson && (
-              <div className="text-[11px] text-[var(--page-text-muted)] font-medium">
-                Module {currentModuleIndex + 1} · Lesson {currentLessonIndex + 1}
-              </div>
-            )}
-          </div>
+  // ── MOBILE TOP NAV ─────────────────────────────────────────────────────────
 
+  const renderMobileNav = () => (
+    <div className="lg:hidden fixed top-0 left-0 right-0 z-30 bg-[var(--page-card)]/80 backdrop-blur-xl border-b border-[var(--page-border)]">
+      <div className="px-4 py-3 flex items-center justify-between">
+        <button
+          onClick={() => setIsSidebarOpen(true)}
+          className="p-2 hover:bg-[var(--page-section)] rounded-xl transition-colors"
+        >
+          <HiOutlineMenu className="w-5 h-5 text-[var(--page-text)]" />
+        </button>
+
+        <div className="flex-1 mx-3 min-w-0">
+          <div className="text-sm font-semibold text-[var(--page-text)] truncate">
+            {currentLesson ? currentLesson.title : course.title}
+          </div>
           {currentLesson && (
-            <div className="flex items-center gap-1">
-              <button
-                onClick={() => navigateLesson('prev')}
-                disabled={currentModuleIndex === 0 && currentLessonIndex === 0}
-                className="p-2 text-gray-600 hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed rounded-xl"
-              >
-                <FaChevronLeft className="w-4 h-4" />
-              </button>
-              <button
-                onClick={() => navigateLesson('next')}
-                className="p-2 text-gray-600 hover:bg-gray-100 rounded-xl"
-              >
-                <FaChevronRight className="w-4 h-4" />
-              </button>
+            <div className="text-[11px] text-[var(--page-text-muted)] font-medium">
+              Module {currentModuleIndex + 1} · Lesson {currentLessonIndex + 1}
             </div>
           )}
         </div>
+
+        {currentLesson && (
+          <div className="flex items-center gap-1">
+            <button
+              onClick={() => navigateLesson('prev')}
+              disabled={currentModuleIndex === 0 && currentLessonIndex === 0}
+              className="p-2 text-[var(--page-text-muted)] hover:bg-[var(--page-section)] disabled:opacity-30 disabled:cursor-not-allowed rounded-xl"
+            >
+              <FaChevronLeft className="w-4 h-4" />
+            </button>
+            <button
+              onClick={() => navigateLesson('next')}
+              className="p-2 text-[var(--page-text-muted)] hover:bg-[var(--page-section)] rounded-xl"
+            >
+              <FaChevronRight className="w-4 h-4" />
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
 
-  /**
-   * ========================================
-   * COURSE OVERVIEW (No Lesson Selected)
-   * ========================================
-   */
+  // ── COURSE OVERVIEW ────────────────────────────────────────────────────────
+
   const renderCourseOverview = () => {
     const milestone = getMilestoneBadge();
+    const streakDays = Math.floor(progressPercent / 10);
+    const nextMilestone = progressPercent < 25 ? 25 : progressPercent < 50 ? 50 : progressPercent < 75 ? 75 : 100;
+
     return (
-    <div className="max-w-4xl mx-auto">
-      <div className="bg-white rounded-2xl border border-[var(--page-border)] shadow-[var(--shadow-sm)] overflow-hidden">
-        {/* Header */}
-        <div className="p-8 border-b border-[var(--page-border)]" style={{ background: 'var(--page-gradient)' }}>
-          <button
-            onClick={() => window.location.hash = `/course/${courseId}`}
-            className="mb-4 px-4 py-2 text-sm text-[var(--page-text-muted)] hover:text-[var(--page-text)] bg-white/60 hover:bg-white rounded-xl flex items-center gap-2 font-medium transition-all border border-[var(--page-border)]"
-          >
-            <FaChevronLeft className="w-3 h-3" /> Back to Course Details
-          </button>
-          
-          <div className="flex items-start justify-between flex-wrap gap-4">
-            <div className="flex-1">
-              <h1 className="text-3xl font-bold text-[var(--page-text)] mb-3" style={{ fontFamily: 'Plus Jakarta Sans, system-ui' }}>{course.title}</h1>
-              <p className="text-[var(--page-text-muted)] leading-relaxed">
-                {course.description || 'Welcome to this course. Select a lesson from the sidebar to begin learning.'}
-              </p>
-            </div>
-            {milestone && (
-              <div className={`${milestone.color} px-4 py-2 rounded-xl shadow-lg flex items-center gap-2 text-sm font-bold animate-bounce`}>
-                {milestone.icon}
-                {milestone.label}
+      <motion.div
+        variants={staggerContainer}
+        initial="hidden"
+        animate="visible"
+        className="max-w-5xl mx-auto space-y-6"
+      >
+        {/* Continue Learning Card */}
+        <motion.div variants={slideUp}>
+          <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[var(--page-accent)] to-[var(--page-accent-secondary)] p-6 sm:p-8">
+            <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PGNpcmNsZSBjeD0iMzAiIGN5PSIzMCIgcj0iMiIvPjwvZz48L2c+PC9zdmc+')] opacity-50" />
+            <div className="relative z-10 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+              <div className="w-14 h-14 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center flex-shrink-0">
+                <FaPlay className="text-white text-xl ml-0.5" />
               </div>
-            )}
-          </div>
-
-          {/* Session time in overview */}
-          {sessionSeconds > 60 && (
-            <div className="mt-4 flex items-center gap-2 text-sm text-[var(--page-text-muted)]">
-              <FaClock className="w-3.5 h-3.5 text-[var(--page-accent)]" />
-              <span>This session: {formatSessionTime(sessionSeconds)}</span>
+              <div className="flex-1 min-w-0">
+                <h2 className="text-white font-bold text-lg sm:text-xl">
+                  {progressPercent > 0 ? 'Continue Learning' : 'Start Learning'}
+                </h2>
+                <p className="text-white/80 text-sm mt-0.5">
+                  {progressPercent > 0
+                    ? `You're ${progressPercent}% through - keep the momentum!`
+                    : 'Begin your journey with this course'}
+                </p>
+              </div>
+              <button
+                onClick={() => {
+                  const modules = course?.sections || [];
+                  // Find first incomplete lesson
+                  for (let m = 0; m < modules.length; m++) {
+                    const lessons = modules[m].lessons || [];
+                    for (let l = 0; l < lessons.length; l++) {
+                      if (!isLessonCompleted(lessons[l]._id)) {
+                        selectLesson(lessons[l], m, l);
+                        return;
+                      }
+                    }
+                  }
+                  // All complete, go to first lesson
+                  if (modules[0]?.lessons?.[0]) {
+                    selectLesson(modules[0].lessons[0], 0, 0);
+                  }
+                }}
+                className="px-6 py-2.5 bg-white text-[var(--page-accent)] rounded-xl font-semibold text-sm hover:bg-white/90 transition-all shadow-lg flex items-center gap-2 whitespace-nowrap"
+              >
+                {progressPercent > 0 ? 'Resume' : 'Get Started'}
+                <FaArrowRight className="text-xs" />
+              </button>
             </div>
-          )}
-        </div>
-
-        {/* Progress Section */}
-        <div className="p-8" style={{ background: 'var(--page-gradient)' }}>
-          <div className="flex items-center justify-between mb-3">
-            <span className="text-sm font-semibold text-[var(--page-text)]">Your Progress</span>
-            <span className="text-2xl font-bold text-[var(--page-accent)]" style={{ fontFamily: 'Plus Jakarta Sans, system-ui' }}>{progressPercent}%</span>
           </div>
-          <div className="h-3 bg-white/60 rounded-full overflow-hidden shadow-inner">
-            <div 
-              className="h-full bg-gradient-to-r from-[var(--page-accent)] to-[var(--page-accent-secondary)] rounded-full transition-all duration-500"
-              style={{ width: `${progressPercent}%` }}
-            />
-          </div>
-          <p className="text-sm text-[var(--page-text-muted)] mt-3">
-            Keep going! You're {progressPercent >= 50 ? 'more than halfway' : 'making great progress'}.
-          </p>
-        </div>
+        </motion.div>
 
-        {/* Modules Overview */}
-        <div className="p-8">
-          <h2 className="text-xl font-bold text-[var(--page-text)] mb-6" style={{ fontFamily: 'Plus Jakarta Sans, system-ui' }}>Course Modules</h2>
-          <div className="space-y-4">
+        {/* Main content card */}
+        <motion.div variants={slideUp} className="rounded-2xl border border-[var(--page-border)] bg-[var(--page-card)] overflow-hidden">
+          {/* Compact Header */}
+          <div className="p-6 border-b border-[var(--page-border)]" style={{ background: 'var(--page-gradient)' }}>
+            <div className="flex items-start justify-between gap-4">
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 mb-1">
+                  <button
+                    onClick={() => window.location.hash = `/course/${courseId}`}
+                    className="text-xs text-[var(--page-text-muted)] hover:text-[var(--page-accent)] font-medium transition-colors"
+                  >
+                    Course Details
+                  </button>
+                  <FaChevronRight className="w-2 h-2 text-[var(--page-text-muted)]/40" />
+                  <span className="text-xs text-[var(--page-text)] font-semibold">Learning</span>
+                </div>
+                <h1 className="text-xl sm:text-2xl font-bold text-[var(--page-text)] leading-tight">{course.title}</h1>
+                <p className="text-sm text-[var(--page-text-muted)] mt-1 leading-relaxed line-clamp-2">
+                  {course.description || 'Select a lesson from the sidebar to begin learning.'}
+                </p>
+              </div>
+              {milestone && (
+                <div className={`bg-gradient-to-r ${milestone.color} px-3 py-1.5 rounded-xl shadow-lg flex items-center gap-1.5 text-xs font-bold flex-shrink-0`}>
+                  {milestone.icon}
+                  {milestone.label}
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Progress + Stats */}
+          <div className="p-6 grid grid-cols-2 sm:grid-cols-4 gap-4 border-b border-[var(--page-border)]">
+            <div className="text-center">
+              <div className="text-2xl font-bold text-[var(--page-accent)]">{progressPercent}%</div>
+              <div className="text-[11px] text-[var(--page-text-muted)] font-medium">Complete</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-[var(--page-text)]">
+                {progress?.completedLessons?.length || 0}
+              </div>
+              <div className="text-[11px] text-[var(--page-text-muted)] font-medium">Lessons Done</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-[var(--page-text)]">
+                {course?.sections?.reduce((acc: number, s: any) => acc + (s.lessons?.length || 0), 0) || 0}
+              </div>
+              <div className="text-[11px] text-[var(--page-text-muted)] font-medium">Total Lessons</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-blue-600">{streakDays}</div>
+              <div className="text-[11px] text-[var(--page-text-muted)] font-medium">Streak Days</div>
+            </div>
+          </div>
+
+          {/* Progress bar */}
+          <div className="px-6 pb-6 pt-4">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-xs font-semibold text-[var(--page-text)]">Course Progress</span>
+              <span className="text-xs text-[var(--page-text-muted)]">{nextMilestone}% until next milestone</span>
+            </div>
+            <div className="h-3 bg-[var(--page-section)] rounded-full overflow-hidden shadow-inner">
+              <motion.div
+                initial={{ width: 0 }}
+                animate={{ width: `${progressPercent}%` }}
+                transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+                className="h-full bg-gradient-to-r from-[var(--page-accent)] to-[var(--page-accent-secondary)] rounded-full"
+              />
+            </div>
+            <p className="text-xs text-[var(--page-text-muted)] mt-2">
+              {progressPercent >= 50 ? 'Great progress! Almost there.' : 'Keep going! You\'re making great strides.'}
+            </p>
+          </div>
+        </motion.div>
+
+        {/* Modules Grid */}
+        <motion.div variants={slideUp} className="space-y-3">
+          <h2 className="text-lg font-bold text-[var(--page-text)] px-1">Course Modules</h2>
+          <div className="grid gap-3">
             {course.sections.map((module: any, idx: number) => {
-              const moduleProgress = module.lessons?.filter((l: any) => 
+              const moduleProgress = module.lessons?.filter((l: any) =>
                 isLessonCompleted(l._id)
               ).length || 0;
               const totalLessons = module.lessons?.length || 0;
               const progressPct = totalLessons > 0 ? (moduleProgress / totalLessons) * 100 : 0;
 
               return (
-                <div key={idx} className="p-6 bg-[var(--page-section)]/50 rounded-2xl border border-[var(--page-border)] hover:border-[var(--page-accent)]/20 hover:shadow-md transition-all">
+                <motion.div
+                  key={idx}
+                  variants={slideInLeft}
+                  className="p-5 rounded-2xl border border-[var(--page-border)] bg-[var(--page-card)] hover:border-[var(--page-accent)]/20 hover:shadow-sm transition-all"
+                >
                   <div className="flex items-start justify-between mb-3">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-2">
-                        <span className="text-xs font-bold text-[var(--page-accent)] uppercase tracking-wider">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="text-[11px] font-bold text-[var(--page-accent)] uppercase tracking-wider">
                           Module {idx + 1}
                         </span>
                         {progressPct === 100 && (
-                          <span className="px-2 py-0.5 bg-emerald-100 text-emerald-700 text-xs font-semibold rounded-full">
-                            Completed
+                          <span className="px-2 py-0.5 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 text-[10px] font-semibold rounded-full">
+                            Complete
                           </span>
                         )}
                       </div>
-                      <h3 className="text-lg font-bold text-[var(--page-text)] mb-2" style={{ fontFamily: 'Plus Jakarta Sans, system-ui' }}>{module.title}</h3>
-                      <p className="text-sm text-[var(--page-text-muted)]">
-                        {moduleProgress}/{totalLessons} lessons completed
-                      </p>
+                      <h3 className="text-base font-bold text-[var(--page-text)] leading-snug">{module.title}</h3>
+                    </div>
+
+                    {/* Circular progress indicator */}
+                    <div className="relative w-10 h-10 flex-shrink-0">
+                      <svg className="w-10 h-10 -rotate-90" viewBox="0 0 36 36">
+                        <circle cx="18" cy="18" r="15.5" fill="none" stroke="var(--page-border)" strokeWidth="2.5" />
+                        <circle
+                          cx="18" cy="18" r="15.5" fill="none"
+                          stroke={progressPct === 100 ? '#10b981' : 'var(--page-accent)'}
+                          strokeWidth="2.5" strokeLinecap="round"
+                          strokeDasharray={`${(progressPct / 100) * 97.4} 97.4`}
+                        />
+                      </svg>
+                      <span className="absolute inset-0 flex items-center justify-center text-[10px] font-bold text-[var(--page-text)]">
+                        {moduleProgress}/{totalLessons}
+                      </span>
                     </div>
                   </div>
-                  
-                  {/* Progress bar */}
-                  <div className="h-2 bg-[var(--page-border)] rounded-full overflow-hidden mb-3">
-                    <div 
-                      className="h-full bg-[var(--page-accent)] rounded-full transition-all duration-500"
-                      style={{ width: `${progressPct}%` }}
+
+                  <div className="h-1.5 bg-[var(--page-section)] rounded-full overflow-hidden mb-3">
+                    <motion.div
+                      initial={{ width: 0 }}
+                      animate={{ width: `${progressPct}%` }}
+                      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                      className="h-full bg-gradient-to-r from-[var(--page-accent)] to-[var(--page-accent-secondary)] rounded-full"
                     />
                   </div>
 
@@ -1472,65 +1520,45 @@ const LearningPage: React.FC<LearningPageProps> = ({ courseId }) => {
                         selectLesson(module.lessons[0], idx, 0);
                       }
                     }}
-                    className="text-sm text-[var(--page-accent)] hover:text-[var(--page-accent)]/80 font-semibold flex items-center gap-2 group"
+                    className="text-xs text-[var(--page-accent)] hover:text-[var(--page-accent)]/80 font-semibold flex items-center gap-1.5 group"
                   >
-                    {progressPct === 0 ? 'Start Module' : 'Continue Learning'}
-                    <FaChevronRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+                    {progressPct === 0 ? 'Start Module' : 'Continue'}
+                    <FaChevronRight className="w-2.5 h-2.5 group-hover:translate-x-0.5 transition-transform" />
                   </button>
-                </div>
+                </motion.div>
               );
             })}
           </div>
-        </div>
-
-        {/* CTA */}
-        <div className="p-8 bg-[var(--page-section)] border-t border-[var(--page-border)] text-center">
-          <button
-            onClick={() => {
-              if (course.sections?.[0]?.lessons?.[0]) {
-                selectLesson(course.sections[0].lessons[0], 0, 0);
-              }
-            }}
-            className="px-8 py-4 bg-gradient-to-r from-[var(--page-accent)] to-[var(--page-accent-secondary)] hover:from-[var(--page-accent)]/90 hover:to-[var(--page-accent-secondary)]/90 text-white rounded-2xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all transform hover:scale-105"
-          >
-            {progressPercent > 0 ? 'Continue Learning' : 'Start Learning'}
-          </button>
-        </div>
-      </div>
-    </div>
+        </motion.div>
+      </motion.div>
     );
   };
 
-  /**
-   * ========================================
-   * MAIN RENDER
-   * ========================================
-   */
-  return (
-    <div className="min-h-screen font-['Inter',system-ui,sans-serif]" style={{ background: 'var(--page-bg)', backgroundImage: 'var(--page-gradient)', backgroundAttachment: 'fixed' }}>
-      {/* Sidebar */}
-      {showSidebar && renderSidebar()}
+  // ── MAIN RENDER ────────────────────────────────────────────────────────────
 
-      {/* Focus Mode - Hide sidebar on desktop when active */}
-      {isFocusMode && showSidebar && (
-        <div className="hidden lg:block fixed top-0 left-0 w-80 h-screen bg-black/30 z-45 transition-opacity" style={{ zIndex: 45 }} />
-      )}
+  return (
+    <div className="min-h-screen" style={{ background: 'var(--page-bg)' }}>
+      {renderSidebar()}
 
       {/* Mobile Nav */}
-      {renderMobileNav()}
+      {!isFocusMode && renderMobileNav()}
 
       {/* Main Content */}
       <main className={`
-        pt-16 lg:pt-8 min-h-screen
-        ${showSidebar ? 'lg:ml-80' : ''}
+        pt-16 lg:pt-0 min-h-screen
+        ${showSidebar ? 'lg:ml-72' : ''}
       `}>
         <div className={`
           ${isFullWidthLesson ? 'max-w-7xl' : 'max-w-5xl'}
-          mx-auto px-4 sm:px-6 lg:px-8 py-8
+          mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8
         `}>
-          {/* Desktop Breadcrumb & Navigation */}
+          {/* Desktop breadcrumb + nav */}
           {currentLesson && (
-            <div className="hidden lg:flex items-center justify-between mb-6">
+            <motion.div
+              initial={{ opacity: 0, y: -8 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="hidden lg:flex items-center justify-between mb-6"
+            >
               <div className="flex items-center gap-2 text-sm">
                 <button
                   onClick={() => {
@@ -1542,62 +1570,59 @@ const LearningPage: React.FC<LearningPageProps> = ({ courseId }) => {
                 >
                   Course Overview
                 </button>
-                <FaChevronRight className="w-3 h-3 text-[var(--page-text-muted)]/40" />
+                <FaChevronRight className="w-2.5 h-2.5 text-[var(--page-text-muted)]/40" />
                 <span className="text-[var(--page-text-muted)]">Module {currentModuleIndex + 1}</span>
-                <FaChevronRight className="w-3 h-3 text-[var(--page-text-muted)]/40" />
+                <FaChevronRight className="w-2.5 h-2.5 text-[var(--page-text-muted)]/40" />
                 <span className="text-[var(--page-text)] font-semibold">Lesson {currentLessonIndex + 1}</span>
               </div>
 
-              <div className="flex items-center gap-2.5">
-                {/* Session Timer */}
-                <div className="flex items-center gap-1.5 px-3 py-1.5 bg-[var(--page-section)] rounded-xl text-xs font-semibold text-[var(--page-text-muted)]" title="Session time">
+              <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1.5 px-3 py-1.5 bg-[var(--page-section)] rounded-xl text-xs font-semibold text-[var(--page-text-muted)]">
                   <FaClock className="w-3 h-3 text-[var(--page-accent)]" />
                   <span>{formatSessionTime(sessionSeconds)}</span>
                 </div>
 
-                {/* Focus Mode Toggle */}
                 <button
                   onClick={() => {
                     setIsFocusMode(prev => !prev);
-                    toast.success(isFocusMode ? 'Focus mode off' : 'Focus mode on — distractions hidden');
+                    toast.success(isFocusMode ? 'Focus mode off' : 'Focus mode on');
                   }}
-                  className={`p-2 rounded-xl transition-all ${isFocusMode ? 'bg-[var(--page-accent)] text-white shadow-lg shadow-[var(--page-accent)]/30' : 'bg-[var(--page-section)] text-[var(--page-text-muted)] hover:bg-[var(--page-border)]'}`}
-                  title={isFocusMode ? 'Exit Focus Mode (F)' : 'Focus Mode (F)'}
+                  className={`p-2 rounded-xl transition-all ${isFocusMode ? 'bg-[var(--page-accent)] text-white shadow-md' : 'bg-[var(--page-section)] text-[var(--page-text-muted)] hover:bg-[var(--page-border)]'}`}
+                  title="Toggle focus mode"
                 >
-                  {isFocusMode ? <FaMoon className="w-4 h-4" /> : <FaSun className="w-4 h-4" />}
+                  {isFocusMode ? <FaMoon className="w-3.5 h-3.5" /> : <FaSun className="w-3.5 h-3.5" />}
                 </button>
 
-                {/* Keyboard Shortcuts */}
                 <button
                   onClick={() => setShowShortcuts(prev => !prev)}
                   className="p-2 bg-[var(--page-section)] text-[var(--page-text-muted)] hover:bg-[var(--page-border)] rounded-xl transition-all"
-                  title="Keyboard Shortcuts (?)"
+                  title="Keyboard shortcuts"
                 >
-                  <FaKeyboard className="w-4 h-4" />
+                  <FaKeyboard className="w-3.5 h-3.5" />
                 </button>
 
-                <div className="w-px h-5 bg-[var(--page-border)]" />
+                <div className="w-px h-4 bg-[var(--page-border)]" />
 
                 <button
                   onClick={() => navigateLesson('prev')}
                   disabled={currentModuleIndex === 0 && currentLessonIndex === 0}
-                  className="px-3.5 py-2 text-[var(--page-text-muted)] hover:text-[var(--page-text)] hover:bg-[var(--page-section)] disabled:opacity-30 disabled:cursor-not-allowed rounded-xl transition-all font-medium text-sm flex items-center gap-1.5"
+                  className="px-3 py-1.5 text-[var(--page-text-muted)] hover:text-[var(--page-text)] hover:bg-[var(--page-section)] disabled:opacity-30 disabled:cursor-not-allowed rounded-xl transition-all font-medium text-xs flex items-center gap-1.5"
                 >
-                  <FaChevronLeft className="w-3 h-3" />
+                  <FaChevronLeft className="w-2.5 h-2.5" />
                   Prev
                 </button>
                 <button
                   onClick={() => navigateLesson('next')}
-                  className="px-3.5 py-2 bg-[var(--page-accent)] hover:bg-[var(--page-accent)]/90 text-white rounded-xl transition-all font-medium text-sm flex items-center gap-1.5 shadow-sm"
+                  className="px-3 py-1.5 bg-[var(--page-accent)] hover:bg-[var(--page-accent)]/90 text-white rounded-xl transition-all font-medium text-xs flex items-center gap-1.5 shadow-sm"
                 >
                   Next
-                  <FaChevronRight className="w-3 h-3" />
+                  <FaChevronRight className="w-2.5 h-2.5" />
                 </button>
               </div>
-            </div>
+            </motion.div>
           )}
 
-          {/* Content */}
+          {/* Content Area */}
           {!currentLesson ? (
             renderCourseOverview()
           ) : isCurrentLessonLocked ? (
@@ -1629,26 +1654,31 @@ const LearningPage: React.FC<LearningPageProps> = ({ courseId }) => {
               }}
             />
           ) : (
-            <div className="bg-white rounded-2xl border border-[var(--page-border)] shadow-[var(--shadow-sm)] overflow-hidden">
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+              className="rounded-2xl border border-[var(--page-border)] bg-[var(--page-card)] overflow-hidden"
+            >
               {/* Lesson Header */}
-              <div className="p-6 lg:p-8 border-b border-[var(--page-border)]" style={{ background: 'var(--page-gradient)' }}>
+              <div className="p-5 sm:p-6 lg:p-8 border-b border-[var(--page-border)]" style={{ background: 'var(--page-gradient)' }}>
                 <div className="flex items-start gap-4">
-                  <div className="flex-shrink-0 w-12 h-12 rounded-2xl bg-gradient-to-br from-[var(--page-accent)] to-[var(--page-accent-secondary)] flex items-center justify-center shadow-lg">
-                    <span className="text-white">{getLessonIcon(currentLesson.description)}</span>
+                  <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-[var(--page-accent)] to-[var(--page-accent-secondary)] flex items-center justify-center shadow-md flex-shrink-0">
+                    <span className="text-white text-sm">{getLessonIcon(currentLesson.description)}</span>
                   </div>
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-2">
-                      <h1 className="text-2xl lg:text-3xl font-bold text-[var(--page-text)] leading-tight" style={{ fontFamily: 'Plus Jakarta Sans, system-ui' }}>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-3 mb-1 flex-wrap">
+                      <h1 className="text-xl sm:text-2xl font-bold text-[var(--page-text)] leading-tight">
                         {currentLesson.title}
                       </h1>
                       {currentLesson.isPreview && (
-                        <span className="px-3 py-1 bg-emerald-100 text-emerald-700 text-xs font-semibold rounded-full">
+                        <span className="px-2.5 py-0.5 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 text-[10px] font-semibold rounded-full">
                           FREE PREVIEW
                         </span>
                       )}
                     </div>
                     {currentLesson.description && (
-                      <div className="text-[var(--page-text-muted)] leading-relaxed">
+                      <div className="text-[var(--page-text-muted)] text-sm leading-relaxed">
                         <RichTextRenderer content={currentLesson.description} />
                       </div>
                     )}
@@ -1656,7 +1686,7 @@ const LearningPage: React.FC<LearningPageProps> = ({ courseId }) => {
                 </div>
               </div>
 
-              {/* Lesson Content */}
+              {/* Lesson Body */}
               <div className="p-4 sm:p-6 lg:p-8">
                 {lessonType === 'concept' && renderConceptLesson()}
                 {lessonType === 'mcq' && renderMCQLesson()}
@@ -1664,28 +1694,28 @@ const LearningPage: React.FC<LearningPageProps> = ({ courseId }) => {
                 {(lessonType === 'test' || lessonType === 'moduleTest') && renderModuleTest()}
                 {lessonType === 'completion' && renderCompletionScreen()}
               </div>
-            </div>
+            </motion.div>
           )}
         </div>
       </main>
 
-      {/* Mobile Bottom Navigation (when lesson active) */}
+      {/* Mobile bottom nav */}
       {currentLesson && (
-        <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 flex items-center gap-3 z-20">
+        <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-[var(--page-card)] border-t border-[var(--page-border)] p-3 flex items-center gap-3 z-20 safe-area-bottom">
           <button
             onClick={() => navigateLesson('prev')}
             disabled={currentModuleIndex === 0 && currentLessonIndex === 0}
-            className="flex-1 py-3 bg-gray-100 hover:bg-gray-200 disabled:opacity-30 disabled:cursor-not-allowed text-gray-700 font-semibold rounded-xl transition-all flex items-center justify-center gap-2"
+            className="flex-1 py-2.5 bg-[var(--page-section)] hover:bg-[var(--page-border)] disabled:opacity-30 disabled:cursor-not-allowed text-[var(--page-text)] font-semibold rounded-xl transition-all flex items-center justify-center gap-2 text-sm"
           >
-            <FaChevronLeft className="w-4 h-4" />
+            <FaChevronLeft className="w-3.5 h-3.5" />
             Previous
           </button>
           <button
             onClick={() => navigateLesson('next')}
-            className="flex-1 py-3 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-xl transition-all flex items-center justify-center gap-2"
+            className="flex-1 py-2.5 bg-gradient-to-r from-[var(--page-accent)] to-[var(--page-accent-secondary)] text-white font-semibold rounded-xl transition-all flex items-center justify-center gap-2 text-sm shadow-md"
           >
             Next
-            <FaChevronRight className="w-4 h-4" />
+            <FaChevronRight className="w-3.5 h-3.5" />
           </button>
         </div>
       )}
@@ -1693,7 +1723,7 @@ const LearningPage: React.FC<LearningPageProps> = ({ courseId }) => {
       {/* AI Floating Panel */}
       {currentLesson && <AIFloatingPanel currentLesson={currentLesson} />}
 
-      {/* Milestone Badge */}
+      {/* Milestone badge */}
       {milestone && (
         <MilestoneBadge
           type={milestone.type}
@@ -1702,68 +1732,85 @@ const LearningPage: React.FC<LearningPageProps> = ({ courseId }) => {
         />
       )}
 
-      {/* Focus Mode Overlay */}
+      {/* Focus mode overlay */}
       {isFocusMode && (
         <div className="fixed inset-0 pointer-events-none z-40">
-          <div className="absolute inset-0 bg-black/5 transition-opacity" />
-          {/* Subtle vignette effect */}
+          <div className="absolute inset-0 bg-black/5" />
           <div className="absolute inset-0" style={{
             background: 'radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.15) 100%)'
           }} />
         </div>
       )}
 
-      {/* Keyboard Shortcuts Panel */}
-      {showShortcuts && (
-        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={() => setShowShortcuts(false)}>
-          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 border border-[var(--page-border)]" onClick={(e) => e.stopPropagation()}>
-            <div className="flex items-center justify-between mb-5">
-              <h3 className="text-lg font-bold text-[var(--page-text)] flex items-center gap-2" style={{ fontFamily: 'Plus Jakarta Sans, system-ui' }}>
-                <FaKeyboard className="text-[var(--page-accent)]" />
-                Keyboard Shortcuts
-              </h3>
-              <button onClick={() => setShowShortcuts(false)} className="p-1.5 hover:bg-[var(--page-section)] rounded-lg transition-colors">
-                <FaTimes className="w-4 h-4 text-[var(--page-text-muted)]" />
-              </button>
-            </div>
-            <div className="space-y-1.5">
-              {[
-                { keys: ['Alt', '←'], desc: 'Previous lesson' },
-                { keys: ['Alt', '→'], desc: 'Next lesson' },
-                { keys: ['F'], desc: 'Toggle focus mode' },
-                { keys: ['S'], desc: 'Toggle sidebar' },
-                { keys: ['Esc'], desc: 'Close panel / exit focus' },
-                { keys: ['?'], desc: 'Toggle this panel' },
-              ].map(({ keys, desc }) => (
-                <div key={desc} className="flex items-center justify-between py-2.5 px-3 rounded-xl hover:bg-[var(--page-section)] transition-colors">
-                  <span className="text-sm text-[var(--page-text)]">{desc}</span>
-                  <div className="flex items-center gap-1">
-                    {keys.map((k, i) => (
-                      <kbd key={i} className="px-2.5 py-1 bg-[var(--page-section)] border border-[var(--page-border)] rounded-lg text-xs font-mono font-semibold text-[var(--page-text-muted)]">
-                        {k}
-                      </kbd>
-                    ))}
+      {/* Keyboard Shortcuts */}
+      <AnimatePresence>
+        {showShortcuts && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={() => setShowShortcuts(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              className="bg-[var(--page-card)] rounded-2xl shadow-2xl max-w-md w-full p-6 border border-[var(--page-border)]"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-5">
+                <h3 className="text-lg font-bold text-[var(--page-text)] flex items-center gap-2">
+                  <FaKeyboard className="text-[var(--page-accent)]" />
+                  Keyboard Shortcuts
+                </h3>
+                <button onClick={() => setShowShortcuts(false)} className="p-1.5 hover:bg-[var(--page-section)] rounded-lg transition-colors">
+                  <FaTimes className="w-4 h-4 text-[var(--page-text-muted)]" />
+                </button>
+              </div>
+              <div className="space-y-1.5">
+                {[
+                  { keys: ['Alt', '\u2190'], desc: 'Previous lesson' },
+                  { keys: ['Alt', '\u2192'], desc: 'Next lesson' },
+                  { keys: ['F'], desc: 'Toggle focus mode' },
+                  { keys: ['S'], desc: 'Toggle sidebar' },
+                  { keys: ['Esc'], desc: 'Close panel / exit focus' },
+                  { keys: ['?'], desc: 'Toggle this panel' },
+                ].map(({ keys, desc }) => (
+                  <div key={desc} className="flex items-center justify-between py-2.5 px-3 rounded-xl hover:bg-[var(--page-section)] transition-colors">
+                    <span className="text-sm text-[var(--page-text)]">{desc}</span>
+                    <div className="flex items-center gap-1">
+                      {keys.map((k, i) => (
+                        <kbd key={i} className="px-2 py-0.5 bg-[var(--page-section)] border border-[var(--page-border)] rounded-lg text-[11px] font-mono font-semibold text-[var(--page-text-muted)]">
+                          {k}
+                        </kbd>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
-            <p className="mt-5 text-xs text-[var(--page-text-muted)]/60 text-center">
-              Press <kbd className="px-1.5 py-0.5 bg-[var(--page-section)] rounded text-[var(--page-text-muted)] font-mono">?</kbd> anytime to toggle this panel
-            </p>
-          </div>
-        </div>
-      )}
+                ))}
+              </div>
+              <p className="mt-5 text-[11px] text-[var(--page-text-muted)]/60 text-center">
+                Press <kbd className="px-1.5 py-0.5 bg-[var(--page-section)] rounded text-[var(--page-text-muted)] font-mono">?</kbd> anytime to toggle
+              </p>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-      {/* Milestone Badge Toast */}
+      {/* Milestone toast */}
       {!isFocusMode && (() => {
-        const milestone = getMilestoneBadge();
-        if (!milestone || progressPercent < 100) return null;
+        const ms = getMilestoneBadge();
+        if (!ms || progressPercent < 100) return null;
         return (
-          <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50 animate-bounce">
-            <div className={`${milestone.color} px-6 py-3 rounded-2xl shadow-2xl flex items-center gap-3 text-lg font-bold`}>
-              {milestone.icon}
-              <span>{milestone.label}</span>
-            </div>
+          <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8, y: -20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              className={`bg-gradient-to-r ${ms.color} px-6 py-3 rounded-2xl shadow-2xl flex items-center gap-3 text-lg font-bold`}
+            >
+              {ms.icon}
+              <span>{ms.label}</span>
+            </motion.div>
           </div>
         );
       })()}
