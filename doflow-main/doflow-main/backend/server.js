@@ -59,22 +59,12 @@ const allowedOrigins = [
   'https://www.doflow.tech',
 ].filter(Boolean);
 
-function isAllowedOrigin(origin) {
-  if (!origin) return false;
-  const normalised = origin.replace(/\/+$/, '');
-  return allowedOrigins.some((o) => o.replace(/\/+$/, '') === normalised);
-}
-
 const corsOptions = {
   origin: (origin, callback) => {
-    if (!origin) {
-      if (process.env.NODE_ENV === 'development') return callback(null, true);
-      return callback(new Error('Origin header required'));
-    }
-    if (isAllowedOrigin(origin)) {
+    if (!origin || allowedOrigins.some((o) => o === origin)) {
       return callback(null, true);
     }
-    console.error(`[CORS] Blocked origin: ${origin}`);
+    console.error(`[CORS] Blocked origin: "${origin}" | Allowed: ${allowedOrigins.join(', ')}`);
     return callback(new Error('Not allowed by CORS'));
   },
   credentials: true,
