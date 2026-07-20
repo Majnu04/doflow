@@ -51,26 +51,30 @@ connectDB();
 const app = express();
 
 // CORS (placed before other middleware so every response inherits the headers)
-const allowedOrigins = new Set([
+const allowedOrigins = [
   process.env.FRONTEND_URL,
   'http://localhost:5173',
   'http://localhost:3000',
   'https://doflow.tech',
   'https://www.doflow.tech',
-].filter(Boolean));
+].filter(Boolean);
+
+function isAllowedOrigin(origin) {
+  if (!origin) return false;
+  const normalised = origin.replace(/\/+$/, '');
+  return allowedOrigins.some((o) => o.replace(/\/+$/, '') === normalised);
+}
+
 const corsOptions = {
   origin: (origin, callback) => {
-    // In development, allow requests without origin (Postman, cURL)
-    // In production, reject requests without origin for security
-    if (!origin && process.env.NODE_ENV === 'development') {
-      return callback(null, true);
-    }
     if (!origin) {
+      if (process.env.NODE_ENV === 'development') return callback(null, true);
       return callback(new Error('Origin header required'));
     }
-    if (allowedOrigins.has(origin)) {
+    if (isAllowedOrigin(origin)) {
       return callback(null, true);
     }
+    console.error(`[CORS] Blocked origin: ${origin}`);
     return callback(new Error('Not allowed by CORS'));
   },
   credentials: true,
