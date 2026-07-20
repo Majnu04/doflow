@@ -181,10 +181,10 @@ const RoadmapDetailPage: React.FC<RoadmapDetailPageProps> = ({ roadmapId }) => {
           </button>
 
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="flex flex-col lg:flex-row gap-8 items-start"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.4 }}
+            className="flex flex-col lg:flex-row gap-6 sm:gap-8 items-start"
           >
             <div className="flex-1">
               <div className="flex items-center gap-3 mb-4">

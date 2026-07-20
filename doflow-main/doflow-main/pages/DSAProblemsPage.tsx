@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { FiCode, FiLock, FiExternalLink, FiShoppingCart, FiHeart, FiCheckCircle, FiSearch, FiBookOpen, FiStar, FiTrendingUp, FiZap, FiChevronRight, FiClock, FiTarget, FiRotateCcw, FiPlay, FiBarChart2, FiAward, FiCalendar, FiCpu, FiChevronDown, FiX, FiBriefcase, FiLayers, FiArrowRight } from 'react-icons/fi';
+import { FiCode, FiLock, FiExternalLink, FiShoppingCart, FiHeart, FiCheckCircle, FiSearch, FiBookOpen, FiStar, FiTrendingUp, FiZap, FiChevronRight, FiClock, FiTarget, FiRotateCcw, FiPlay, FiBarChart2, FiAward, FiCalendar, FiCpu, FiChevronDown, FiX, FiBriefcase, FiLayers, FiArrowRight, FiArrowLeft } from 'react-icons/fi';
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import { Button } from '../src/components/ui';
@@ -324,6 +324,13 @@ const DSAProblemsPage: React.FC<{ courseId: string }> = ({ courseId }) => {
           <div className="max-w-[1400px] mx-auto px-6 py-4">
             <div className="flex items-start justify-between gap-6">
               <div className="min-w-0 flex-1">
+                <button
+                  onClick={() => window.location.hash = '/courses'}
+                  className="flex items-center gap-1.5 text-xs text-light-textSecondary dark:text-dark-muted hover:text-brand-primary dark:hover:text-brand-primary transition-colors mb-2"
+                >
+                  <FiArrowLeft className="w-3.5 h-3.5" />
+                  <span>Back to Courses</span>
+                </button>
                 <p className="text-[9px] uppercase tracking-[0.25em] text-brand-primary font-semibold mb-1">
                   {dsaWorkspaceConfig.title}
                 </p>

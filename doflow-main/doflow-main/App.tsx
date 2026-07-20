@@ -4,6 +4,8 @@ import { Toaster } from 'react-hot-toast';
 import type { RootState } from './src/store';
 import Navbar from './src/components/Navbar';
 import Footer from './src/components/Footer';
+import { isDsaCourse } from './src/utils/courseUtils';
+import api from './src/utils/api';
 
 // Eagerly loaded (small, visible immediately)
 import HomePage from './pages/HomePage';
@@ -57,6 +59,43 @@ const NotFound: React.FC = () => (
     </div>
 );
 
+const DsaCourseRedirect: React.FC = () => {
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        api.get('/courses')
+            .then((res) => {
+                const courses = res.data?.courses || res.data || [];
+                const dsaCourse = courses.find((c: any) => isDsaCourse(c));
+                if (dsaCourse?._id) {
+                    window.location.hash = `/dsa/problems/${dsaCourse._id}`;
+                } else {
+                    setError('No DSA course found.');
+                    setLoading(false);
+                }
+            })
+            .catch(() => {
+                setError('Failed to load courses.');
+                setLoading(false);
+            });
+    }, []);
+
+    if (error) {
+        return (
+            <div className="min-h-screen flex items-center justify-center text-light-text dark:text-dark-text">
+                <p>{error}</p>
+            </div>
+        );
+    }
+
+    return (
+        <div className="min-h-screen flex items-center justify-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-brand-primary"></div>
+        </div>
+    );
+};
+
 const ProtectedRoute: React.FC<{ children: React.ReactNode; requireAdmin?: boolean }> = ({ children, requireAdmin = false }) => {
     const { isAuthenticated, user } = useSelector((state: RootState) => state.auth);
 
@@ -86,6 +125,7 @@ const App: React.FC = () => {
     useEffect(() => {
         const handleHashChange = () => {
             setRoute(window.location.hash);
+            window.scrollTo(0, 0);
         };
 
         window.addEventListener('hashchange', handleHashChange);
@@ -133,6 +173,11 @@ const App: React.FC = () => {
         if (dsaCourseMatch) {
             const courseId = dsaCourseMatch[1];
             return <DSAProblemsPage courseId={courseId} />;
+        }
+
+        // DSA problems without courseId - auto-discover and redirect
+        if (path === '/dsa/problems') {
+            return <DsaCourseRedirect />;
         }
 
         // Certificate verification route

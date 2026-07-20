@@ -92,7 +92,7 @@ const Navbar: React.FC = () => {
     return currentRoute.includes(path);
   };
 
-  const practicePath = dsaCourseId ? `/dsa/problems/${dsaCourseId}` : '/courses';
+  const practicePath = dsaCourseId ? `/dsa/problems/${dsaCourseId}` : '/dsa/problems';
 
   const desktopNavLinks = [
     { name: 'Home', path: '/' },
