@@ -1,0 +1,849 @@
+{
+  "title": "Java Foundations & Problem Solving – DoFlow Edition",
+  "description": "Master Java programming from scratch! This comprehensive course takes you from writing your first line of Java code to building real programs and solving algorithmic challenges. Perfect for absolute beginners with no prior coding experience.",
+  "category": "Programming",
+  "level": "Beginner",
+  "price": 999,
+  "instructor": "DoFlow Academy",
+  "language": "English",
+  "duration": "40 hours",
+  "thumbnail": "/images/java-course.jpg",
+  "sections": [
+    {
+      "title": "Output & Printing in Java",
+      "lessons": [
+        {
+          "title": "Introduction to Java Output",
+          "type": "concept",
+          "duration": "8 min",
+          "content": {
+            "explanation": "In Java, we use System.out.println() to display output on the console. This is your first step in communicating with users through your program. The println() method prints text and moves to a new line, while print() keeps the cursor on the same line. Understanding output is fundamental because it allows you to see what your program is doing, making debugging and user interaction possible. Every Java program begins with displaying information.",
+            "realWorldAnalogy": "Think of System.out.println() as a loudspeaker announcement at a train station. When you make an announcement, everyone hears it clearly, and then the announcer moves to the next line for the next message. Similarly, println() displays your message and automatically moves to the next line, ready for the next output.",
+            "syntaxExample": "public class HelloWorld {\n    public static void main(String[] args) {\n        System.out.println(\"Hello, World!\");\n        System.out.println(\"Welcome to Java\");\n        System.out.print(\"Same \");\n        System.out.print(\"Line\");\n    }\n}",
+            "keyNotes": [
+              "System.out.println() prints text and moves to a new line",
+              "System.out.print() prints text without moving to a new line",
+              "All Java programs must have a main method",
+              "Text must be enclosed in double quotes",
+              "Each statement ends with a semicolon"
+            ]
+          }
+        },
+        {
+          "title": "Printing on Multiple Lines",
+          "type": "concept",
+          "duration": "6 min",
+          "content": {
+            "explanation": "Java allows you to print multiple lines of text using separate println() statements or by using escape sequences like \\n for newlines and \\t for tabs. This gives you control over formatting and presentation. The escape sequence \\n creates a line break within a single print statement, while multiple println() statements achieve the same result more explicitly. Understanding these techniques helps you create well-formatted, readable output for users.",
+            "realWorldAnalogy": "Imagine writing a letter. Using println() multiple times is like writing each sentence on a new line naturally. Using \\n is like manually pressing Enter on your keyboard to create a new line within a paragraph. Both achieve the same formatting, but one is explicit while the other is embedded in your text.",
+            "syntaxExample": "public class MultiLine {\n    public static void main(String[] args) {\n        System.out.println(\"Line 1\");\n        System.out.println(\"Line 2\");\n        System.out.println(\"Line 3\");\n        \n        System.out.println(\"First\\nSecond\\nThird\");\n        System.out.println(\"Name:\\tJohn\");\n    }\n}",
+            "keyNotes": [
+              "\\n creates a new line within text",
+              "\\t creates a tab space for alignment",
+              "Escape sequences work inside double quotes",
+              "Multiple println() statements are more readable",
+              "Choose the method that makes your code clearest"
+            ]
+          }
+        },
+        {
+          "title": "MCQ: Output Basics",
+          "type": "mcq",
+          "duration": "5 min",
+          "hideSidebar": true,
+          "content": {
+            "problem": "Understanding Java Output Methods",
+            "question": "What is the difference between System.out.println() and System.out.print()?",
+            "hint": "Think about what happens to the cursor after each method executes.",
+            "commonDoubts": "Many beginners confuse these two methods. println() adds a newline character automatically, moving the cursor to the next line. print() keeps the cursor on the same line, allowing the next output to continue on the same line.",
+            "options": [
+              "println() prints and moves to new line, print() stays on same line",
+              "They are exactly the same",
+              "print() is faster than println()",
+              "println() can only print numbers"
+            ],
+            "correctAnswer": 0,
+            "explanation": "System.out.println() prints the text and automatically adds a newline character, moving the cursor to the next line. System.out.print() prints the text but keeps the cursor on the same line, allowing subsequent output to continue on the same line."
+          }
+        },
+        {
+          "title": "Coding Task: Print Your Name",
+          "type": "coding",
+          "duration": "10 min",
+          "hideSidebar": true,
+          "content": {
+            "problem": "Print Your Name",
+            "description": "Write a Java program that prints your name on the first line and your age on the second line.",
+            "inputFormat": "No input required",
+            "outputFormat": "Two lines of text",
+            "sampleInput": "",
+            "sampleOutput": "John Doe\n25",
+            "constraints": "Use System.out.println() for each line",
+            "starterCode": "public class Main {\n    public static void main(String[] args) {\n        // Write your code here\n        \n    }\n}",
+            "solution": "public class Main {\n    public static void main(String[] args) {\n        System.out.println(\"John Doe\");\n        System.out.println(\"25\");\n    }\n}",
+            "testCases": [
+              {
+                "input": "",
+                "output": "John Doe\n25"
+              }
+            ]
+          }
+        },
+        {
+          "title": "Module 1 Test",
+          "type": "test",
+          "duration": "15 min",
+          "hideSidebar": true,
+          "content": {
+            "questions": [
+              {
+                "question": "Which method is used to print output in Java?",
+                "options": [
+                  "System.out.println()",
+                  "print()",
+                  "console.log()",
+                  "printf()"
+                ],
+                "correctAnswer": 0
+              },
+              {
+                "question": "What does \\n represent in Java?",
+                "options": [
+                  "Tab space",
+                  "Newline character",
+                  "Backslash",
+                  "Nothing special"
+                ],
+                "correctAnswer": 1
+              },
+              {
+                "question": "How do you print text without moving to a new line?",
+                "options": [
+                  "System.out.println()",
+                  "System.out.print()",
+                  "System.print()",
+                  "console.print()"
+                ],
+                "correctAnswer": 1
+              },
+              {
+                "question": "What must all Java programs contain?",
+                "options": [
+                  "main method",
+                  "print statement",
+                  "import statement",
+                  "class declaration"
+                ],
+                "correctAnswer": 0
+              },
+              {
+                "question": "How do you end a statement in Java?",
+                "options": [
+                  "Period (.)",
+                  "Semicolon (;)",
+                  "Comma (,)",
+                  "Colon (:)"
+                ],
+                "correctAnswer": 1
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "title": "Variables & Datatypes",
+      "lessons": [
+        {
+          "title": "Understanding Variables",
+          "type": "concept",
+          "duration": "10 min",
+          "content": {
+            "explanation": "A variable is a named container that stores data in your program's memory. In Java, you must declare a variable's type before using it, making Java a statically-typed language. Variables allow you to store, modify, and retrieve values throughout your program. They have names (identifiers) that you choose, and types that determine what kind of data they can hold. Understanding variables is crucial because they are the foundation of storing and manipulating information in programming.",
+            "realWorldAnalogy": "Think of a variable as a labeled box in a storage room. The label is the variable name (like 'age'), and the type of box determines what you can store (numbers, text, etc.). Just as you wouldn't store liquids in a paper box, Java won't let you store the wrong type of data in a variable. You can always look at the label to find what you stored inside.",
+            "syntaxExample": "public class Variables {\n    public static void main(String[] args) {\n        int age = 25;\n        String name = \"Alice\";\n        double price = 99.99;\n        boolean isStudent = true;\n        \n        System.out.println(\"Name: \" + name);\n        System.out.println(\"Age: \" + age);\n        System.out.println(\"Price: $\" + price);\n        System.out.println(\"Student: \" + isStudent);\n    }\n}",
+            "keyNotes": [
+              "Variables must be declared with a type",
+              "Variable names should be descriptive and meaningful",
+              "Use camelCase for variable names (firstName, totalAmount)",
+              "Variables can be reassigned new values",
+              "Once declared, a variable's type cannot change"
+            ]
+          }
+        },
+        {
+          "title": "Primitive Data Types",
+          "type": "concept",
+          "duration": "12 min",
+          "content": {
+            "explanation": "Java has eight primitive data types: byte, short, int, long (for integers), float, double (for decimals), char (for single characters), and boolean (for true/false). Each type has a specific size and range. int is most commonly used for whole numbers, double for decimals, boolean for logical values, and char for single characters. Choosing the right data type optimizes memory usage and ensures your program handles data correctly. These primitives are building blocks for more complex data structures.",
+            "realWorldAnalogy": "Primitive data types are like different sized containers in a kitchen. A shot glass (byte) holds very little, a cup (int) holds a moderate amount, and a bucket (long) holds much more. You wouldn't use a bucket to store a teaspoon of salt, just as you wouldn't use a byte to store a large number. Each container has its purpose based on what you're storing.",
+            "syntaxExample": "public class DataTypes {\n    public static void main(String[] args) {\n        byte smallNum = 127;\n        short mediumNum = 32000;\n        int regularNum = 2147483647;\n        long bigNum = 9223372036854775807L;\n        \n        float decimal1 = 3.14f;\n        double decimal2 = 3.14159265359;\n        \n        char letter = 'A';\n        boolean isTrue = true;\n        \n        System.out.println(\"Integer: \" + regularNum);\n        System.out.println(\"Decimal: \" + decimal2);\n    }\n}",
+            "keyNotes": [
+              "int stores whole numbers from -2 billion to 2 billion",
+              "double stores decimal numbers with high precision",
+              "boolean stores only true or false",
+              "char stores a single character in single quotes",
+              "long values need 'L' suffix, float values need 'f' suffix"
+            ]
+          }
+        },
+        {
+          "title": "String Data Type",
+          "type": "concept",
+          "duration": "8 min",
+          "content": {
+            "explanation": "String is a reference type in Java used to store sequences of characters (text). Unlike primitive types, String is a class and strings are objects. Strings are enclosed in double quotes and are immutable, meaning once created, their content cannot be changed. Java provides many built-in methods to manipulate strings. Understanding strings is essential because most programs involve text processing, user input, and displaying information. Strings are one of the most frequently used data types in Java programming.",
+            "realWorldAnalogy": "Think of a String as a necklace made of beads, where each bead is a character. Once you string the beads together, you can't change individual beads on that specific necklace. However, you can create a new necklace with different beads. Similarly, String operations create new strings rather than modifying existing ones.",
+            "syntaxExample": "public class StringExample {\n    public static void main(String[] args) {\n        String greeting = \"Hello\";\n        String name = \"World\";\n        String message = greeting + \" \" + name + \"!\";\n        \n        System.out.println(message);\n        System.out.println(\"Length: \" + message.length());\n        System.out.println(\"Uppercase: \" + message.toUpperCase());\n        System.out.println(\"Lowercase: \" + message.toLowerCase());\n    }\n}",
+            "keyNotes": [
+              "Strings are enclosed in double quotes",
+              "Use + operator to concatenate strings",
+              "Strings are immutable (cannot be changed)",
+              "String is a class, not a primitive type",
+              "Many built-in methods available for string manipulation"
+            ]
+          }
+        },
+        {
+          "title": "MCQ: Variable Declaration",
+          "type": "mcq",
+          "duration": "5 min",
+          "hideSidebar": true,
+          "content": {
+            "problem": "Variable Declaration Syntax",
+            "question": "Which of the following correctly declares an integer variable named 'count' with value 10?",
+            "hint": "Remember: type variableName = value;",
+            "commonDoubts": "Variable declaration requires three parts: the data type, the variable name, and optionally an initial value. The type comes first, followed by the name, then equals sign and value.",
+            "options": [
+              "int count = 10;",
+              "count int = 10;",
+              "integer count = 10;",
+              "int count == 10;"
+            ],
+            "correctAnswer": 0,
+            "explanation": "The correct syntax is: int count = 10; The data type (int) comes first, followed by the variable name (count), then the assignment operator (=), and finally the value (10), ending with a semicolon."
+          }
+        },
+        {
+          "title": "MCQ: Data Type Selection",
+          "type": "mcq",
+          "duration": "5 min",
+          "hideSidebar": true,
+          "content": {
+            "problem": "Choosing the Right Data Type",
+            "question": "Which data type should you use to store a person's age?",
+            "hint": "Age is a whole number that is never negative and typically not very large.",
+            "commonDoubts": "While byte or short could technically work, int is the standard choice for age because it's the default integer type in Java and is more readable and maintainable.",
+            "options": [
+              "String",
+              "double",
+              "int",
+              "boolean"
+            ],
+            "correctAnswer": 2,
+            "explanation": "int is the best choice for storing age because it's a whole number. While byte or short could work, int is the standard integer type in Java and offers good range without worrying about overflow."
+          }
+        },
+        {
+          "title": "Coding Task: Store and Display Info",
+          "type": "coding",
+          "duration": "15 min",
+          "hideSidebar": true,
+          "content": {
+            "problem": "Store Student Information",
+            "description": "Create variables to store a student's name, age, grade (as a decimal), and whether they passed. Display all information.",
+            "inputFormat": "No input required",
+            "outputFormat": "Four lines showing name, age, grade, and pass status",
+            "sampleInput": "",
+            "sampleOutput": "Name: Alice\nAge: 20\nGrade: 85.5\nPassed: true",
+            "constraints": "Use appropriate data types for each piece of information",
+            "starterCode": "public class Main {\n    public static void main(String[] args) {\n        // Declare and initialize variables\n        \n        // Display the information\n        \n    }\n}",
+            "solution": "public class Main {\n    public static void main(String[] args) {\n        String name = \"Alice\";\n        int age = 20;\n        double grade = 85.5;\n        boolean passed = true;\n        \n        System.out.println(\"Name: \" + name);\n        System.out.println(\"Age: \" + age);\n        System.out.println(\"Grade: \" + grade);\n        System.out.println(\"Passed: \" + passed);\n    }\n}",
+            "testCases": [
+              {
+                "input": "",
+                "output": "Name: Alice\nAge: 20\nGrade: 85.5\nPassed: true"
+              }
+            ]
+          }
+        },
+        {
+          "title": "Module 2 Test",
+          "type": "test",
+          "duration": "15 min",
+          "hideSidebar": true,
+          "content": {
+            "questions": [
+              {
+                "question": "What is the correct way to declare a variable in Java?",
+                "options": [
+                  "type variableName = value;",
+                  "variableName = value;",
+                  "var variableName = value;",
+                  "variableName: type = value;"
+                ],
+                "correctAnswer": 0
+              },
+              {
+                "question": "Which data type stores decimal numbers?",
+                "options": [
+                  "int",
+                  "double",
+                  "String",
+                  "boolean"
+                ],
+                "correctAnswer": 1
+              },
+              {
+                "question": "What data type is used for true/false values?",
+                "options": [
+                  "int",
+                  "String",
+                  "boolean",
+                  "char"
+                ],
+                "correctAnswer": 2
+              },
+              {
+                "question": "How do you declare a string variable?",
+                "options": [
+                  "string name = 'John';",
+                  "String name = \"John\";",
+                  "text name = \"John\";",
+                  "String name = 'John';"
+                ],
+                "correctAnswer": 1
+              },
+              {
+                "question": "Which is NOT a primitive data type in Java?",
+                "options": [
+                  "int",
+                  "boolean",
+                  "String",
+                  "double"
+                ],
+                "correctAnswer": 2
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "title": "Operators",
+      "lessons": [
+        {
+          "title": "Arithmetic Operators",
+          "type": "concept",
+          "duration": "10 min",
+          "content": {
+            "explanation": "Arithmetic operators perform mathematical calculations on numbers. Java provides five basic arithmetic operators: addition (+), subtraction (-), multiplication (*), division (/), and modulus (%). Addition combines numbers, subtraction finds the difference, multiplication repeats addition, division splits into equal parts, and modulus gives the remainder after division. Understanding these operators is fundamental for calculations, data processing, and algorithm implementation. Integer division truncates decimals, while modulus is useful for checking divisibility and cycling through ranges.",
+            "realWorldAnalogy": "Think of arithmetic operators as basic calculator functions. Addition is like combining apples in a basket, subtraction is removing some, multiplication is having multiple baskets, division is sharing equally among people, and modulus is finding what's left over after equal sharing. If you divide 10 candies among 3 children (10/3=3 each), the modulus (10%3=1) tells you how many candies are left.",
+            "syntaxExample": "public class Arithmetic {\n    public static void main(String[] args) {\n        int a = 10;\n        int b = 3;\n        \n        System.out.println(\"Addition: \" + (a + b));\n        System.out.println(\"Subtraction: \" + (a - b));\n        System.out.println(\"Multiplication: \" + (a * b));\n        System.out.println(\"Division: \" + (a / b));\n        System.out.println(\"Modulus: \" + (a % b));\n        \n        double c = 10.0;\n        System.out.println(\"Decimal Division: \" + (c / b));\n    }\n}",
+            "keyNotes": [
+              "Integer division truncates decimal results (10/3 = 3)",
+              "Use double for precise decimal division",
+              "Modulus (%) gives remainder after division",
+              "Order of operations: multiply/divide before add/subtract",
+              "Use parentheses to control operation order"
+            ]
+          }
+        },
+        {
+          "title": "Comparison Operators",
+          "type": "concept",
+          "duration": "10 min",
+          "content": {
+            "explanation": "Comparison operators compare two values and return a boolean result (true or false). Java provides six comparison operators: equal to (==), not equal to (!=), greater than (>), less than (<), greater than or equal to (>=), and less than or equal to (<=). These operators are essential for decision-making in programs, allowing you to compare numbers, check conditions, and control program flow. They are most commonly used in if statements, loops, and conditional expressions. The result is always boolean.",
+            "realWorldAnalogy": "Comparison operators are like a judge making yes/no decisions. Is this person taller than 6 feet? (height > 6) - Yes or No. Are these two test scores equal? (score1 == score2) - Yes or No. It's like checking eligibility criteria: age >= 18 determines if someone can vote. The answer is always a clear true or false, nothing in between.",
+            "syntaxExample": "public class Comparison {\n    public static void main(String[] args) {\n        int age = 20;\n        int minAge = 18;\n        \n        System.out.println(\"Equal: \" + (age == minAge));\n        System.out.println(\"Not Equal: \" + (age != minAge));\n        System.out.println(\"Greater: \" + (age > minAge));\n        System.out.println(\"Less: \" + (age < minAge));\n        System.out.println(\"Greater or Equal: \" + (age >= minAge));\n        System.out.println(\"Less or Equal: \" + (age <= minAge));\n    }\n}",
+            "keyNotes": [
+              "Use == to check equality, not = (assignment)",
+              "Result is always true or false (boolean)",
+              "Works with numbers and characters",
+              "For strings, use .equals() method, not ==",
+              "Commonly used in if statements and loops"
+            ]
+          }
+        },
+        {
+          "title": "Logical Operators",
+          "type": "concept",
+          "duration": "10 min",
+          "content": {
+            "explanation": "Logical operators combine multiple boolean conditions. Java has three logical operators: AND (&&), OR (||), and NOT (!). AND returns true only if both conditions are true. OR returns true if at least one condition is true. NOT reverses the boolean value. These operators are crucial for complex decision-making when you need to check multiple conditions simultaneously. They enable you to write sophisticated conditional logic, validate multiple criteria, and create compound conditions in your programs.",
+            "realWorldAnalogy": "Logical operators are like security checks at different levels. AND (&&) is like needing both a key AND a password to open a safe - both must be true. OR (||) is like accepting cash OR card payment - either one works. NOT (!) is like a toggle switch that reverses the state - if the light is on, NOT makes it off. These help make complex decisions based on multiple factors.",
+            "syntaxExample": "public class Logical {\n    public static void main(String[] args) {\n        int age = 20;\n        boolean hasLicense = true;\n        boolean hasInsurance = false;\n        \n        boolean canDrive = age >= 18 && hasLicense;\n        System.out.println(\"Can drive: \" + canDrive);\n        \n        boolean canRent = age >= 21 || hasInsurance;\n        System.out.println(\"Can rent: \" + canRent);\n        \n        boolean needsInsurance = !hasInsurance;\n        System.out.println(\"Needs insurance: \" + needsInsurance);\n    }\n}",
+            "keyNotes": [
+              "AND (&&) requires ALL conditions to be true",
+              "OR (||) requires AT LEAST ONE condition to be true",
+              "NOT (!) reverses true to false and vice versa",
+              "Use parentheses for clarity with multiple operators",
+              "Short-circuit evaluation: && stops if first is false, || stops if first is true"
+            ]
+          }
+        },
+        {
+          "title": "MCQ: Arithmetic Operations",
+          "type": "mcq",
+          "duration": "5 min",
+          "hideSidebar": true,
+          "content": {
+            "problem": "Understanding Integer Division",
+            "question": "What is the result of 17 / 5 in Java?",
+            "hint": "Remember that integer division truncates the decimal part.",
+            "commonDoubts": "When both operands are integers, Java performs integer division and discards the fractional part. 17 divided by 5 is 3.4, but Java truncates to 3. If you want the decimal result, at least one operand must be a double.",
+            "options": [
+              "3.4",
+              "3",
+              "4",
+              "3.0"
+            ],
+            "correctAnswer": 1,
+            "explanation": "In integer division, Java truncates (cuts off) the decimal part. 17 / 5 = 3.4, but since both are integers, the result is 3. To get 3.4, use 17.0 / 5 or 17 / 5.0."
+          }
+        },
+        {
+          "title": "MCQ: Logical Operators",
+          "type": "mcq",
+          "duration": "5 min",
+          "hideSidebar": true,
+          "content": {
+            "problem": "Combining Conditions",
+            "question": "If age = 16 and hasLicense = true, what is the result of: (age >= 18) && hasLicense?",
+            "hint": "AND requires both conditions to be true.",
+            "commonDoubts": "The && operator requires both conditions to be true. Even though hasLicense is true, age >= 18 is false (16 is not >= 18), so the entire expression is false.",
+            "options": [
+              "true",
+              "false",
+              "16",
+              "Error"
+            ],
+            "correctAnswer": 1,
+            "explanation": "The && operator returns true only if BOTH conditions are true. Here, age >= 18 is false (16 < 18), so the entire expression is false regardless of hasLicense being true."
+          }
+        },
+        {
+          "title": "Coding Task: Calculate Total Price",
+          "type": "coding",
+          "duration": "15 min",
+          "hideSidebar": true,
+          "content": {
+            "problem": "Calculate Total with Tax",
+            "description": "Given a price and tax rate, calculate and display the total price including tax.",
+            "inputFormat": "Two integers: price and taxRate (as percentage)",
+            "outputFormat": "One line: Total price with tax (as double)",
+            "sampleInput": "100\n10",
+            "sampleOutput": "110.0",
+            "constraints": "1 <= price <= 10000, 0 <= taxRate <= 100",
+            "starterCode": "import java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int price = sc.nextInt();\n        int taxRate = sc.nextInt();\n        \n        // Calculate total price\n        \n    }\n}",
+            "solution": "import java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int price = sc.nextInt();\n        int taxRate = sc.nextInt();\n        \n        double tax = price * taxRate / 100.0;\n        double total = price + tax;\n        \n        System.out.println(total);\n    }\n}",
+            "testCases": [
+              {
+                "input": "100\n10",
+                "output": "110.0"
+              },
+              {
+                "input": "50\n20",
+                "output": "60.0"
+              }
+            ]
+          }
+        },
+        {
+          "title": "Module 3 Test",
+          "type": "test",
+          "duration": "15 min",
+          "hideSidebar": true,
+          "content": {
+            "questions": [
+              {
+                "question": "What does the % operator do?",
+                "options": [
+                  "Calculates percentage",
+                  "Returns remainder after division",
+                  "Divides two numbers",
+                  "Multiplies by 100"
+                ],
+                "correctAnswer": 1
+              },
+              {
+                "question": "Which operator checks if two values are equal?",
+                "options": [
+                  "=",
+                  "==",
+                  "!=",
+                  "==="
+                ],
+                "correctAnswer": 1
+              },
+              {
+                "question": "What is the result of: true && false?",
+                "options": [
+                  "true",
+                  "false",
+                  "null",
+                  "Error"
+                ],
+                "correctAnswer": 1
+              },
+              {
+                "question": "What is the result of: 5 > 3 || 2 > 4?",
+                "options": [
+                  "true",
+                  "false",
+                  "5",
+                  "Error"
+                ],
+                "correctAnswer": 0
+              },
+              {
+                "question": "What does the ! operator do?",
+                "options": [
+                  "Multiplies values",
+                  "Reverses boolean value",
+                  "Checks equality",
+                  "Adds values"
+                ],
+                "correctAnswer": 1
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "title": "Strings in Java",
+      "lessons": [
+        {
+          "title": "String Basics and Operations",
+          "type": "concept",
+          "duration": "12 min",
+          "content": {
+            "explanation": "Strings in Java are sequences of characters used to represent text. They are objects of the String class and are immutable, meaning their content cannot be changed after creation. Java provides numerous methods to manipulate strings: length() returns the character count, charAt() accesses individual characters, substring() extracts portions, toUpperCase() and toLowerCase() change case, and concat() or + operator joins strings. Understanding string operations is essential because most programs involve text processing, user interfaces, and data formatting.",
+            "realWorldAnalogy": "Think of a String as a train where each character is a train car. The length() method counts the cars, charAt() looks at a specific car, substring() detaches a section of cars, and concatenation adds more cars to the train. Just like you can't change a car once it's manufactured (immutable), you create new modified trains instead of altering the original. The train itself never changes, but you can build new trains from parts of old ones.",
+            "syntaxExample": "public class StringOps {\n    public static void main(String[] args) {\n        String text = \"Hello World\";\n        \n        System.out.println(\"Length: \" + text.length());\n        System.out.println(\"First char: \" + text.charAt(0));\n        System.out.println(\"Substring: \" + text.substring(0, 5));\n        System.out.println(\"Uppercase: \" + text.toUpperCase());\n        System.out.println(\"Lowercase: \" + text.toLowerCase());\n        System.out.println(\"Concat: \" + text.concat(\"!\"));\n        System.out.println(\"Replace: \" + text.replace(\"World\", \"Java\"));\n    }\n}",
+            "keyNotes": [
+              "Strings are immutable - operations create new strings",
+              "charAt() uses zero-based indexing (first char is 0)",
+              "substring(start, end) - end index is exclusive",
+              "String comparison should use .equals(), not ==",
+              "Empty string \"\" is different from null"
+            ]
+          }
+        },
+        {
+          "title": "String Comparison and Methods",
+          "type": "concept",
+          "duration": "10 min",
+          "content": {
+            "explanation": "Comparing strings correctly is crucial in Java. The equals() method compares content, while == compares object references. Always use equals() for string comparison. The equalsIgnoreCase() method ignores case differences. Other useful methods include contains() to check if a substring exists, startsWith() and endsWith() to check string beginnings and endings, indexOf() to find character positions, and trim() to remove leading and trailing whitespace. These methods enable powerful text searching, validation, and processing capabilities.",
+            "realWorldAnalogy": "String comparison is like comparing two books. The == operator checks if both variables point to the exact same physical book (same object in memory). The equals() method checks if the books have the same content (same text). Even if you have two identical copies of a book (same content), they're still different physical objects. Always use equals() when you care about the content, not the object identity.",
+            "syntaxExample": "public class StringCompare {\n    public static void main(String[] args) {\n        String str1 = \"Hello\";\n        String str2 = \"hello\";\n        String str3 = \"Hello\";\n        \n        System.out.println(str1.equals(str3));\n        System.out.println(str1.equals(str2));\n        System.out.println(str1.equalsIgnoreCase(str2));\n        \n        System.out.println(str1.contains(\"ell\"));\n        System.out.println(str1.startsWith(\"He\"));\n        System.out.println(str1.endsWith(\"lo\"));\n        System.out.println(str1.indexOf(\"l\"));\n    }\n}",
+            "keyNotes": [
+              "Always use .equals() to compare string content",
+              "== compares references, not content",
+              "equalsIgnoreCase() ignores upper/lower case",
+              "indexOf() returns -1 if character not found",
+              "contains() returns boolean true/false"
+            ]
+          }
+        },
+        {
+          "title": "MCQ: String Methods",
+          "type": "mcq",
+          "duration": "5 min",
+          "hideSidebar": true,
+          "content": {
+            "problem": "String Length Calculation",
+            "question": "What does \"Java\".length() return?",
+            "hint": "Count the characters in the string Java.",
+            "commonDoubts": "The length() method counts the number of characters in a string. 'Java' has 4 characters: J, a, v, a. Note that length() is a method (with parentheses), not a property.",
+            "options": [
+              "3",
+              "4",
+              "5",
+              "Error"
+            ],
+            "correctAnswer": 1,
+            "explanation": "The string 'Java' contains 4 characters: J, a, v, a. The length() method returns the count of characters, which is 4."
+          }
+        },
+        {
+          "title": "MCQ: String Comparison",
+          "type": "mcq",
+          "duration": "5 min",
+          "hideSidebar": true,
+          "content": {
+            "problem": "Correct String Comparison",
+            "question": "What is the correct way to check if two strings have the same content?",
+            "hint": "Think about comparing content vs references.",
+            "commonDoubts": "In Java, == compares object references (whether they point to the same object in memory), while .equals() compares the actual content. Always use .equals() to compare string values.",
+            "options": [
+              "str1 == str2",
+              "str1.equals(str2)",
+              "str1 = str2",
+              "compare(str1, str2)"
+            ],
+            "correctAnswer": 1,
+            "explanation": "Use str1.equals(str2) to compare string content. The == operator compares references, not content, and can give incorrect results even when strings have the same text."
+          }
+        },
+        {
+          "title": "Coding Task: String Manipulation",
+          "type": "coding",
+          "duration": "15 min",
+          "hideSidebar": true,
+          "content": {
+            "problem": "Extract Initials",
+            "description": "Given a full name (first and last), extract and display the initials in uppercase.",
+            "inputFormat": "Two strings: firstName and lastName",
+            "outputFormat": "Two uppercase characters representing initials",
+            "sampleInput": "john\ndoe",
+            "sampleOutput": "JD",
+            "constraints": "Both names contain at least one character",
+            "starterCode": "import java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        String firstName = sc.nextLine();\n        String lastName = sc.nextLine();\n        \n        // Extract and display initials\n        \n    }\n}",
+            "solution": "import java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        String firstName = sc.nextLine();\n        String lastName = sc.nextLine();\n        \n        char first = firstName.toUpperCase().charAt(0);\n        char last = lastName.toUpperCase().charAt(0);\n        \n        System.out.println(\"\" + first + last);\n    }\n}",
+            "testCases": [
+              {
+                "input": "john\ndoe",
+                "output": "JD"
+              },
+              {
+                "input": "alice\nsmith",
+                "output": "AS"
+              }
+            ]
+          }
+        },
+        {
+          "title": "Module 4 Test",
+          "type": "test",
+          "duration": "15 min",
+          "hideSidebar": true,
+          "content": {
+            "questions": [
+              {
+                "question": "What does the charAt() method do?",
+                "options": [
+                  "Returns length of string",
+                  "Returns character at specific position",
+                  "Changes character case",
+                  "Compares strings"
+                ],
+                "correctAnswer": 1
+              },
+              {
+                "question": "How do you convert a string to uppercase?",
+                "options": [
+                  "str.upper()",
+                  "str.toUpperCase()",
+                  "str.uppercase()",
+                  "upper(str)"
+                ],
+                "correctAnswer": 1
+              },
+              {
+                "question": "What does substring(2, 5) return from \"Hello\"?",
+                "options": [
+                  "Hel",
+                  "ell",
+                  "llo",
+                  "lo"
+                ],
+                "correctAnswer": 1
+              },
+              {
+                "question": "Which method checks if a string contains a substring?",
+                "options": [
+                  "has()",
+                  "includes()",
+                  "contains()",
+                  "indexOf()"
+                ],
+                "correctAnswer": 2
+              },
+              {
+                "question": "Are strings mutable in Java?",
+                "options": [
+                  "Yes, they can be changed",
+                  "No, they are immutable",
+                  "Only if declared final",
+                  "Depends on the version"
+                ],
+                "correctAnswer": 1
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "title": "User Input using Scanner",
+      "lessons": [
+        {
+          "title": "Introduction to Scanner",
+          "type": "concept",
+          "duration": "12 min",
+          "content": {
+            "explanation": "The Scanner class in Java allows programs to read input from users. To use Scanner, you must import it from java.util package and create a Scanner object connected to System.in (standard input). Scanner provides methods to read different data types: nextInt() for integers, nextDouble() for decimals, nextLine() for strings, and nextBoolean() for booleans. Understanding Scanner is essential because interactive programs need to receive user input, process it, and respond accordingly. This makes your programs dynamic and user-friendly rather than having hardcoded values.",
+            "realWorldAnalogy": "Think of Scanner as a receptionist at a hotel who takes information from guests. Just as the receptionist asks for your name (string), age (number), and preferences (various types), Scanner asks for different types of input. The receptionist writes information on different forms - Scanner similarly processes different data types through different methods. You must tell the receptionist clearly what information you want, just as you choose the right Scanner method for the data type you need.",
+            "syntaxExample": "import java.util.Scanner;\n\npublic class UserInput {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        \n        System.out.print(\"Enter your name: \");\n        String name = scanner.nextLine();\n        \n        System.out.print(\"Enter your age: \");\n        int age = scanner.nextInt();\n        \n        System.out.print(\"Enter your GPA: \");\n        double gpa = scanner.nextDouble();\n        \n        System.out.println(\"Name: \" + name);\n        System.out.println(\"Age: \" + age);\n        System.out.println(\"GPA: \" + gpa);\n        \n        scanner.close();\n    }\n}",
+            "keyNotes": [
+              "Import Scanner: import java.util.Scanner;",
+              "Create Scanner object: Scanner sc = new Scanner(System.in);",
+              "nextInt() reads integers, nextDouble() reads decimals",
+              "nextLine() reads entire line including spaces",
+              "Always close Scanner with scanner.close() when done"
+            ]
+          }
+        },
+        {
+          "title": "Common Scanner Issues",
+          "type": "concept",
+          "duration": "10 min",
+          "content": {
+            "explanation": "Scanner has a common pitfall when mixing nextInt() or nextDouble() with nextLine(). After reading a number, nextLine() reads the leftover newline character, causing unexpected behavior. The solution is to add an extra nextLine() after reading numbers to consume the newline, or use nextLine() followed by Integer.parseInt() or Double.parseDouble() for consistent behavior. Understanding this issue prevents frustrating bugs where your program skips input prompts. Proper Scanner usage ensures smooth user interaction.",
+            "realWorldAnalogy": "Imagine filling out a form where you write your age on one line and press Enter. The Enter keystroke leaves a blank line. If the next question asks for your address, but someone already processed that blank line as your answer, you'd be confused. Similarly, after reading a number, Scanner leaves the Enter keystroke in the buffer. You need to explicitly clear it before reading the next line of text.",
+            "syntaxExample": "import java.util.Scanner;\n\npublic class ScannerFix {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        \n        System.out.print(\"Enter age: \");\n        int age = sc.nextInt();\n        sc.nextLine(); // Consume leftover newline\n        \n        System.out.print(\"Enter name: \");\n        String name = sc.nextLine();\n        \n        System.out.println(\"Age: \" + age);\n        System.out.println(\"Name: \" + name);\n        \n        sc.close();\n    }\n}",
+            "keyNotes": [
+              "nextLine() after nextInt() prevents input skipping",
+              "Alternative: use nextLine() + Integer.parseInt()",
+              "next() reads one word, nextLine() reads entire line",
+              "Scanner throws InputMismatchException for wrong type",
+              "Validate input to prevent crashes from bad data"
+            ]
+          }
+        },
+        {
+          "title": "MCQ: Scanner Methods",
+          "type": "mcq",
+          "duration": "5 min",
+          "hideSidebar": true,
+          "content": {
+            "problem": "Choosing the Right Method",
+            "question": "Which method should you use to read a decimal number from the user?",
+            "hint": "Think about the data type for decimal numbers.",
+            "commonDoubts": "Decimal numbers are floating-point numbers. In Java, we use double for decimal numbers, and the corresponding Scanner method is nextDouble(). nextInt() only works for whole numbers.",
+            "options": [
+              "nextInt()",
+              "nextDouble()",
+              "nextLine()",
+              "nextDecimal()"
+            ],
+            "correctAnswer": 1,
+            "explanation": "Use nextDouble() to read decimal numbers. This method reads floating-point values like 3.14, 99.99, etc. nextInt() only reads whole numbers."
+          }
+        },
+        {
+          "title": "MCQ: Scanner Issues",
+          "type": "mcq",
+          "duration": "5 min",
+          "hideSidebar": true,
+          "content": {
+            "problem": "Understanding Input Buffer",
+            "question": "What problem occurs when using nextInt() followed immediately by nextLine()?",
+            "hint": "Think about what happens to the Enter key press.",
+            "commonDoubts": "After nextInt() reads the number, the Enter keystroke remains in the buffer. When nextLine() is called next, it reads that leftover newline instead of waiting for new input, causing the program to skip the prompt.",
+            "options": [
+              "No problem occurs",
+              "nextLine() skips input by reading leftover newline",
+              "Program crashes",
+              "Numbers cannot be read"
+            ],
+            "correctAnswer": 1,
+            "explanation": "nextInt() reads the number but leaves the newline character in the buffer. The subsequent nextLine() reads this leftover newline instead of waiting for user input. Add sc.nextLine() after nextInt() to fix this."
+          }
+        },
+        {
+          "title": "Coding Task: Simple Calculator",
+          "type": "coding",
+          "duration": "15 min",
+          "hideSidebar": true,
+          "content": {
+            "problem": "Two Number Calculator",
+            "description": "Read two integers and an operation symbol (+, -, *, /) from the user, then perform the operation and display the result.",
+            "inputFormat": "Three lines: two integers and one character",
+            "outputFormat": "One line: result of the operation",
+            "sampleInput": "10\n5\n+",
+            "sampleOutput": "15",
+            "constraints": "Valid integers and operation symbol",
+            "starterCode": "import java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        \n        // Read input and perform calculation\n        \n    }\n}",
+            "solution": "import java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        \n        int num1 = sc.nextInt();\n        int num2 = sc.nextInt();\n        char op = sc.next().charAt(0);\n        \n        int result = 0;\n        if (op == '+') result = num1 + num2;\n        else if (op == '-') result = num1 - num2;\n        else if (op == '*') result = num1 * num2;\n        else if (op == '/') result = num1 / num2;\n        \n        System.out.println(result);\n        sc.close();\n    }\n}",
+            "testCases": [
+              {
+                "input": "10\n5\n+",
+                "output": "15"
+              },
+              {
+                "input": "20\n4\n*",
+                "output": "80"
+              }
+            ]
+          }
+        },
+        {
+          "title": "Module 5 Test",
+          "type": "test",
+          "duration": "15 min",
+          "hideSidebar": true,
+          "content": {
+            "questions": [
+              {
+                "question": "Which package must be imported to use Scanner?",
+                "options": [
+                  "java.io",
+                  "java.util",
+                  "java.scanner",
+                  "java.input"
+                ],
+                "correctAnswer": 1
+              },
+              {
+                "question": "How do you create a Scanner object for keyboard input?",
+                "options": [
+                  "Scanner sc = new Scanner();",
+                  "Scanner sc = new Scanner(System.in);",
+                  "Scanner sc = Scanner.create();",
+                  "Scanner sc = new Scanner(keyboard);"
+                ],
+                "correctAnswer": 1
+              },
+              {
+                "question": "Which method reads an entire line of text?",
+                "options": [
+                  "next()",
+                  "nextLine()",
+                  "readLine()",
+                  "nextString()"
+                ],
+                "correctAnswer": 1
+              },
+              {
+                "question": "What should you do after using Scanner?",
+                "options": [
+                  "Nothing special",
+                  "Call scanner.close()",
+                  "Delete the scanner",
+                  "Reset the scanner"
+                ],
+                "correctAnswer": 1
+              },
+              {
+                "question": "What happens if user enters text when nextInt() expects a number?",
+                "options": [
+                  "Converts to 0",
+                  "Ignores input",
+                  "Throws InputMismatchException",
+                  "Reads as string"
+                ],
+                "correctAnswer": 2
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

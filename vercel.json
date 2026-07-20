@@ -1,0 +1,7 @@
+{
+  "version": 2,
+  "buildCommand": "cd doflow-main/doflow-main && npm install && npm run build",
+  "outputDirectory": "doflow-main/doflow-main/dist",
+  "installCommand": "cd doflow-main/doflow-main && npm install",
+  "framework": "vite"
+}

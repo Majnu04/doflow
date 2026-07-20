@@ -1,0 +1,187 @@
+/** @type {import('tailwindcss').Config} */
+export default {
+  darkMode: 'class',
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+    "./*.{js,ts,jsx,tsx}",
+    "./components/**/*.{js,ts,jsx,tsx}",
+    "./pages/**/*.{js,ts,jsx,tsx}",
+  ],
+  theme: {
+    container: {
+      center: true,
+      padding: {
+        DEFAULT: '1rem',
+        sm: '1.25rem',
+        lg: '2rem',
+        xl: '2.5rem',
+        '2xl': '3rem',
+      },
+    },
+    extend: {
+      colors: {
+        light: {
+          bg: '#FDFBF8',
+          card: '#FFFFFF',
+          cardAlt: '#F6F0E8',
+          text: '#1F232E',
+          textSecondary: '#5A6072',
+          textMuted: '#878B9A',
+          border: '#E5DDD2',
+        },
+        dark: {
+          bg: '#FDFBF8',
+          card: '#FFFFFF',
+          cardAlt: '#F6F0E8',
+          text: '#1F232E',
+          muted: '#5A6072',
+          border: '#E5DDD2',
+        },
+        brand: {
+          primary: '#E06438',
+          primaryHover: '#C7542F',
+          accent: '#F3A45C',
+          accentSoft: '#FFE4CC',
+          highlight: '#F8DCC1',
+        },
+        neutral: {
+          sand: '#F9F3EB',
+          cloud: '#F4EFE7',
+          dusk: '#2F2C28',
+        },
+        border: {
+          subtle: '#E5DDD2',
+          bold: '#D4C7BB',
+        },
+        shadow: {
+          soft: 'rgba(47, 44, 40, 0.08)',
+        },
+      },
+      fontFamily: {
+        brand: ['"Plus Jakarta Sans"', '"Inter"', 'system-ui', 'sans-serif'],
+        sans: ['"Inter"', 'system-ui', 'sans-serif'],
+        display: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+        mono: ['"IBM Plex Mono"', 'SFMono-Regular', 'Menlo', 'monospace'],
+      },
+      fontSize: {
+        'fluid-xs': 'clamp(0.75rem, 0.72rem + 0.2vw, 0.85rem)',
+        'fluid-sm': 'clamp(0.85rem, 0.8rem + 0.25vw, 0.95rem)',
+        'fluid-base': 'clamp(1rem, 0.95rem + 0.35vw, 1.15rem)',
+        'fluid-lg': 'clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem)',
+        'fluid-xl': 'clamp(1.5rem, 1.3rem + 0.8vw, 2rem)',
+        'display': 'clamp(2rem, 1.6rem + 1.6vw, 3.5rem)',
+      },
+      boxShadow: {
+        'xs': '0 1px 2px rgba(32, 29, 25, 0.04)',
+        'sm': '0 2px 8px rgba(32, 29, 25, 0.06)',
+        'DEFAULT': '0 4px 16px rgba(32, 29, 25, 0.08)',
+        'md': '0 4px 16px rgba(32, 29, 25, 0.08)',
+        'lg': '0 8px 32px rgba(32, 29, 25, 0.1)',
+        'xl': '0 16px 48px rgba(32, 29, 25, 0.12)',
+        '2xl': '0 24px 64px rgba(32, 29, 25, 0.16)',
+        'brand': '0 8px 32px rgba(224, 100, 56, 0.2)',
+        'brand-lg': '0 16px 48px rgba(224, 100, 56, 0.25)',
+        'brand-xl': '0 24px 64px rgba(224, 100, 56, 0.3)',
+        'inner-glow': 'inset 0 1px 0 rgba(255, 255, 255, 0.6)',
+        'card': '0 1px 3px rgba(32, 29, 25, 0.04), 0 4px 12px rgba(32, 29, 25, 0.06)',
+        'card-hover': '0 4px 12px rgba(32, 29, 25, 0.06), 0 12px 32px rgba(32, 29, 25, 0.1)',
+        'elevated': '0 8px 24px rgba(32, 29, 25, 0.08), 0 24px 48px rgba(32, 29, 25, 0.08)',
+      },
+      borderRadius: {
+        '4xl': '2rem',
+        '5xl': '2.5rem',
+      },
+      animation: {
+        'soft-fade': 'softFade 0.65s ease-out both',
+        'rise-up': 'riseUp 0.75s cubic-bezier(0.22, 1, 0.36, 1) both',
+        'float': 'float 7s ease-in-out infinite',
+        'scale-in': 'scaleIn 0.4s ease-out both',
+        'shimmer': 'shimmer 2.4s linear infinite',
+        'fade-in': 'fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) both',
+        'slide-up': 'slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both',
+        'slide-down': 'slideDown 0.4s cubic-bezier(0.16, 1, 0.3, 1) both',
+        'slide-up-fade': 'slideUpFade 0.5s cubic-bezier(0.16, 1, 0.3, 1) both',
+        'pop-in': 'popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both',
+        'pulse-glow': 'pulseGlow 2s ease-in-out infinite',
+        'counter': 'counter 1.5s cubic-bezier(0.16, 1, 0.3, 1) both',
+      },
+      keyframes: {
+        softFade: {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+        riseUp: {
+          '0%': { opacity: '0', transform: 'translateY(16px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        float: {
+          '0%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-6px)' },
+          '100%': { transform: 'translateY(0)' },
+        },
+        scaleIn: {
+          '0%': { opacity: '0', transform: 'scale(0.98)' },
+          '100%': { opacity: '1', transform: 'scale(1)' },
+        },
+        shimmer: {
+          '0%': { backgroundPosition: '-200% 0' },
+          '100%': { backgroundPosition: '200% 0' },
+        },
+        fadeIn: {
+          from: { opacity: '0' },
+          to: { opacity: '1' },
+        },
+        slideUp: {
+          from: { opacity: '0', transform: 'translateY(12px)' },
+          to: { opacity: '1', transform: 'translateY(0)' },
+        },
+        slideDown: {
+          from: { opacity: '0', transform: 'translateY(-8px)' },
+          to: { opacity: '1', transform: 'translateY(0)' },
+        },
+        slideUpFade: {
+          from: { opacity: '0', transform: 'translateY(16px)' },
+          to: { opacity: '1', transform: 'translateY(0)' },
+        },
+        popIn: {
+          from: { opacity: '0', transform: 'scale(0.9)' },
+          to: { opacity: '1', transform: 'scale(1)' },
+        },
+        pulseGlow: {
+          '0%, 100%': { boxShadow: '0 0 0 0 rgba(224, 100, 56, 0.3)' },
+          '50%': { boxShadow: '0 0 0 8px rgba(224, 100, 56, 0)' },
+        },
+        counter: {
+          from: { opacity: '0', transform: 'translateY(8px)' },
+          to: { opacity: '1', transform: 'translateY(0)' },
+        },
+      },
+      transitionTimingFunction: {
+        soft: 'cubic-bezier(0.33, 1, 0.68, 1)',
+        expo: 'cubic-bezier(0.16, 1, 0.3, 1)',
+        spring: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
+      },
+      transitionDuration: {
+        '350': '350ms',
+        '400': '400ms',
+        '500': '500ms',
+        '600': '600ms',
+        '700': '700ms',
+      },
+      dropShadow: {
+        brand: '0 20px 45px rgba(224, 100, 56, 0.25)',
+        'brand-lg': '0 24px 64px rgba(224, 100, 56, 0.3)',
+      },
+      backgroundImage: {
+        'soft-vignette': 'radial-gradient(circle at top, rgba(240, 170, 110, 0.18), transparent 60%)',
+        'soft-grain': 'linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px), linear-gradient(rgba(32,29,25,0.03) 1px, transparent 1px)',
+        'hero-gradient': 'linear-gradient(135deg, rgba(240, 170, 110, 0.18), rgba(255, 226, 197, 0.5))',
+        'brand-gradient': 'linear-gradient(135deg, #E06438, #F3A45C)',
+        'brand-gradient-soft': 'linear-gradient(135deg, rgba(224, 100, 56, 0.1), rgba(243, 164, 92, 0.15))',
+        'surface-gradient': 'linear-gradient(180deg, rgba(253, 251, 248, 0) 0%, rgba(246, 240, 232, 0.4) 100%)',
+      },
+    },
+  },
+  plugins: [],
+}

@@ -1,0 +1,1368 @@
+{
+  "title": "Python Fundamentals: Complete Beginner Program",
+  "slug": "python-fundamentals-complete-beginner-program",
+  "description": "Master Python programming from scratch! This beginner-friendly course takes you from writing your first line of code to building real programs. Perfect for absolute beginners with no prior coding experience. ULTRA EDITION with premium content, real-world analogies, MCQ pages, coding tasks, and module tests.",
+  "thumbnail": "https://images.unsplash.com/photo-1526379095098-d400fd0bf935?w=800",
+  "instructor": "DoFlow Academy",
+  "price": 0,
+  "originalPrice": 1999,
+  "duration": "12 hours",
+  "level": "Beginner",
+  "language": "English",
+  "category": "Programming",
+  "tags": ["Python", "Programming", "Beginner", "Coding", "Ultra Edition"],
+  "features": [
+    "12 Interactive Modules",
+    "Real-World Analogies",
+    "Hands-on Coding Challenges",
+    "MCQ Quizzes with CodeChef Format",
+    "Module Tests (5 MCQs each)",
+    "Coding Tasks with Compiler",
+    "Certificate on Completion"
+  ],
+  "requirements": [
+    "No prior programming experience needed",
+    "A computer with internet access",
+    "Enthusiasm to learn!"
+  ],
+  "whatYouWillLearn": [
+    "Write and run Python programs",
+    "Understand variables and data types",
+    "Work with strings and numbers",
+    "Take user input and make decisions",
+    "Use loops to automate tasks",
+    "Create reusable functions",
+    "Master operators and expressions",
+    "Build real-world projects"
+  ],
+  "modules": [
+    {
+      "id": 1,
+      "title": "Output & Printing",
+      "description": "Learn to display text and numbers on screen — The most fundamental tool in Python",
+      "duration": "60 mins",
+      "lessons": [
+        {
+          "id": "1.1",
+          "title": "Introduction to Output & Printing",
+          "type": "concept",
+          "content": {
+            "explanation": "The print() function is the most fundamental tool in Python. It displays information on the screen—text, numbers, results of calculations, variables, and formatted output. In every program, debugging, interaction, or final result showing is done using print(). Think of print() as your direct communication channel from your program to the user.",
+            "analogy": {
+              "title": "🚂 Real-World Analogy: Train Control Room",
+              "description": "Imagine you're in a train control room. You enter data into the system; the public display boards (screens) show the announcement. The public display = print(). Whatever you send — Text, Numbers, Warnings, Status messages — will appear for users to see."
+            },
+            "syntax": {
+              "title": "🐍 Python Syntax",
+              "code": "# Basic Print\nprint(\"Hello, World!\")\n\n# Printing Multiple Items\nprint(\"The sum is\", 5 + 3)\n\n# Printing Numbers\nprint(42)\nprint(3.14)\n\n# Printing on New Lines\nprint(\"Line 1\")\nprint(\"Line 2\")"
+            },
+            "keyNotes": [
+              "Strings require quotes (\"text\" or 'text')",
+              "Numbers do NOT require quotes",
+              "Commas inside print add a space automatically",
+              "print() can evaluate expressions like print(10 + 5)",
+              "Python prints from left to right"
+            ]
+          }
+        },
+        {
+          "id": "1.2",
+          "title": "Printing on Multiple Lines",
+          "type": "concept",
+          "content": {
+            "explanation": "Python lets you print multiple lines easily using multiple print statements or using newline characters (\\n) inside a single print. This helps when formatting reports, logs, or structured output.",
+            "analogy": {
+              "title": "📄 Real-World Analogy: Document Formatting",
+              "description": "Just like pressing Enter on your keyboard creates a new line in a document, the \\n character tells Python to start a new line in the output."
+            },
+            "syntax": {
+              "title": "🐍 Python Syntax",
+              "code": "# Using multiple print()\nprint(\"Name: Gouri\")\nprint(\"Age: 21\")\nprint(\"City: Vizag\")\n\n# Using newline character\nprint(\"Name: Gouri\\nAge: 21\\nCity: Vizag\")\n\n# Using triple-quoted strings\nprint(\"\"\"\nPython is fun!\nLearning it is even more fun!\n\"\"\")"
+            },
+            "keyNotes": [
+              "\\n inserts a new line",
+              "Triple quotes preserve formatting",
+              "Ideal for large text outputs"
+            ]
+          }
+        },
+        {
+          "id": "1.3",
+          "title": "Printing Text and Numbers Together",
+          "type": "concept",
+          "content": {
+            "explanation": "A single print can output multiple pieces of data—text, numbers, or variables. Python automatically converts numbers to text when printing with commas.",
+            "analogy": {
+              "title": "🎯 Real-World Analogy: Announcement Board",
+              "description": "Like a scoreboard that shows both team names and their scores together, print() can combine text and numbers seamlessly."
+            },
+            "syntax": {
+              "title": "🐍 Python Syntax",
+              "code": "# Printing text with numbers\nprint(\"Result:\", 5 * 7)\n\n# Printing multiple variables\nname = \"Gouri\"\nage = 21\nprint(\"Name:\", name, \"| Age:\", age)\n\n# Printing expressions\nprint(\"Total:\", 8 + 12)"
+            },
+            "keyNotes": [
+              "Use commas to print multiple items",
+              "Avoid \"text\" + number — use commas instead",
+              "Python auto-inserts spaces when using commas"
+            ]
+          }
+        },
+        {
+          "id": "1.4",
+          "title": "MCQ: Output and Printing",
+          "type": "mcq",
+          "hideSidebar": true,
+          "content": {
+            "problemTitle": "MCQ on Output and Printing",
+            "question": "What will be the output of the following code?\n\nprint(5 + 3)",
+            "hint": "The code prints the evaluated result of the expression.",
+            "commonDoubts": [
+              "Does print() convert numbers automatically?",
+              "Is + used for addition or string concatenation?",
+              "How does Python evaluate mathematical expressions?"
+            ],
+            "options": [
+              "A) 5 + 3",
+              "B) 8",
+              "C) \"8\"",
+              "D) Error"
+            ],
+            "correctAnswer": "B",
+            "explanation": "Since 5 + 3 is NOT inside quotes, Python evaluates it as a mathematical expression and prints the result: 8"
+          }
+        },
+        {
+          "id": "1.5",
+          "title": "Coding Task: Print the Sum of Two Numbers",
+          "type": "codingTask",
+          "content": {
+            "problemTitle": "Print the Sum of Two Numbers",
+            "problemStatement": "Write a program that reads two integers and prints their sum.",
+            "inputFormat": "Two integers (each on a new line):\n5\n7",
+            "outputFormat": "One integer:\n12",
+            "sampleInput": "10\n20",
+            "sampleOutput": "30",
+            "constraints": [
+              "-10000 ≤ N ≤ 10000"
+            ],
+            "starterCode": "# Read two numbers and print their sum\n",
+            "solution": "a = int(input())\nb = int(input())\nprint(a + b)"
+          }
+        },
+        {
+          "id": "1.6",
+          "title": "Module 1 Test",
+          "type": "moduleTest",
+          "content": {
+            "testTitle": "Module 1: Output & Printing — Test",
+            "questions": [
+              {
+                "id": "1.6.1",
+                "question": "What is the output of:\nprint(\"Hello\")",
+                "options": ["A) Hello", "B) \"Hello\"", "C) Error", "D) Nothing"],
+                "correctAnswer": "A",
+                "explanation": "print() displays the content without the quotes"
+              },
+              {
+                "id": "1.6.2",
+                "question": "What will this print?\nprint(10 * 2)",
+                "options": ["A) 20", "B) 102", "C) 10 * 2", "D) Error"],
+                "correctAnswer": "A",
+                "explanation": "Without quotes, 10 * 2 is evaluated as multiplication = 20"
+              },
+              {
+                "id": "1.6.3",
+                "question": "Which is the correct way to print text?",
+                "options": ["A) print('Python')", "B) print(Python)", "C) echo \"Python\"", "D) display(\"Python\")"],
+                "correctAnswer": "A",
+                "explanation": "print() with quotes around text is the correct Python syntax"
+              },
+              {
+                "id": "1.6.4",
+                "question": "Which prints two lines?",
+                "options": ["A) print(\"A\\nB\")", "B) print(\"AB\")", "C) print(A,B)", "D) print(\"A B\")"],
+                "correctAnswer": "A",
+                "explanation": "\\n is the newline character that creates a new line"
+              },
+              {
+                "id": "1.6.5",
+                "question": "What is printed here?\nprint(\"3\" + \"7\")",
+                "options": ["A) 10", "B) 37", "C) \"10\"", "D) Error"],
+                "correctAnswer": "B",
+                "explanation": "\"3\" and \"7\" are strings, so + concatenates them to \"37\""
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Variables & Datatypes",
+      "description": "Learn how Python stores and processes numbers, text, and boolean values",
+      "duration": "70 mins",
+      "lessons": [
+        {
+          "id": "2.1",
+          "title": "Introduction to Variables & Datatypes",
+          "type": "concept",
+          "content": {
+            "explanation": "A variable is a name that stores a value. Datatypes define the kind of data a variable contains—numbers, text, true/false, etc. Python automatically detects the datatype when you assign a value, making coding simpler and faster.",
+            "analogy": {
+              "title": "🏷️ Real-World Analogy: Labeled Containers",
+              "description": "Imagine labeling containers: 'Sugar' → sweet powder, 'Rice' → grains, 'Water' → liquid. In Python: name = \"Gouri\", age = 21, height = 5.8. The label = variable name, The content = datatype."
+            },
+            "syntax": {
+              "title": "🐍 Python Syntax",
+              "code": "# Assigning Variables\nname = \"Gouri\"\nage = 21\nprice = 99.99\nis_active = True\n\n# Common Datatypes\ntext = \"hello\"     # String\nnum = 10           # Integer\npi = 3.14          # Float\nflag = False       # Boolean\n\n# Checking Datatypes\nprint(type(name))  \nprint(type(age))\nprint(type(pi))\nprint(type(flag))"
+            },
+            "keyNotes": [
+              "No need to declare datatype manually",
+              "A variable name must NOT start with a number",
+              "Python variable names are case-sensitive",
+              "Use snake_case for Python variables"
+            ]
+          }
+        },
+        {
+          "id": "2.2",
+          "title": "Boolean Datatype & Negative Numbers",
+          "type": "concept",
+          "content": {
+            "explanation": "Booleans represent truth values: True or False. Negative numbers are written with '-' and work in arithmetic like positive numbers.",
+            "analogy": {
+              "title": "🔘 Real-World Analogy: Switches & Debt",
+              "description": "Boolean = 'Yes/No' switch. Negative numbers = owing money (debt). Like a light switch that's either ON or OFF, booleans are either True or False."
+            },
+            "syntax": {
+              "title": "🐍 Python Syntax",
+              "code": "# Booleans\nis_logged_in = True\nis_admin = False\n\n# Negative Values\ntemperature = -5\nbalance = -1500\n\n# Boolean with Conditions\nx = 10\nprint(x > 5)   # True\nprint(x < 0)   # False"
+            },
+            "keyNotes": [
+              "Python booleans start with capital letters (True, False)",
+              "Negative integers behave like normal numbers",
+              "Boolean operations are essential in conditions"
+            ]
+          }
+        },
+        {
+          "id": "2.3",
+          "title": "Type Conversion (Pro)",
+          "type": "concept",
+          "content": {
+            "explanation": "Type conversion changes the datatype of a value. This is essential when mixing numbers and strings.",
+            "analogy": {
+              "title": "🔄 Real-World Analogy: Currency Exchange",
+              "description": "Just like converting dollars to rupees, type conversion transforms data from one form to another so it can be used in different contexts."
+            },
+            "syntax": {
+              "title": "🐍 Python Syntax",
+              "code": "# Convert to int\nx = int(\"10\")    # 10\n\n# Convert to float\ny = float(\"3.14\")\n\n# Convert to string\nz = str(100)\n\n# Convert to boolean\nbool(0)   # False\nbool(1)   # True\n\n# Input always returns string\nage = input(\"Enter age: \")\nage = int(age)"
+            },
+            "keyNotes": [
+              "Strings must contain valid numbers for int/float conversion",
+              "Booleans convert 0 → False, others → True",
+              "input() always returns a string, so convert when needed"
+            ]
+          }
+        },
+        {
+          "id": "2.4",
+          "title": "MCQ: Variables & Datatypes",
+          "type": "mcq",
+          "hideSidebar": true,
+          "content": {
+            "problemTitle": "MCQ on Variables & Datatypes",
+            "question": "What is the datatype of the value returned by this code?\n\nx = input(\"Enter a number: \")\nprint(type(x))",
+            "hint": "input() always returns a string.",
+            "commonDoubts": [
+              "Does input return number automatically?",
+              "Do we need to typecast input?",
+              "How do we convert to int?"
+            ],
+            "options": [
+              "A) int",
+              "B) float",
+              "C) str",
+              "D) bool"
+            ],
+            "correctAnswer": "C",
+            "explanation": "input() always returns a string, regardless of what the user types. Even if you type 42, it's stored as \"42\" (string)."
+          }
+        },
+        {
+          "id": "2.5",
+          "title": "Coding Task: Digital Profile Card",
+          "type": "codingTask",
+          "content": {
+            "problemTitle": "Create a Digital Profile Card",
+            "problemStatement": "Write a program that asks the user for:\n• name\n• age\n• city\n• is_student (True/False)\n\nStore each in variables and print the final profile.",
+            "inputFormat": "Gouri\n21\nVizag\nTrue",
+            "outputFormat": "Name: Gouri\nAge: 21\nCity: Vizag\nStudent: True",
+            "sampleInput": "Rahul\n25\nMumbai\nFalse",
+            "sampleOutput": "Name: Rahul\nAge: 25\nCity: Mumbai\nStudent: False",
+            "constraints": [
+              "Age is between 1 and 120",
+              "is_student is either True or False"
+            ],
+            "starterCode": "# Get user input and create profile\n",
+            "solution": "name = input()\nage = input()\ncity = input()\nis_student = input()\n\nprint(\"Name:\", name)\nprint(\"Age:\", age)\nprint(\"City:\", city)\nprint(\"Student:\", is_student)"
+          }
+        },
+        {
+          "id": "2.6",
+          "title": "Module 2 Test",
+          "type": "moduleTest",
+          "content": {
+            "testTitle": "Module 2: Variables & Datatypes — Test",
+            "questions": [
+              {
+                "id": "2.6.1",
+                "question": "Which is a valid variable name?",
+                "options": ["A) 1name", "B) _value", "C) class", "D) for"],
+                "correctAnswer": "B",
+                "explanation": "_value is valid. Variables can't start with numbers, and 'class'/'for' are reserved keywords."
+              },
+              {
+                "id": "2.6.2",
+                "question": "What is the output?\nx = \"10\"\ny = 5\nprint(x + str(y))",
+                "options": ["A) 15", "B) 105", "C) \"105\"", "D) Error"],
+                "correctAnswer": "B",
+                "explanation": "\"10\" + \"5\" = \"105\" (string concatenation, not addition)"
+              },
+              {
+                "id": "2.6.3",
+                "question": "What does type(False) return?",
+                "options": ["A) int", "B) bool", "C) str", "D) False"],
+                "correctAnswer": "B",
+                "explanation": "False is a boolean value, so type(False) returns <class 'bool'>"
+              },
+              {
+                "id": "2.6.4",
+                "question": "What is the result of:\nint(\"7\") + 3",
+                "options": ["A) 10", "B) \"73\"", "C) Error", "D) \"10\""],
+                "correctAnswer": "A",
+                "explanation": "int(\"7\") converts string to integer 7, then 7 + 3 = 10"
+              },
+              {
+                "id": "2.6.5",
+                "question": "What is the datatype of -99?",
+                "options": ["A) str", "B) float", "C) int", "D) bool"],
+                "correctAnswer": "C",
+                "explanation": "-99 is a negative whole number, which is an integer (int)"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Operators",
+      "description": "Learn how Python performs math, comparison, and logical operations",
+      "duration": "65 mins",
+      "lessons": [
+        {
+          "id": "3.1",
+          "title": "Arithmetic Operators",
+          "type": "concept",
+          "content": {
+            "explanation": "Arithmetic operators allow Python to perform basic mathematical operations such as addition, subtraction, multiplication, division, exponentiation, and modulo. They help you calculate values, build formulas, and process numerical data.",
+            "analogy": {
+              "title": "🧮 Real-World Analogy: Calculator Buttons",
+              "description": "Arithmetic operators are like the buttons on a calculator: + adds numbers, - subtracts, / divides, and % gives the remainder—just like when you divide chocolates among friends and check how many are left."
+            },
+            "syntax": {
+              "title": "🐍 Python Syntax",
+              "code": "# Basic Arithmetic\na = 10\nb = 3\n\nprint(a + b)   # 13\nprint(a - b)   # 7\nprint(a * b)   # 30\nprint(a / b)   # 3.333...\n\n# Floor Division\nprint(10 // 3)   # 3\n\n# Modulo (Remainder)\nprint(10 % 3)    # 1\n\n# Power / Exponent\nprint(2 ** 3)    # 8"
+            },
+            "keyNotes": [
+              "/ always returns float",
+              "// removes decimals (floor division)",
+              "% is remainder (modulo)",
+              "** is power (exponent)"
+            ]
+          }
+        },
+        {
+          "id": "3.2",
+          "title": "Relational Operators (Pro)",
+          "type": "concept",
+          "content": {
+            "explanation": "Relational operators compare two values and return True or False. These are used in conditions, loops, and decision-making.",
+            "analogy": {
+              "title": "📊 Real-World Analogy: Comparing Marksheets",
+              "description": "Comparing two marksheets: 'Is mark1 > mark2?', 'Is mark1 equal to mark2?' — Just like real life comparisons, relational operators compare values."
+            },
+            "syntax": {
+              "title": "🐍 Python Syntax",
+              "code": "print(5 > 3)     # True\nprint(5 < 3)     # False\nprint(10 == 10)  # True\nprint(10 != 5)   # True\nprint(7 >= 7)    # True\nprint(4 <= 2)    # False"
+            },
+            "keyNotes": [
+              "== checks equality",
+              "!= checks inequality",
+              "<, >, <=, >= compare values",
+              "All return True or False"
+            ]
+          }
+        },
+        {
+          "id": "3.3",
+          "title": "Logical Operators (Pro)",
+          "type": "concept",
+          "content": {
+            "explanation": "Logical operators combine multiple conditions. They return True or False based on the relationship between statements.",
+            "analogy": {
+              "title": "🚪 Real-World Analogy: Security Door",
+              "description": "A door opens only if: You have a key AND you press the button. This is 'and'. If either condition works, that's 'or'. 'not' reverses truth value."
+            },
+            "syntax": {
+              "title": "🐍 Python Syntax",
+              "code": "x = 10\n\nprint(x > 5 and x < 20)  # True\nprint(x > 5 or x < 5)    # True\nprint(not(x > 5))        # False"
+            },
+            "keyNotes": [
+              "and → both must be True",
+              "or → at least one True",
+              "not → reverses True/False"
+            ]
+          }
+        },
+        {
+          "id": "3.4",
+          "title": "Precedence & Associativity (Pro)",
+          "type": "concept",
+          "content": {
+            "explanation": "Python evaluates expressions based on priority of operators. This is called precedence. When two operators have the same priority, Python evaluates from left to right (associativity).",
+            "analogy": {
+              "title": "📐 Real-World Analogy: Math Class Rules",
+              "description": "In maths: Multiplication before addition → same rule here. BODMAS/PEMDAS rules apply in Python too."
+            },
+            "syntax": {
+              "title": "🐍 Python Syntax",
+              "code": "print(2 + 3 * 4)       # 14  (multiplication first)\nprint((2 + 3) * 4)     # 20  (parentheses first)\nprint(10 - 2 + 3)      # 11  (left to right)"
+            },
+            "keyNotes": [
+              "() has highest precedence",
+              "** next",
+              "*, /, //, %",
+              "+, - have lowest precedence"
+            ]
+          }
+        },
+        {
+          "id": "3.5",
+          "title": "MCQ: Operators",
+          "type": "mcq",
+          "hideSidebar": true,
+          "content": {
+            "problemTitle": "MCQ on Operators",
+            "question": "What is the output of the following code?\n\nprint(10 // 3)",
+            "hint": "// performs floor division.",
+            "commonDoubts": [
+              "Why isn't it 3.33?",
+              "What's the difference between / and //?",
+              "How does floor work for negatives?"
+            ],
+            "options": [
+              "A) 3.33",
+              "B) 3",
+              "C) 4",
+              "D) Error"
+            ],
+            "correctAnswer": "B",
+            "explanation": "// is floor division which removes the decimal part. 10 / 3 = 3.33, floor = 3"
+          }
+        },
+        {
+          "id": "3.6",
+          "title": "Coding Task: Simple Grade Calculator",
+          "type": "codingTask",
+          "content": {
+            "problemTitle": "Simple Grade Calculator",
+            "problemStatement": "Write a program that reads two marks and prints:\n• Total\n• Average\n• Whether the student passed (marks >= 35)",
+            "inputFormat": "45\n32",
+            "outputFormat": "Total: 77\nAverage: 38.5\nPassed: True",
+            "sampleInput": "20\n40",
+            "sampleOutput": "Total: 60\nAverage: 30.0\nPassed: False",
+            "constraints": [
+              "0 ≤ marks ≤ 100"
+            ],
+            "starterCode": "# Read two marks and calculate\n",
+            "solution": "mark1 = int(input())\nmark2 = int(input())\n\ntotal = mark1 + mark2\naverage = total / 2\npassed = average >= 35\n\nprint(\"Total:\", total)\nprint(\"Average:\", average)\nprint(\"Passed:\", passed)"
+          }
+        },
+        {
+          "id": "3.7",
+          "title": "Module 3 Test",
+          "type": "moduleTest",
+          "content": {
+            "testTitle": "Module 3: Operators — Test",
+            "questions": [
+              {
+                "id": "3.7.1",
+                "question": "Output?\nprint(2 ** 3)",
+                "options": ["A) 6", "B) 8", "C) 9", "D) 23"],
+                "correctAnswer": "B",
+                "explanation": "** is exponentiation. 2^3 = 8"
+              },
+              {
+                "id": "3.7.2",
+                "question": "Which operator returns remainder?",
+                "options": ["A) //", "B) %", "C) /", "D) **"],
+                "correctAnswer": "B",
+                "explanation": "% is the modulo operator that returns remainder"
+              },
+              {
+                "id": "3.7.3",
+                "question": "Output?\nprint(10 > 2 and 3 > 5)",
+                "options": ["A) True", "B) False", "C) Error", "D) 10"],
+                "correctAnswer": "B",
+                "explanation": "10 > 2 is True, but 3 > 5 is False. True and False = False"
+              },
+              {
+                "id": "3.7.4",
+                "question": "Output?\nprint(10 != 10)",
+                "options": ["A) True", "B) False", "C) Error", "D) None"],
+                "correctAnswer": "B",
+                "explanation": "10 != 10 means '10 is not equal to 10' which is False"
+              },
+              {
+                "id": "3.7.5",
+                "question": "Which has highest precedence?",
+                "options": ["A) +", "B) -", "C) **", "D) %"],
+                "correctAnswer": "C",
+                "explanation": "** (exponentiation) has the highest precedence among these operators"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "Strings",
+      "description": "Learn how to work with text, characters, slicing, and indexing in Python",
+      "duration": "65 mins",
+      "lessons": [
+        {
+          "id": "4.1",
+          "title": "Introduction to Strings",
+          "type": "concept",
+          "content": {
+            "explanation": "A string is a sequence of characters enclosed inside quotes. Strings allow you to store names, addresses, sentences, or any textual data. They support indexing, slicing, and various built-in methods for manipulation. Python treats strings as immutable—meaning once created, they cannot be altered directly.",
+            "analogy": {
+              "title": "🔐 Real-World Analogy: Row of Lockers",
+              "description": "Think of a string like a row of lockers, each locker holding a letter. Example: 'GOURI' — Indexing means opening a specific locker. Slicing means selecting a range of lockers."
+            },
+            "syntax": {
+              "title": "🐍 Python Syntax",
+              "code": "# Creating Strings\nname = \"Gouri\"\ncity = 'Vizag'\n\n# Multi-line Strings\ntext = \"\"\"\nPython is powerful.\nPython is fun.\n\"\"\"\n\n# Concatenation\nfull = \"Hello\" + \" \" + \"World\"\nprint(full)\n\n# Length of String\nprint(len(\"Python\"))  # 6"
+            },
+            "keyNotes": [
+              "Strings need quotes",
+              "Strings are immutable",
+              "len() gives number of characters",
+              "Concatenation uses +"
+            ]
+          }
+        },
+        {
+          "id": "4.2",
+          "title": "String Indexing & Slicing (Pro)",
+          "type": "concept",
+          "content": {
+            "explanation": "Indexing accesses a single character using a number. Index starts from 0. Slicing retrieves parts of a string using [start:end].",
+            "analogy": {
+              "title": "🍞 Real-World Analogy: Bread Slicing",
+              "description": "Indexing = picking a specific letter from a word. Slicing = cutting a substring from the word like slicing a bread loaf."
+            },
+            "syntax": {
+              "title": "🐍 Python Syntax",
+              "code": "# Indexing\nname = \"Python\"\nprint(name[0])   # P\nprint(name[5])   # n\n\n# Negative Indexing\nprint(name[-1])  # n\nprint(name[-3])  # h\n\n# Slicing\nprint(name[0:3])  # Pyt\nprint(name[2:])   # thon\nprint(name[:4])   # Pyth\n\n# Step Slicing\nprint(name[::2])  # Pto"
+            },
+            "keyNotes": [
+              "name[0] = first character",
+              "name[-1] = last character",
+              "Slicing excludes the end index",
+              "Strings are immutable"
+            ]
+          }
+        },
+        {
+          "id": "4.3",
+          "title": "Common String Methods (Pro)",
+          "type": "concept",
+          "content": {
+            "explanation": "Python provides built-in methods to transform strings: upper/lower, replace, count, find, split, etc.",
+            "analogy": {
+              "title": "🔧 Real-World Analogy: Text Editor Tools",
+              "description": "Think of these methods like tools to edit text in a text editor — find and replace, convert case, split paragraphs."
+            },
+            "syntax": {
+              "title": "🐍 Python Syntax",
+              "code": "text = \"hello world\"\n\nprint(text.upper())      # HELLO WORLD\nprint(text.lower())      # hello world\nprint(text.replace(\"world\", \"Python\"))  # hello Python\nprint(text.split())      # ['hello', 'world']\nprint(text.find(\"o\"))    # 4\nprint(text.count(\"l\"))   # 3"
+            },
+            "keyNotes": [
+              "replace() is non-destructive",
+              "split() gives list",
+              "find() returns index",
+              "Case methods return new strings"
+            ]
+          }
+        },
+        {
+          "id": "4.4",
+          "title": "MCQ: Strings",
+          "type": "mcq",
+          "hideSidebar": true,
+          "content": {
+            "problemTitle": "MCQ on Strings",
+            "question": "What is the output of the following?\n\nword = \"Python\"\nprint(word[1:4])",
+            "hint": "Slicing goes from start → end-1.",
+            "commonDoubts": [
+              "Why does it not include index 4?",
+              "What is slicing rule?",
+              "What is index 1?"
+            ],
+            "options": [
+              "A) Pyt",
+              "B) yth",
+              "C) ytho",
+              "D) ython"
+            ],
+            "correctAnswer": "B",
+            "explanation": "word[1:4] gets characters at index 1, 2, 3 (not 4). 'Python'[1:4] = 'yth'"
+          }
+        },
+        {
+          "id": "4.5",
+          "title": "Coding Task: Extract Substring",
+          "type": "codingTask",
+          "content": {
+            "problemTitle": "Extract Substring",
+            "problemStatement": "Given a string, print the first 3 characters and the last 2 characters.",
+            "inputFormat": "Python",
+            "outputFormat": "Pyt\non",
+            "sampleInput": "Hello",
+            "sampleOutput": "Hel\nlo",
+            "constraints": [
+              "String length ≥ 3"
+            ],
+            "starterCode": "# Read string and extract substrings\n",
+            "solution": "text = input()\nprint(text[:3])\nprint(text[-2:])"
+          }
+        },
+        {
+          "id": "4.6",
+          "title": "Module 4 Test",
+          "type": "moduleTest",
+          "content": {
+            "testTitle": "Module 4: Strings — Test",
+            "questions": [
+              {
+                "id": "4.6.1",
+                "question": "Output?\nprint(\"apple\"[3])",
+                "options": ["A) l", "B) e", "C) p", "D) Error"],
+                "correctAnswer": "A",
+                "explanation": "Index 3 of 'apple' is 'l' (a=0, p=1, p=2, l=3, e=4)"
+              },
+              {
+                "id": "4.6.2",
+                "question": "Output?\nprint(\"hello\".upper())",
+                "options": ["A) hello", "B) HELLO", "C) Hello", "D) Error"],
+                "correctAnswer": "B",
+                "explanation": "upper() converts all characters to uppercase"
+              },
+              {
+                "id": "4.6.3",
+                "question": "Output?\nprint(\"coding\"[1:4])",
+                "options": ["A) odi", "B) cod", "C) din", "D) odi"],
+                "correctAnswer": "A",
+                "explanation": "Indices 1, 2, 3 of 'coding' = 'odi'"
+              },
+              {
+                "id": "4.6.4",
+                "question": "Which is true?",
+                "options": ["A) Strings are mutable", "B) Strings use indexes", "C) Strings cannot be sliced", "D) Strings cannot be length checked"],
+                "correctAnswer": "B",
+                "explanation": "Strings support indexing. They are immutable, can be sliced, and len() works on them."
+              },
+              {
+                "id": "4.6.5",
+                "question": "Output?\nprint(len(\"Python\"))",
+                "options": ["A) 5", "B) 6", "C) 7", "D) Error"],
+                "correctAnswer": "B",
+                "explanation": "'Python' has 6 characters: P-y-t-h-o-n"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "title": "User Inputs",
+      "description": "Learn how to take input from users and convert it into usable data",
+      "duration": "60 mins",
+      "lessons": [
+        {
+          "id": "5.1",
+          "title": "How to Take User Input",
+          "type": "concept",
+          "content": {
+            "explanation": "Python receives user data using the input() function. Whatever the user types is returned as a string, even if it looks like a number. To use numeric values, you must convert them using int() or float(). User input allows your program to be interactive and dynamic.",
+            "analogy": {
+              "title": "🎫 Real-World Analogy: Ticket Counter",
+              "description": "Think of a ticket counter. You give your answer (your name, age, destination), the system reads it, and then processes your booking. Similarly: input() = Python waiting for the user's answer."
+            },
+            "syntax": {
+              "title": "🐍 Python Syntax",
+              "code": "# Basic Input\nname = input(\"Enter your name: \")\nprint(\"Hello,\", name)\n\n# Numeric Input\nage = int(input(\"Enter your age: \"))\nprint(age + 5)\n\n# Float Input\nprice = float(input(\"Enter price: \"))\nprint(price * 1.18)\n\n# Taking two inputs\na = int(input())\nb = int(input())\nprint(a + b)"
+            },
+            "keyNotes": [
+              "Every input is returned as string",
+              "Use int() for whole numbers",
+              "Use float() for decimal numbers",
+              "Prompt text is optional",
+              "Multiple inputs require multiple input() calls"
+            ]
+          }
+        },
+        {
+          "id": "5.2",
+          "title": "Practice Problems on Input (Pro)",
+          "type": "concept",
+          "content": {
+            "explanation": "Practice is essential to master input handling. These problems help you convert inputs, perform operations, and print outputs correctly.",
+            "analogy": {
+              "title": "🏋️ Real-World Analogy: Gym Practice",
+              "description": "Just like gym practice builds muscles, coding practice builds your programming skills. Each problem strengthens your understanding."
+            },
+            "syntax": {
+              "title": "🐍 Python Syntax",
+              "code": "# Double a number\nnum = int(input())\nprint(num * 2)\n\n# Add salary + bonus\nsalary = int(input())\nbonus = int(input())\nprint(salary + bonus)\n\n# Read name + age\nname = input()\nage = int(input())\nprint(\"Name:\", name)\nprint(\"Age:\", age)"
+            },
+            "keyNotes": [
+              "Focus on datatype conversion",
+              "Ensure proper output formatting",
+              "Always test with different inputs"
+            ]
+          }
+        },
+        {
+          "id": "5.3",
+          "title": "MCQ: User Input",
+          "type": "mcq",
+          "hideSidebar": true,
+          "content": {
+            "problemTitle": "MCQ on User Input",
+            "question": "What is the datatype of the value returned by the following?\n\nx = input()",
+            "hint": "input() always returns a string.",
+            "commonDoubts": [
+              "Does input() detect numbers automatically?",
+              "Why do we need conversion?",
+              "Difference between text and numeric input?"
+            ],
+            "options": [
+              "A) int",
+              "B) float",
+              "C) str",
+              "D) depends on input"
+            ],
+            "correctAnswer": "C",
+            "explanation": "input() always returns a string, regardless of what the user types. Even numbers are stored as strings."
+          }
+        },
+        {
+          "id": "5.4",
+          "title": "Coding Task: Basic Calculator Using User Input",
+          "type": "codingTask",
+          "content": {
+            "problemTitle": "Basic Calculator Using User Input",
+            "problemStatement": "Write a program that takes two integers from the user and prints:\n• Sum\n• Difference\n• Product\n• Quotient (float)",
+            "inputFormat": "10\n5",
+            "outputFormat": "Sum: 15\nDifference: 5\nProduct: 50\nQuotient: 2.0",
+            "sampleInput": "20\n4",
+            "sampleOutput": "Sum: 24\nDifference: 16\nProduct: 80\nQuotient: 5.0",
+            "constraints": [
+              "Numbers range from -10⁶ to 10⁶"
+            ],
+            "starterCode": "# Read two numbers and perform calculations\n",
+            "solution": "a = int(input())\nb = int(input())\n\nprint(\"Sum:\", a + b)\nprint(\"Difference:\", a - b)\nprint(\"Product:\", a * b)\nprint(\"Quotient:\", a / b)"
+          }
+        },
+        {
+          "id": "5.5",
+          "title": "Module 5 Test",
+          "type": "moduleTest",
+          "content": {
+            "testTitle": "Module 5: User Inputs — Test",
+            "questions": [
+              {
+                "id": "5.5.1",
+                "question": "What does input() return?",
+                "options": ["A) int", "B) bool", "C) str", "D) float"],
+                "correctAnswer": "C",
+                "explanation": "input() always returns a string"
+              },
+              {
+                "id": "5.5.2",
+                "question": "Output?\nx = input()\nprint(type(x))\n(Input: 45)",
+                "options": ["A) int", "B) str", "C) float", "D) bool"],
+                "correctAnswer": "B",
+                "explanation": "Even if you type 45, input() returns it as a string"
+              },
+              {
+                "id": "5.5.3",
+                "question": "Output?\nnum = int(\"50\")\nprint(num + 10)",
+                "options": ["A) 60", "B) 5010", "C) Error", "D) \"60\""],
+                "correctAnswer": "A",
+                "explanation": "int(\"50\") = 50, then 50 + 10 = 60"
+              },
+              {
+                "id": "5.5.4",
+                "question": "Which is correct?",
+                "options": ["A) int(input()) converts text to number", "B) input(int()) converts number to text", "C) input() only accepts numbers", "D) input() cannot take strings"],
+                "correctAnswer": "A",
+                "explanation": "int(input()) first gets string input, then converts to integer"
+              },
+              {
+                "id": "5.5.5",
+                "question": "Output?\na = float(input())\nb = float(input())\nprint(a + b)\n(Input: 1.5, 2.5)",
+                "options": ["A) 15", "B) 1.52.5", "C) 4.0", "D) Error"],
+                "correctAnswer": "C",
+                "explanation": "float(\"1.5\") = 1.5, float(\"2.5\") = 2.5, sum = 4.0"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "title": "Conditionals",
+      "description": "Make decisions in your code with if, elif, and else statements",
+      "duration": "70 mins",
+      "lessons": [
+        {
+          "id": "6.1",
+          "title": "Introduction to Conditionals",
+          "type": "concept",
+          "content": {
+            "explanation": "Conditionals let your program make decisions! The `if` statement checks a condition — if it's True, the indented code runs. Use `else` for what happens when the condition is False. Use `elif` (else if) to check multiple conditions. This is the foundation of decision-making in programming.",
+            "analogy": {
+              "title": "🚦 Real-World Analogy: Traffic Signal",
+              "description": "Conditionals work like traffic rules. IF the light is green, you go. ELIF (else if) the light is yellow, you slow down. ELSE (red light), you stop. Your program checks conditions and takes different actions based on what's true."
+            },
+            "syntax": {
+              "title": "🐍 Python Syntax",
+              "code": "# Simple if statement\nage = 18\nif age >= 18:\n    print(\"You can vote!\")\n\n# if-else\ntemperature = 35\nif temperature > 30:\n    print(\"It's hot! 🔥\")\nelse:\n    print(\"Nice weather! 😊\")\n\n# if-elif-else (multiple conditions)\nmarks = 75\nif marks >= 90:\n    grade = \"A+\"\nelif marks >= 80:\n    grade = \"A\"\nelif marks >= 70:\n    grade = \"B\"\nelif marks >= 60:\n    grade = \"C\"\nelse:\n    grade = \"F\"\nprint(\"Grade:\", grade)"
+            },
+            "keyNotes": [
+              "if checks a condition",
+              "elif checks additional conditions",
+              "else handles all other cases",
+              "Indentation is crucial in Python",
+              "Only one branch executes"
+            ]
+          }
+        },
+        {
+          "id": "6.2",
+          "title": "Comparison Operators in Conditions",
+          "type": "concept",
+          "content": {
+            "explanation": "Comparison operators are used inside conditions to compare values. They return True or False which determines which branch of code runs.",
+            "analogy": {
+              "title": "⚖️ Real-World Analogy: Judge's Decision",
+              "description": "Like a judge comparing evidence to make a verdict, comparison operators compare values to determine the outcome."
+            },
+            "syntax": {
+              "title": "🐍 Python Syntax",
+              "code": "# Comparison Operators\n# ==  Equal to\n# !=  Not equal to\n# >   Greater than\n# <   Less than\n# >=  Greater than or equal\n# <=  Less than or equal\n\nx = 10\nprint(x == 10)  # True\nprint(x != 5)   # True\nprint(x > 5)    # True\nprint(x < 5)    # False\nprint(x >= 10)  # True\nprint(x <= 9)   # False"
+            },
+            "keyNotes": [
+              "== checks equality (not =)",
+              "!= means not equal",
+              "All comparisons return True or False"
+            ]
+          }
+        },
+        {
+          "id": "6.3",
+          "title": "Logical Operators in Conditions",
+          "type": "concept",
+          "content": {
+            "explanation": "Logical operators (and, or, not) combine multiple conditions to create complex decision-making logic.",
+            "analogy": {
+              "title": "🔐 Real-World Analogy: Bank Vault",
+              "description": "A bank vault might need TWO keys (and), OR a manager's override (or). NOT reverses a condition—like 'not locked' means open."
+            },
+            "syntax": {
+              "title": "🐍 Python Syntax",
+              "code": "# Logical Operators\nage = 25\nhas_license = True\n\n# and - both must be True\nif age >= 18 and has_license:\n    print(\"You can drive!\")\n\n# or - at least one True\nif age < 13 or age > 60:\n    print(\"Special discount!\")\n\n# not - reverses the condition\nis_raining = False\nif not is_raining:\n    print(\"Go outside!\")"
+            },
+            "keyNotes": [
+              "and requires ALL conditions True",
+              "or requires AT LEAST ONE True",
+              "not reverses True/False"
+            ]
+          }
+        },
+        {
+          "id": "6.4",
+          "title": "MCQ: Conditionals",
+          "type": "mcq",
+          "hideSidebar": true,
+          "content": {
+            "problemTitle": "MCQ on Conditionals",
+            "question": "What will this code print?\n\nx = 10\nif x > 5:\n    print(\"A\")\nelif x > 8:\n    print(\"B\")\nelse:\n    print(\"C\")",
+            "hint": "Python checks conditions from top to bottom and stops at the first True.",
+            "commonDoubts": [
+              "Does Python check all conditions?",
+              "What if multiple conditions are True?",
+              "When does else run?"
+            ],
+            "options": [
+              "A) A",
+              "B) B",
+              "C) A and B",
+              "D) C"
+            ],
+            "correctAnswer": "A",
+            "explanation": "Python checks conditions from top to bottom. The first condition (x > 5) is True, so it prints 'A' and skips ALL remaining elif/else blocks."
+          }
+        },
+        {
+          "id": "6.5",
+          "title": "Coding Task: Ticket Price Calculator",
+          "type": "codingTask",
+          "content": {
+            "problemTitle": "Movie Ticket Price Calculator",
+            "problemStatement": "Create a movie ticket price calculator based on age:\n• Children (under 12): ₹100\n• Teenagers (12-17): ₹150\n• Adults (18-59): ₹200\n• Seniors (60+): ₹120\n\nAsk the user for their age and print the ticket price.",
+            "inputFormat": "25",
+            "outputFormat": "Ticket Price: ₹200",
+            "sampleInput": "10",
+            "sampleOutput": "Ticket Price: ₹100",
+            "constraints": [
+              "Age is between 1 and 120"
+            ],
+            "starterCode": "# Get age and calculate ticket price\n",
+            "solution": "age = int(input())\n\nif age < 12:\n    price = 100\nelif age < 18:\n    price = 150\nelif age < 60:\n    price = 200\nelse:\n    price = 120\n\nprint(\"Ticket Price: ₹\" + str(price))"
+          }
+        },
+        {
+          "id": "6.6",
+          "title": "Module 6 Test",
+          "type": "moduleTest",
+          "content": {
+            "testTitle": "Module 6: Conditionals — Test",
+            "questions": [
+              {
+                "id": "6.6.1",
+                "question": "Which keyword is used for 'otherwise' in Python?",
+                "options": ["A) elif", "B) else", "C) otherwise", "D) default"],
+                "correctAnswer": "B",
+                "explanation": "else is used for the 'otherwise' case when no conditions are True"
+              },
+              {
+                "id": "6.6.2",
+                "question": "What does 'elif' stand for?",
+                "options": ["A) else if", "B) end loop if", "C) equal if", "D) element if"],
+                "correctAnswer": "A",
+                "explanation": "elif is short for 'else if' - checks another condition"
+              },
+              {
+                "id": "6.6.3",
+                "question": "Output?\nif 5 > 3 and 2 > 4:\n    print(\"Yes\")\nelse:\n    print(\"No\")",
+                "options": ["A) Yes", "B) No", "C) Error", "D) Nothing"],
+                "correctAnswer": "B",
+                "explanation": "5 > 3 is True, but 2 > 4 is False. True and False = False, so 'No' prints"
+              },
+              {
+                "id": "6.6.4",
+                "question": "Output?\nx = 15\nif x > 10:\n    print(\"Big\")\nif x > 5:\n    print(\"Medium\")",
+                "options": ["A) Big", "B) Medium", "C) Big and Medium", "D) Nothing"],
+                "correctAnswer": "C",
+                "explanation": "These are TWO separate if statements, not if-elif. Both conditions are True, so both print."
+              },
+              {
+                "id": "6.6.5",
+                "question": "Which is the correct syntax?",
+                "options": ["A) if x == 5:", "B) if x = 5:", "C) if (x == 5)", "D) if x equals 5:"],
+                "correctAnswer": "A",
+                "explanation": "if x == 5: is correct. == is comparison, = is assignment"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "title": "Loops",
+      "description": "Automate repetitive tasks with for and while loops",
+      "duration": "75 mins",
+      "lessons": [
+        {
+          "id": "7.1",
+          "title": "Introduction to Loops",
+          "type": "concept",
+          "content": {
+            "explanation": "Loops repeat code automatically! A `for` loop iterates over a sequence (like a range of numbers or characters in a string). A `while` loop keeps running as long as a condition is True. Loops are essential for automating repetitive tasks.",
+            "analogy": {
+              "title": "🔄 Real-World Analogy: Assembly Line",
+              "description": "Imagine an assembly line in a factory. A FOR loop is like saying 'paint exactly 100 cars' — you know how many times to repeat. A WHILE loop is like saying 'keep painting cars until the paint runs out' — you keep going until a condition changes."
+            },
+            "syntax": {
+              "title": "🐍 Python Syntax",
+              "code": "# FOR loop with range\nfor i in range(5):        # 0, 1, 2, 3, 4\n    print(i)\n\nfor i in range(1, 6):     # 1, 2, 3, 4, 5\n    print(i)\n\nfor i in range(0, 10, 2): # 0, 2, 4, 6, 8 (step of 2)\n    print(i)\n\n# FOR loop with string\nfor char in \"Python\":\n    print(char)  # P y t h o n (each on new line)"
+            },
+            "keyNotes": [
+              "for loops iterate a known number of times",
+              "range(n) goes from 0 to n-1",
+              "range(start, stop, step) for custom ranges",
+              "Strings can be iterated character by character"
+            ]
+          }
+        },
+        {
+          "id": "7.2",
+          "title": "While Loops (Pro)",
+          "type": "concept",
+          "content": {
+            "explanation": "While loops continue executing as long as a condition remains True. They're useful when you don't know in advance how many iterations you need.",
+            "analogy": {
+              "title": "🎮 Real-World Analogy: Video Game",
+              "description": "A while loop is like playing a video game until you run out of lives. You keep playing (looping) while lives > 0."
+            },
+            "syntax": {
+              "title": "🐍 Python Syntax",
+              "code": "# WHILE loop\ncount = 1\nwhile count <= 5:\n    print(count)\n    count += 1  # Don't forget to update!\n\n# Countdown example\nn = 5\nwhile n > 0:\n    print(n)\n    n -= 1\nprint(\"Blast off!\")"
+            },
+            "keyNotes": [
+              "while loops run as long as condition is True",
+              "Always update the loop variable to avoid infinite loops",
+              "Use when number of iterations is unknown"
+            ]
+          }
+        },
+        {
+          "id": "7.3",
+          "title": "Break and Continue",
+          "type": "concept",
+          "content": {
+            "explanation": "The `break` statement exits a loop immediately. The `continue` statement skips the current iteration and moves to the next one. These control statements give you fine-grained control over loop execution.",
+            "analogy": {
+              "title": "🚨 Real-World Analogy: Emergency Exit",
+              "description": "break is like an emergency exit — you leave immediately. continue is like skipping a boring chapter — you move to the next one without finishing the current."
+            },
+            "syntax": {
+              "title": "🐍 Python Syntax",
+              "code": "# break - exit loop early\nfor i in range(10):\n    if i == 5:\n        break      # Stop when i is 5\n    print(i)       # Prints 0, 1, 2, 3, 4\n\n# continue - skip current iteration\nfor i in range(5):\n    if i == 2:\n        continue   # Skip when i is 2\n    print(i)       # Prints 0, 1, 3, 4\n\n# Practical: Sum until negative\ntotal = 0\nfor num in [1, 5, 3, -1, 7]:\n    if num < 0:\n        break\n    total += num\nprint(total)  # 9"
+            },
+            "keyNotes": [
+              "break exits the entire loop",
+              "continue skips to next iteration",
+              "Both work in for and while loops"
+            ]
+          }
+        },
+        {
+          "id": "7.4",
+          "title": "MCQ: Loops",
+          "type": "mcq",
+          "hideSidebar": true,
+          "content": {
+            "problemTitle": "MCQ on Loops",
+            "question": "How many times will this loop print \"Hello\"?\n\nfor i in range(2, 8, 2):\n    print(\"Hello\")",
+            "hint": "range(2, 8, 2) generates values starting at 2, stepping by 2, stopping before 8.",
+            "commonDoubts": [
+              "What does the third parameter mean?",
+              "Is 8 included in the range?",
+              "What values does range generate?"
+            ],
+            "options": [
+              "A) 6 times",
+              "B) 4 times",
+              "C) 3 times",
+              "D) 8 times"
+            ],
+            "correctAnswer": "C",
+            "explanation": "range(2, 8, 2) generates: 2, 4, 6 (starts at 2, stops before 8, steps by 2). That's 3 values, so 'Hello' prints 3 times."
+          }
+        },
+        {
+          "id": "7.5",
+          "title": "Coding Task: Multiplication Table",
+          "type": "codingTask",
+          "content": {
+            "problemTitle": "Print Multiplication Table",
+            "problemStatement": "Create a program that:\n1. Asks the user for a number\n2. Prints the multiplication table for that number (1 to 10)\n\nExample output for number 5:\n5 x 1 = 5\n5 x 2 = 10\n...\n5 x 10 = 50",
+            "inputFormat": "7",
+            "outputFormat": "7 x 1 = 7\n7 x 2 = 14\n7 x 3 = 21\n7 x 4 = 28\n7 x 5 = 35\n7 x 6 = 42\n7 x 7 = 49\n7 x 8 = 56\n7 x 9 = 63\n7 x 10 = 70",
+            "sampleInput": "5",
+            "sampleOutput": "5 x 1 = 5\n5 x 2 = 10\n5 x 3 = 15\n5 x 4 = 20\n5 x 5 = 25\n5 x 6 = 30\n5 x 7 = 35\n5 x 8 = 40\n5 x 9 = 45\n5 x 10 = 50",
+            "constraints": [
+              "Number is between 1 and 100"
+            ],
+            "starterCode": "# Print multiplication table\n",
+            "solution": "num = int(input())\n\nfor i in range(1, 11):\n    result = num * i\n    print(num, \"x\", i, \"=\", result)"
+          }
+        },
+        {
+          "id": "7.6",
+          "title": "Module 7 Test",
+          "type": "moduleTest",
+          "content": {
+            "testTitle": "Module 7: Loops — Test",
+            "questions": [
+              {
+                "id": "7.6.1",
+                "question": "What does range(5) generate?",
+                "options": ["A) 1, 2, 3, 4, 5", "B) 0, 1, 2, 3, 4", "C) 0, 1, 2, 3, 4, 5", "D) 1, 2, 3, 4"],
+                "correctAnswer": "B",
+                "explanation": "range(5) generates 0, 1, 2, 3, 4 (5 values, starting from 0)"
+              },
+              {
+                "id": "7.6.2",
+                "question": "Which loop runs while a condition is True?",
+                "options": ["A) for", "B) while", "C) do", "D) repeat"],
+                "correctAnswer": "B",
+                "explanation": "while loops run as long as the condition is True"
+              },
+              {
+                "id": "7.6.3",
+                "question": "What does 'break' do?",
+                "options": ["A) Pauses the loop", "B) Exits the loop", "C) Restarts the loop", "D) Skips one iteration"],
+                "correctAnswer": "B",
+                "explanation": "break immediately exits/terminates the loop"
+              },
+              {
+                "id": "7.6.4",
+                "question": "Output?\nfor i in range(3):\n    print(i, end=\" \")",
+                "options": ["A) 1 2 3", "B) 0 1 2", "C) 0 1 2 3", "D) 1 2"],
+                "correctAnswer": "B",
+                "explanation": "range(3) = 0, 1, 2. The end=\" \" prints them on same line with space"
+              },
+              {
+                "id": "7.6.5",
+                "question": "What does 'continue' do?",
+                "options": ["A) Exits the loop", "B) Pauses the loop", "C) Skips to next iteration", "D) Restarts from beginning"],
+                "correctAnswer": "C",
+                "explanation": "continue skips the rest of current iteration and moves to the next"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "title": "Functions",
+      "description": "Create reusable code blocks with functions",
+      "duration": "80 mins",
+      "lessons": [
+        {
+          "id": "8.1",
+          "title": "Introduction to Functions",
+          "type": "concept",
+          "content": {
+            "explanation": "Functions are reusable blocks of code that perform specific tasks. Define a function using `def function_name():`. Functions can accept inputs (parameters) and return outputs using `return`. This makes your code organized, reusable, and easier to debug.",
+            "analogy": {
+              "title": "🍳 Real-World Analogy: Recipe Book",
+              "description": "A function is like a recipe. You write it once (define it), and you can use it whenever you want (call it). The recipe might need ingredients (parameters) and produces a dish (return value). Just like you don't rewrite the recipe every time you cook, you don't rewrite code — you just call the function!"
+            },
+            "syntax": {
+              "title": "🐍 Python Syntax",
+              "code": "# Simple function (no parameters)\ndef greet():\n    print(\"Hello, Welcome!\")\n\ngreet()  # Call the function\n\n# Function with parameters\ndef greet_user(name):\n    print(f\"Hello, {name}!\")\n\ngreet_user(\"Rahul\")    # Hello, Rahul!\ngreet_user(\"Priya\")    # Hello, Priya!"
+            },
+            "keyNotes": [
+              "def keyword defines a function",
+              "Function names follow variable naming rules",
+              "Parameters are inputs to the function",
+              "Call a function by using its name with ()"
+            ]
+          }
+        },
+        {
+          "id": "8.2",
+          "title": "Return Values",
+          "type": "concept",
+          "content": {
+            "explanation": "Functions can return values using the `return` statement. The returned value can be stored in a variable or used directly. Functions without return statements return None by default.",
+            "analogy": {
+              "title": "🏭 Real-World Analogy: Factory Output",
+              "description": "A function is like a factory. You give it raw materials (parameters), it processes them, and gives you a finished product (return value)."
+            },
+            "syntax": {
+              "title": "🐍 Python Syntax",
+              "code": "# Function with return value\ndef add(a, b):\n    return a + b\n\nresult = add(5, 3)     # result = 8\nprint(result)\n\n# Multiple return values\ndef calculate(a, b):\n    sum_val = a + b\n    diff_val = a - b\n    return sum_val, diff_val\n\ns, d = calculate(10, 4)\nprint(f\"Sum: {s}, Difference: {d}\")"
+            },
+            "keyNotes": [
+              "return sends a value back to the caller",
+              "Functions can return multiple values",
+              "Without return, function returns None",
+              "Code after return doesn't execute"
+            ]
+          }
+        },
+        {
+          "id": "8.3",
+          "title": "Default Parameters",
+          "type": "concept",
+          "content": {
+            "explanation": "Default parameters allow functions to have optional arguments with preset values. If the caller doesn't provide a value, the default is used.",
+            "analogy": {
+              "title": "☕ Real-World Analogy: Coffee Order",
+              "description": "Like ordering coffee — if you don't specify milk, they use the default (regular milk). But you can customize by specifying oat milk."
+            },
+            "syntax": {
+              "title": "🐍 Python Syntax",
+              "code": "# Function with default parameter\ndef power(base, exp=2):\n    return base ** exp\n\nprint(power(5))        # 25 (uses default exp=2)\nprint(power(5, 3))     # 125 (exp=3)\n\n# Practical example\ndef greet(name, greeting=\"Hello\"):\n    print(f\"{greeting}, {name}!\")\n\ngreet(\"Gouri\")              # Hello, Gouri!\ngreet(\"Gouri\", \"Welcome\")   # Welcome, Gouri!"
+            },
+            "keyNotes": [
+              "Default parameters have = in definition",
+              "Put default parameters after required ones",
+              "Caller can override default values"
+            ]
+          }
+        },
+        {
+          "id": "8.4",
+          "title": "Practical Functions",
+          "type": "concept",
+          "content": {
+            "explanation": "Functions help organize code into logical, reusable pieces. Common patterns include validation functions, calculation functions, and utility functions.",
+            "analogy": {
+              "title": "🧰 Real-World Analogy: Toolbox",
+              "description": "Functions are like tools in a toolbox. Each tool has a specific purpose. You pick the right tool for the job and use it whenever needed."
+            },
+            "syntax": {
+              "title": "🐍 Python Syntax",
+              "code": "# Validation function\ndef is_even(number):\n    return number % 2 == 0\n\nprint(is_even(4))   # True\nprint(is_even(7))   # False\n\n# Calculation function\ndef calculate_area(length, width):\n    return length * width\n\narea = calculate_area(5, 3)\nprint(\"Area:\", area)  # Area: 15\n\n# Utility function\ndef format_name(first, last):\n    return f\"{first.title()} {last.upper()}\"\n\nprint(format_name(\"john\", \"doe\"))  # John DOE"
+            },
+            "keyNotes": [
+              "Keep functions focused on one task",
+              "Use descriptive function names",
+              "Document complex functions",
+              "Test functions with different inputs"
+            ]
+          }
+        },
+        {
+          "id": "8.5",
+          "title": "MCQ: Functions",
+          "type": "mcq",
+          "hideSidebar": true,
+          "content": {
+            "problemTitle": "MCQ on Functions",
+            "question": "What does this function return?\n\ndef mystery(x):\n    if x > 0:\n        return \"Positive\"\n    elif x < 0:\n        return \"Negative\"\n\nprint(mystery(0))",
+            "hint": "What happens when x is exactly 0?",
+            "commonDoubts": [
+              "What if no condition is True?",
+              "What does a function return by default?",
+              "Does every function need a return?"
+            ],
+            "options": [
+              "A) \"Positive\"",
+              "B) \"Negative\"",
+              "C) 0",
+              "D) None"
+            ],
+            "correctAnswer": "D",
+            "explanation": "When x is 0, neither condition (x > 0 or x < 0) is True, so no return statement executes. In Python, if a function doesn't explicitly return something, it returns None by default."
+          }
+        },
+        {
+          "id": "8.6",
+          "title": "Coding Task: Grade Calculator Function",
+          "type": "codingTask",
+          "content": {
+            "problemTitle": "Grade Calculator Function",
+            "problemStatement": "Create a function called `calculate_grade` that:\n1. Takes a marks parameter (0-100)\n2. Returns the grade based on:\n   • 90-100: \"A+\"\n   • 80-89: \"A\"\n   • 70-79: \"B\"\n   • 60-69: \"C\"\n   • Below 60: \"F\"\n3. Test it with marks: 95, 82, 73, 58",
+            "inputFormat": "95\n82\n73\n58",
+            "outputFormat": "A+\nA\nB\nF",
+            "sampleInput": "85",
+            "sampleOutput": "A",
+            "constraints": [
+              "Marks are between 0 and 100"
+            ],
+            "starterCode": "# Define the function\ndef calculate_grade(marks):\n    # Add your logic here\n    pass\n\n# Test the function\n",
+            "solution": "def calculate_grade(marks):\n    if marks >= 90:\n        return \"A+\"\n    elif marks >= 80:\n        return \"A\"\n    elif marks >= 70:\n        return \"B\"\n    elif marks >= 60:\n        return \"C\"\n    else:\n        return \"F\"\n\nprint(calculate_grade(95))\nprint(calculate_grade(82))\nprint(calculate_grade(73))\nprint(calculate_grade(58))"
+          }
+        },
+        {
+          "id": "8.7",
+          "title": "Module 8 Test",
+          "type": "moduleTest",
+          "content": {
+            "testTitle": "Module 8: Functions — Test",
+            "questions": [
+              {
+                "id": "8.7.1",
+                "question": "Which keyword is used to define a function?",
+                "options": ["A) function", "B) def", "C) func", "D) define"],
+                "correctAnswer": "B",
+                "explanation": "def is the keyword used to define functions in Python"
+              },
+              {
+                "id": "8.7.2",
+                "question": "What does 'return' do in a function?",
+                "options": ["A) Prints a value", "B) Ends the program", "C) Sends a value back to caller", "D) Loops the function"],
+                "correctAnswer": "C",
+                "explanation": "return sends a value back to where the function was called"
+              },
+              {
+                "id": "8.7.3",
+                "question": "Output?\ndef add(a, b=5):\n    return a + b\nprint(add(3))",
+                "options": ["A) 8", "B) 3", "C) 5", "D) Error"],
+                "correctAnswer": "A",
+                "explanation": "add(3) uses default b=5, so 3 + 5 = 8"
+              },
+              {
+                "id": "8.7.4",
+                "question": "What is returned by a function with no return statement?",
+                "options": ["A) 0", "B) \"\"", "C) None", "D) Error"],
+                "correctAnswer": "C",
+                "explanation": "Functions without return statements return None by default"
+              },
+              {
+                "id": "8.7.5",
+                "question": "Can a function call another function?",
+                "options": ["A) Yes", "B) No", "C) Only in classes", "D) Only with import"],
+                "correctAnswer": "A",
+                "explanation": "Functions can call other functions, enabling code organization and reuse"
+              }
+            ]
+          }
+        },
+        {
+          "id": "8.8",
+          "title": "🎉 Congratulations!",
+          "type": "completion",
+          "content": {
+            "message": "You've completed the Python Fundamentals: Complete Beginner Program!",
+            "summary": [
+              "✅ Printing output with print()",
+              "✅ Variables and data types",
+              "✅ Operators (arithmetic, relational, logical)",
+              "✅ String manipulation and slicing",
+              "✅ Taking user input",
+              "✅ Making decisions with conditionals",
+              "✅ Automating with loops",
+              "✅ Creating reusable functions"
+            ],
+            "nextSteps": [
+              "Practice more coding challenges",
+              "Build mini projects",
+              "Explore data structures (lists, dictionaries)",
+              "Learn about file handling",
+              "Try the DSA Roadmap course!"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

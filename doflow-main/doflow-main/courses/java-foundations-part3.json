@@ -1,0 +1,885 @@
+{
+  "continueFrom": "Module 8",
+  "sections": [
+    {
+      "title": "Arrays",
+      "lessons": [
+        {
+          "title": "Array Basics",
+          "type": "concept",
+          "duration": "15 min",
+          "content": {
+            "explanation": "Arrays store multiple values of the same type in a single variable, accessed using indices starting from 0. You declare arrays by specifying the type followed by square brackets. Arrays have fixed size determined at creation. They're fundamental data structures that enable efficient storage and access of collections. Instead of declaring separate variables for each value, arrays group related data logically. Understanding arrays is essential because most real programs work with collections of data - student grades, product prices, temperature readings. Arrays provide the foundation for more complex data structures.",
+            "realWorldAnalogy": "Think of an array as a row of mailboxes in an apartment building. Each mailbox has a number (index), and all mailboxes are the same size and type. Mailbox 0 is the first one, mailbox 1 is the second, and so on. You can quickly access any mailbox if you know its number. Unlike separate variables (individual houses scattered around town), arrays keep related items organized in one place with systematic access.",
+            "syntaxExample": "public class Arrays {\n    public static void main(String[] args) {\n        // Declare and initialize\n        int[] numbers = new int[5];\n        numbers[0] = 10;\n        numbers[1] = 20;\n        numbers[2] = 30;\n        numbers[3] = 40;\n        numbers[4] = 50;\n        \n        // Direct initialization\n        String[] names = {\"Alice\", \"Bob\", \"Charlie\"};\n        \n        // Access elements\n        System.out.println(numbers[2]);  // 30\n        System.out.println(names[0]);    // Alice\n        \n        // Array length\n        System.out.println(\"Size: \" + numbers.length);\n    }\n}",
+            "keyNotes": [
+              "Arrays have fixed size set at creation",
+              "Indices start at 0, last index is length-1",
+              "Use .length to get array size",
+              "All elements must be the same type",
+              "ArrayIndexOutOfBoundsException if accessing invalid index"
+            ]
+          }
+        },
+        {
+          "title": "Array Operations",
+          "type": "concept",
+          "duration": "12 min",
+          "content": {
+            "explanation": "Common array operations include iterating through elements, searching for values, finding maximum/minimum, calculating sum/average, and reversing elements. Use for loops to traverse arrays systematically. Enhanced for loops (for-each) provide cleaner syntax when you don't need indices. Arrays can be passed to methods and returned from methods. Understanding these operations is crucial because data processing - sorting, filtering, transforming - forms the core of programming. These fundamental operations combine to solve complex problems.",
+            "realWorldAnalogy": "Array operations are like managing a bookshelf. Iterating is walking along the shelf reading each title. Searching is looking for a specific book. Finding the max is finding the thickest book. Calculating sum is counting total pages. Reversing is rearranging books from right-to-left order. Just as you have standard ways to organize and search your bookshelf, arrays have standard operations for processing data.",
+            "syntaxExample": "public class ArrayOperations {\n    public static void main(String[] args) {\n        int[] numbers = {10, 25, 5, 30, 15};\n        \n        // Find sum\n        int sum = 0;\n        for (int i = 0; i < numbers.length; i++) {\n            sum += numbers[i];\n        }\n        System.out.println(\"Sum: \" + sum);\n        \n        // Find maximum\n        int max = numbers[0];\n        for (int num : numbers) {\n            if (num > max) {\n                max = num;\n            }\n        }\n        System.out.println(\"Max: \" + max);\n        \n        // Print array\n        for (int num : numbers) {\n            System.out.print(num + \" \");\n        }\n    }\n}",
+            "keyNotes": [
+              "Use regular for loop when you need indices",
+              "Use for-each loop for simple traversal",
+              "Initialize max/min with first element",
+              "Arrays are passed by reference to methods",
+              "Common operations: sum, average, max, min, search"
+            ]
+          }
+        },
+        {
+          "title": "MCQ: Array Indexing",
+          "type": "mcq",
+          "duration": "5 min",
+          "hideSidebar": true,
+          "content": {
+            "problem": "Understanding Array Access",
+            "question": "If int[] arr = {5, 10, 15, 20}, what is arr[2]?",
+            "hint": "Remember array indices start at 0.",
+            "commonDoubts": "Array indices start at 0. So arr[0]=5, arr[1]=10, arr[2]=15, arr[3]=20. The index represents the position counting from 0, not from 1.",
+            "options": [
+              "10",
+              "15",
+              "20",
+              "Error"
+            ],
+            "correctAnswer": 1,
+            "explanation": "Array indices start at 0. arr[0] is 5, arr[1] is 10, arr[2] is 15, and arr[3] is 20. So arr[2] returns 15, the third element."
+          }
+        },
+        {
+          "title": "Coding Task: Array Sum",
+          "type": "coding",
+          "duration": "15 min",
+          "hideSidebar": true,
+          "content": {
+            "problem": "Calculate Array Average",
+            "description": "Given n integers in an array, calculate and print their average (as an integer).",
+            "inputFormat": "First line: n (number of elements), Next n lines: array elements",
+            "outputFormat": "One integer: average of array elements",
+            "sampleInput": "5\n10\n20\n30\n40\n50",
+            "sampleOutput": "30",
+            "constraints": "1 <= n <= 100, all elements are positive integers",
+            "starterCode": "import java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int[] arr = new int[n];\n        \n        // Read array elements\n        for (int i = 0; i < n; i++) {\n            arr[i] = sc.nextInt();\n        }\n        \n        // Calculate and print average\n        \n    }\n}",
+            "solution": "import java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int[] arr = new int[n];\n        \n        for (int i = 0; i < n; i++) {\n            arr[i] = sc.nextInt();\n        }\n        \n        int sum = 0;\n        for (int i = 0; i < n; i++) {\n            sum += arr[i];\n        }\n        \n        int average = sum / n;\n        System.out.println(average);\n    }\n}",
+            "testCases": [
+              {
+                "input": "5\n10\n20\n30\n40\n50",
+                "output": "30"
+              },
+              {
+                "input": "3\n100\n200\n300",
+                "output": "200"
+              }
+            ]
+          }
+        },
+        {
+          "title": "Module 9 Test",
+          "type": "test",
+          "duration": "15 min",
+          "hideSidebar": true,
+          "content": {
+            "questions": [
+              {
+                "question": "What is the first index of an array?",
+                "options": [
+                  "1",
+                  "0",
+                  "-1",
+                  "Depends on size"
+                ],
+                "correctAnswer": 1
+              },
+              {
+                "question": "How do you get the length of an array arr?",
+                "options": [
+                  "arr.length()",
+                  "arr.size",
+                  "arr.length",
+                  "length(arr)"
+                ],
+                "correctAnswer": 2
+              },
+              {
+                "question": "Can an array store different data types?",
+                "options": [
+                  "Yes, always",
+                  "No, all elements must be same type",
+                  "Only with Object type",
+                  "Depends on declaration"
+                ],
+                "correctAnswer": 1
+              },
+              {
+                "question": "What happens if you access arr[10] when arr.length is 5?",
+                "options": [
+                  "Returns 0",
+                  "Returns null",
+                  "ArrayIndexOutOfBoundsException",
+                  "Expands array automatically"
+                ],
+                "correctAnswer": 2
+              },
+              {
+                "question": "Which loop is best for simple array traversal?",
+                "options": [
+                  "while loop",
+                  "do-while loop",
+                  "for-each loop",
+                  "switch statement"
+                ],
+                "correctAnswer": 2
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "title": "Methods (Functions)",
+      "lessons": [
+        {
+          "title": "Method Basics",
+          "type": "concept",
+          "duration": "15 min",
+          "content": {
+            "explanation": "Methods are reusable blocks of code that perform specific tasks. They take inputs (parameters), process them, and can return outputs. Methods improve code organization, reusability, and readability. Instead of repeating the same code, you define it once in a method and call it whenever needed. Methods have four components: return type (what data it returns), name (identifier), parameters (inputs), and body (implementation). Understanding methods is fundamental because they're the building blocks of structured programming, enabling modular design and code maintainability.",
+            "realWorldAnalogy": "A method is like a recipe. The method name is the recipe title. Parameters are the ingredients you need to provide. The method body contains the steps to follow. The return value is the finished dish. Just as you can use the same recipe multiple times with different ingredients to make variations of a dish, you can call a method multiple times with different arguments to get different results.",
+            "syntaxExample": "public class Methods {\n    // Method with return value\n    public static int add(int a, int b) {\n        return a + b;\n    }\n    \n    // Method without return (void)\n    public static void greet(String name) {\n        System.out.println(\"Hello, \" + name + \"!\");\n    }\n    \n    // Method with no parameters\n    public static int getRandomNumber() {\n        return 42;\n    }\n    \n    public static void main(String[] args) {\n        int sum = add(10, 20);\n        System.out.println(\"Sum: \" + sum);\n        \n        greet(\"Alice\");\n        \n        int num = getRandomNumber();\n        System.out.println(num);\n    }\n}",
+            "keyNotes": [
+              "Syntax: returnType methodName(parameters) { body }",
+              "Use void when method doesn't return anything",
+              "Methods must be called to execute",
+              "Parameters are local to the method",
+              "Use static for methods called from main"
+            ]
+          }
+        },
+        {
+          "title": "Method Overloading",
+          "type": "concept",
+          "duration": "12 min",
+          "content": {
+            "explanation": "Method overloading allows multiple methods with the same name but different parameters (number, types, or order). Java determines which method to call based on the arguments provided. Overloading makes code intuitive - you can have add methods for different types without inventing different names. The return type alone cannot distinguish overloaded methods. Overloading is a form of compile-time polymorphism, providing flexibility and convenience. Understanding overloading helps you design cleaner APIs where similar operations share names, improving code readability.",
+            "realWorldAnalogy": "Method overloading is like a print shop that has different print methods. You can print(document), print(photo), or print(document, copies). Same action (printing), but different inputs require different handling. The shop automatically knows which printing process to use based on what you bring in. You don't need to say 'printDocument' or 'printPhoto' - just 'print' with appropriate materials.",
+            "syntaxExample": "public class Overloading {\n    // Different number of parameters\n    public static int add(int a, int b) {\n        return a + b;\n    }\n    \n    public static int add(int a, int b, int c) {\n        return a + b + c;\n    }\n    \n    // Different parameter types\n    public static double add(double a, double b) {\n        return a + b;\n    }\n    \n    public static void main(String[] args) {\n        System.out.println(add(5, 10));        // 15\n        System.out.println(add(5, 10, 15));    // 30\n        System.out.println(add(5.5, 10.5));    // 16.0\n    }\n}",
+            "keyNotes": [
+              "Same method name, different parameters",
+              "Parameters must differ in number, type, or order",
+              "Return type alone cannot distinguish overloaded methods",
+              "Provides flexibility and convenience",
+              "Compiler determines which method to call"
+            ]
+          }
+        },
+        {
+          "title": "MCQ: Method Concepts",
+          "type": "mcq",
+          "duration": "5 min",
+          "hideSidebar": true,
+          "content": {
+            "problem": "Understanding Method Return",
+            "question": "What return type should a method have if it doesn't return anything?",
+            "hint": "Think about what keyword represents 'no return value'.",
+            "commonDoubts": "When a method performs an action but doesn't need to return data (like printing something), use void as the return type. Void means the method returns nothing.",
+            "options": [
+              "int",
+              "null",
+              "void",
+              "empty"
+            ],
+            "correctAnswer": 2,
+            "explanation": "void is the return type for methods that don't return any value. It indicates the method performs an action but doesn't send back data to the caller."
+          }
+        },
+        {
+          "title": "Coding Task: Calculate Factorial",
+          "type": "coding",
+          "duration": "20 min",
+          "hideSidebar": true,
+          "content": {
+            "problem": "Factorial Method",
+            "description": "Create a method factorial(n) that returns n! (factorial of n). Then call it from main.",
+            "inputFormat": "One integer n",
+            "outputFormat": "Factorial of n",
+            "sampleInput": "5",
+            "sampleOutput": "120",
+            "constraints": "1 <= n <= 12 (to prevent overflow)",
+            "starterCode": "import java.util.Scanner;\n\npublic class Main {\n    // Create factorial method here\n    \n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        \n        // Call factorial method and print result\n        \n    }\n}",
+            "solution": "import java.util.Scanner;\n\npublic class Main {\n    public static long factorial(int n) {\n        long result = 1;\n        for (int i = 1; i <= n; i++) {\n            result *= i;\n        }\n        return result;\n    }\n    \n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        \n        long result = factorial(n);\n        System.out.println(result);\n    }\n}",
+            "testCases": [
+              {
+                "input": "5",
+                "output": "120"
+              },
+              {
+                "input": "7",
+                "output": "5040"
+              }
+            ]
+          }
+        },
+        {
+          "title": "Module 10 Test",
+          "type": "test",
+          "duration": "15 min",
+          "hideSidebar": true,
+          "content": {
+            "questions": [
+              {
+                "question": "What keyword is used for methods that don't return a value?",
+                "options": [
+                  "null",
+                  "void",
+                  "empty",
+                  "none"
+                ],
+                "correctAnswer": 1
+              },
+              {
+                "question": "Can two methods have the same name?",
+                "options": [
+                  "Never",
+                  "Yes, if parameters are different",
+                  "Only if return types differ",
+                  "Only in different classes"
+                ],
+                "correctAnswer": 1
+              },
+              {
+                "question": "What is it called when multiple methods share the same name?",
+                "options": [
+                  "Method duplication",
+                  "Method overriding",
+                  "Method overloading",
+                  "Method repetition"
+                ],
+                "correctAnswer": 2
+              },
+              {
+                "question": "Where are method parameters accessible?",
+                "options": [
+                  "Everywhere in the program",
+                  "Only within that method",
+                  "Only in main method",
+                  "In all methods of the class"
+                ],
+                "correctAnswer": 1
+              },
+              {
+                "question": "What comes after the return keyword?",
+                "options": [
+                  "Method name",
+                  "Value to return",
+                  "Parameter list",
+                  "Nothing"
+                ],
+                "correctAnswer": 1
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "title": "Object-Oriented Programming",
+      "lessons": [
+        {
+          "title": "Classes and Objects",
+          "type": "concept",
+          "duration": "15 min",
+          "content": {
+            "explanation": "Classes are blueprints that define the structure and behavior of objects. Objects are instances of classes - actual entities created from the blueprint. Classes contain fields (data/attributes) and methods (behavior/actions). This paradigm models real-world entities in code. For example, a Car class defines properties like color and speed, while individual car objects have specific values. Object-oriented programming organizes code into reusable, modular components. Understanding classes and objects is fundamental to Java, which is inherently object-oriented. It enables building complex systems through composition and relationships.",
+            "realWorldAnalogy": "A class is like a house blueprint. The blueprint shows the design, rooms, and features but isn't a physical house. An object is an actual house built from that blueprint. You can build many houses (objects) from one blueprint (class). Each house can have different colors or furniture (attribute values) while sharing the same structure. Just as architects use blueprints to build consistent structures, programmers use classes to create consistent objects.",
+            "syntaxExample": "// Define a class\npublic class Student {\n    // Fields (attributes)\n    String name;\n    int age;\n    double gpa;\n    \n    // Constructor\n    public Student(String name, int age, double gpa) {\n        this.name = name;\n        this.age = age;\n        this.gpa = gpa;\n    }\n    \n    // Method\n    public void displayInfo() {\n        System.out.println(\"Name: \" + name);\n        System.out.println(\"Age: \" + age);\n        System.out.println(\"GPA: \" + gpa);\n    }\n}\n\n// Create and use objects\npublic class Main {\n    public static void main(String[] args) {\n        Student s1 = new Student(\"Alice\", 20, 3.8);\n        Student s2 = new Student(\"Bob\", 21, 3.5);\n        \n        s1.displayInfo();\n        s2.displayInfo();\n    }\n}",
+            "keyNotes": [
+              "Class is a blueprint, object is an instance",
+              "Fields store data, methods define behavior",
+              "Use 'new' keyword to create objects",
+              "Constructor initializes object state",
+              "this keyword refers to current object"
+            ]
+          }
+        },
+        {
+          "title": "Encapsulation",
+          "type": "concept",
+          "duration": "12 min",
+          "content": {
+            "explanation": "Encapsulation bundles data and methods into a class while restricting direct access to some components. Use private for fields to hide internal details, and provide public getter/setter methods for controlled access. This protects object integrity by preventing invalid modifications. Encapsulation implements data hiding - a core OOP principle. It allows changing internal implementation without affecting external code. Understanding encapsulation is essential for building maintainable systems where components have clear interfaces and hidden implementations, reducing dependencies and bugs.",
+            "realWorldAnalogy": "Encapsulation is like a car's engine. You don't directly access the pistons or valves (private fields). Instead, you use the steering wheel, pedals, and buttons (public methods) to control the car. The internal mechanics are hidden and protected. You can't accidentally break the engine by poking around inside. The car manufacturer can upgrade the engine without changing how you drive it - the interface stays the same while the implementation improves.",
+            "syntaxExample": "public class BankAccount {\n    // Private fields (encapsulated)\n    private String accountNumber;\n    private double balance;\n    \n    // Constructor\n    public BankAccount(String accountNumber) {\n        this.accountNumber = accountNumber;\n        this.balance = 0.0;\n    }\n    \n    // Public getter\n    public double getBalance() {\n        return balance;\n    }\n    \n    // Public methods with validation\n    public void deposit(double amount) {\n        if (amount > 0) {\n            balance += amount;\n            System.out.println(\"Deposited: \" + amount);\n        }\n    }\n    \n    public void withdraw(double amount) {\n        if (amount > 0 && amount <= balance) {\n            balance -= amount;\n            System.out.println(\"Withdrew: \" + amount);\n        } else {\n            System.out.println(\"Invalid withdrawal\");\n        }\n    }\n}",
+            "keyNotes": [
+              "Use private for fields to hide internal data",
+              "Provide public getters/setters for controlled access",
+              "Getters return field values, setters modify them",
+              "Encapsulation protects object integrity",
+              "Allows implementation changes without affecting users"
+            ]
+          }
+        },
+        {
+          "title": "MCQ: OOP Concepts",
+          "type": "mcq",
+          "duration": "5 min",
+          "hideSidebar": true,
+          "content": {
+            "problem": "Understanding Access Modifiers",
+            "question": "Which access modifier hides fields from outside access?",
+            "hint": "Think about which keyword restricts visibility to only within the class.",
+            "commonDoubts": "private makes fields accessible only within the same class. This implements encapsulation by hiding internal details. Public allows access from anywhere, protected allows access within package and subclasses.",
+            "options": [
+              "public",
+              "private",
+              "protected",
+              "default"
+            ],
+            "correctAnswer": 1,
+            "explanation": "private restricts access to within the class only, hiding fields from external code. This is the foundation of encapsulation, protecting internal data from unauthorized access."
+          }
+        },
+        {
+          "title": "Coding Task: Create Person Class",
+          "type": "coding",
+          "duration": "25 min",
+          "hideSidebar": true,
+          "content": {
+            "problem": "Person Class with Encapsulation",
+            "description": "Create a Person class with private fields name and age. Include constructor, getters, and a method to display info. Create a Person object in main and test it.",
+            "inputFormat": "Two lines: name (string), age (integer)",
+            "outputFormat": "Person info: name and age",
+            "sampleInput": "Alice\n25",
+            "sampleOutput": "Name: Alice\nAge: 25",
+            "constraints": "Name is non-empty string, age is positive integer",
+            "starterCode": "import java.util.Scanner;\n\n// Create Person class here\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        String name = sc.nextLine();\n        int age = sc.nextInt();\n        \n        // Create Person object and display info\n        \n    }\n}",
+            "solution": "import java.util.Scanner;\n\nclass Person {\n    private String name;\n    private int age;\n    \n    public Person(String name, int age) {\n        this.name = name;\n        this.age = age;\n    }\n    \n    public String getName() {\n        return name;\n    }\n    \n    public int getAge() {\n        return age;\n    }\n    \n    public void displayInfo() {\n        System.out.println(\"Name: \" + name);\n        System.out.println(\"Age: \" + age);\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        String name = sc.nextLine();\n        int age = sc.nextInt();\n        \n        Person p = new Person(name, age);\n        p.displayInfo();\n    }\n}",
+            "testCases": [
+              {
+                "input": "Alice\n25",
+                "output": "Name: Alice\nAge: 25"
+              },
+              {
+                "input": "Bob\n30",
+                "output": "Name: Bob\nAge: 30"
+              }
+            ]
+          }
+        },
+        {
+          "title": "Module 11 Test",
+          "type": "test",
+          "duration": "15 min",
+          "hideSidebar": true,
+          "content": {
+            "questions": [
+              {
+                "question": "What is an object?",
+                "options": [
+                  "A blueprint",
+                  "An instance of a class",
+                  "A method",
+                  "A variable"
+                ],
+                "correctAnswer": 1
+              },
+              {
+                "question": "What keyword creates a new object?",
+                "options": [
+                  "create",
+                  "make",
+                  "new",
+                  "object"
+                ],
+                "correctAnswer": 2
+              },
+              {
+                "question": "What is encapsulation?",
+                "options": [
+                  "Creating multiple objects",
+                  "Hiding data and providing controlled access",
+                  "Inheriting from parent class",
+                  "Overloading methods"
+                ],
+                "correctAnswer": 1
+              },
+              {
+                "question": "What are getters and setters?",
+                "options": [
+                  "Constructors",
+                  "Methods to access and modify private fields",
+                  "Keywords",
+                  "Variables"
+                ],
+                "correctAnswer": 1
+              },
+              {
+                "question": "What does 'this' keyword refer to?",
+                "options": [
+                  "The class",
+                  "The method",
+                  "The current object",
+                  "The main method"
+                ],
+                "correctAnswer": 2
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "title": "Exception Handling",
+      "lessons": [
+        {
+          "title": "Try-Catch Blocks",
+          "type": "concept",
+          "duration": "12 min",
+          "content": {
+            "explanation": "Exception handling manages runtime errors gracefully without crashing the program. Try blocks contain code that might throw exceptions. Catch blocks handle specific exceptions that occur. If an exception occurs in try, control jumps to the matching catch block. The finally block (optional) executes regardless of whether an exception occurred, useful for cleanup. Exception handling separates error-handling code from normal logic, improving readability. Understanding exceptions is crucial because real programs encounter errors - invalid input, missing files, network failures. Proper handling keeps programs robust and user-friendly.",
+            "realWorldAnalogy": "Exception handling is like having a safety net under a tightrope walker. The try block is the tightrope walk - you attempt something risky. If you fall (exception occurs), the catch block is the safety net that catches you and handles the fall gracefully. The finally block is like taking a bow at the end, whether you made it across or fell - it always happens. Without the net, a fall means disaster (program crash).",
+            "syntaxExample": "public class ExceptionDemo {\n    public static void main(String[] args) {\n        try {\n            int[] numbers = {1, 2, 3};\n            System.out.println(numbers[5]);  // Will throw exception\n            \n            int result = 10 / 0;  // Will also throw exception\n        } catch (ArrayIndexOutOfBoundsException e) {\n            System.out.println(\"Array index error: \" + e.getMessage());\n        } catch (ArithmeticException e) {\n            System.out.println(\"Math error: \" + e.getMessage());\n        } finally {\n            System.out.println(\"Execution completed\");\n        }\n    }\n}",
+            "keyNotes": [
+              "try contains code that might throw exceptions",
+              "catch handles specific exception types",
+              "Multiple catch blocks for different exceptions",
+              "finally executes regardless of exceptions",
+              "Program continues after handling exception"
+            ]
+          }
+        },
+        {
+          "title": "Common Exceptions",
+          "type": "concept",
+          "duration": "10 min",
+          "content": {
+            "explanation": "Java has many built-in exception types for different error scenarios. ArithmeticException for division by zero, ArrayIndexOutOfBoundsException for invalid array access, NullPointerException when accessing null references, NumberFormatException when parsing invalid strings to numbers, and InputMismatchException for wrong input types. Understanding common exceptions helps you anticipate problems and write defensive code. You can catch general Exception class to handle any exception, but catching specific types allows targeted handling. Learning to recognize exception messages is essential debugging skill.",
+            "realWorldAnalogy": "Different exceptions are like different types of car problems. ArithmeticException is like running out of gas (can't divide). ArrayIndexOutOfBoundsException is like trying to use a 6th gear in a 5-speed car. NullPointerException is like trying to drive a car that doesn't exist. NumberFormatException is like putting diesel in a gasoline car. Each problem needs specific handling, though you could have a general 'call a mechanic' catch-all solution.",
+            "syntaxExample": "import java.util.Scanner;\n\npublic class CommonExceptions {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        \n        try {\n            System.out.print(\"Enter a number: \");\n            String input = sc.nextLine();\n            int num = Integer.parseInt(input);\n            \n            int result = 100 / num;\n            System.out.println(\"Result: \" + result);\n            \n        } catch (NumberFormatException e) {\n            System.out.println(\"Invalid number format\");\n        } catch (ArithmeticException e) {\n            System.out.println(\"Cannot divide by zero\");\n        } catch (Exception e) {\n            System.out.println(\"An error occurred: \" + e.getMessage());\n        }\n    }\n}",
+            "keyNotes": [
+              "ArithmeticException: division by zero",
+              "ArrayIndexOutOfBoundsException: invalid array index",
+              "NullPointerException: accessing null object",
+              "NumberFormatException: invalid string to number conversion",
+              "Catch specific exceptions before general Exception"
+            ]
+          }
+        },
+        {
+          "title": "MCQ: Exception Flow",
+          "type": "mcq",
+          "duration": "5 min",
+          "hideSidebar": true,
+          "content": {
+            "problem": "Understanding Exception Handling",
+            "question": "When does the finally block execute?",
+            "hint": "Think about whether finally depends on exception occurrence.",
+            "commonDoubts": "The finally block always executes, whether an exception occurred or not, whether it was caught or not. It's guaranteed to run, making it perfect for cleanup tasks like closing files or connections.",
+            "options": [
+              "Only if exception occurs",
+              "Only if no exception occurs",
+              "Always, regardless of exceptions",
+              "Never"
+            ],
+            "correctAnswer": 2,
+            "explanation": "finally block always executes, whether an exception occurred or not. This makes it ideal for cleanup code like closing resources that must happen regardless of success or failure."
+          }
+        },
+        {
+          "title": "Coding Task: Safe Division",
+          "type": "coding",
+          "duration": "15 min",
+          "hideSidebar": true,
+          "content": {
+            "problem": "Division with Exception Handling",
+            "description": "Read two integers and perform division. Handle division by zero exception and display appropriate message.",
+            "inputFormat": "Two integers: numerator and denominator",
+            "outputFormat": "Result of division OR error message if denominator is 0",
+            "sampleInput": "10\n2",
+            "sampleOutput": "5",
+            "constraints": "Handle ArithmeticException for division by zero",
+            "starterCode": "import java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int a = sc.nextInt();\n        int b = sc.nextInt();\n        \n        // Perform division with exception handling\n        \n    }\n}",
+            "solution": "import java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int a = sc.nextInt();\n        int b = sc.nextInt();\n        \n        try {\n            int result = a / b;\n            System.out.println(result);\n        } catch (ArithmeticException e) {\n            System.out.println(\"Cannot divide by zero\");\n        }\n    }\n}",
+            "testCases": [
+              {
+                "input": "10\n2",
+                "output": "5"
+              },
+              {
+                "input": "10\n0",
+                "output": "Cannot divide by zero"
+              }
+            ]
+          }
+        },
+        {
+          "title": "Module 12 Test",
+          "type": "test",
+          "duration": "15 min",
+          "hideSidebar": true,
+          "content": {
+            "questions": [
+              {
+                "question": "What block contains code that might throw exceptions?",
+                "options": [
+                  "catch",
+                  "try",
+                  "finally",
+                  "throw"
+                ],
+                "correctAnswer": 1
+              },
+              {
+                "question": "What happens if an exception is not caught?",
+                "options": [
+                  "Program continues normally",
+                  "Exception is ignored",
+                  "Program terminates",
+                  "Exception disappears"
+                ],
+                "correctAnswer": 2
+              },
+              {
+                "question": "Which exception occurs for division by zero?",
+                "options": [
+                  "NullPointerException",
+                  "ArithmeticException",
+                  "NumberFormatException",
+                  "ArrayIndexOutOfBoundsException"
+                ],
+                "correctAnswer": 1
+              },
+              {
+                "question": "Can you have multiple catch blocks?",
+                "options": [
+                  "No, only one catch allowed",
+                  "Yes, for different exception types",
+                  "Only with finally",
+                  "Only without try"
+                ],
+                "correctAnswer": 1
+              },
+              {
+                "question": "What is the purpose of finally block?",
+                "options": [
+                  "Handle exceptions",
+                  "Throw exceptions",
+                  "Execute cleanup code always",
+                  "Prevent exceptions"
+                ],
+                "correctAnswer": 2
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "title": "Collections Introduction",
+      "lessons": [
+        {
+          "title": "ArrayList Basics",
+          "type": "concept",
+          "duration": "12 min",
+          "content": {
+            "explanation": "ArrayList is a dynamic array that can grow and shrink in size. Unlike regular arrays with fixed size, ArrayList resizes automatically when adding or removing elements. It's part of Java Collections Framework and provides methods like add, remove, get, and size. ArrayList stores objects (not primitives directly), so use wrapper classes like Integer for int. It allows duplicate elements and maintains insertion order. Understanding ArrayList is essential because real applications need flexible data structures. It combines array-like indexing with dynamic sizing, making it one of the most commonly used collections.",
+            "realWorldAnalogy": "ArrayList is like a elastic shopping bag. Regular arrays are rigid boxes - once you buy a 10-item box, you can't add an 11th item. ArrayList is stretchy - start with capacity for 5 items, but when you add a 6th, the bag expands automatically. You can add items (add), remove items (remove), check what's in position 3 (get), and count items (size). The bag grows and shrinks as needed, unlike fixed-size boxes.",
+            "syntaxExample": "import java.util.ArrayList;\n\npublic class ArrayListDemo {\n    public static void main(String[] args) {\n        // Create ArrayList\n        ArrayList<String> names = new ArrayList<>();\n        \n        // Add elements\n        names.add(\"Alice\");\n        names.add(\"Bob\");\n        names.add(\"Charlie\");\n        \n        // Access elements\n        System.out.println(names.get(0));  // Alice\n        \n        // Size\n        System.out.println(\"Size: \" + names.size());\n        \n        // Remove element\n        names.remove(1);  // Removes Bob\n        \n        // Iterate\n        for (String name : names) {\n            System.out.println(name);\n        }\n    }\n}",
+            "keyNotes": [
+              "ArrayList grows dynamically unlike arrays",
+              "Use generics <Type> to specify element type",
+              "add() appends elements, get(index) retrieves",
+              "remove() deletes elements, size() returns count",
+              "Import java.util.ArrayList to use"
+            ]
+          }
+        },
+        {
+          "title": "ArrayList Methods",
+          "type": "concept",
+          "duration": "10 min",
+          "content": {
+            "explanation": "ArrayList provides many useful methods beyond basic add and get. contains() checks if element exists, indexOf() finds element position, set() replaces element at index, clear() removes all elements, isEmpty() checks if list is empty, and toArray() converts to array. You can add at specific index with add(index, element), and use addAll() to add multiple elements. Understanding these methods enables efficient list manipulation. ArrayList internally uses an array that resizes when needed, typically doubling capacity. This gives fast random access but slower insertion/deletion in the middle.",
+            "realWorldAnalogy": "ArrayList methods are like playlist controls. add() adds songs, remove() deletes songs, contains() searches if a song exists, indexOf() finds song position, set() replaces a song, shuffle() rearranges (Collections.shuffle), clear() empties the playlist, and size() shows song count. Just as you have many ways to manage your playlist, ArrayList gives you tools to manipulate lists efficiently.",
+            "syntaxExample": "import java.util.ArrayList;\n\npublic class ArrayListMethods {\n    public static void main(String[] args) {\n        ArrayList<Integer> numbers = new ArrayList<>();\n        \n        // Add elements\n        numbers.add(10);\n        numbers.add(20);\n        numbers.add(30);\n        \n        // Check if contains\n        System.out.println(numbers.contains(20));  // true\n        \n        // Find index\n        System.out.println(numbers.indexOf(30));   // 2\n        \n        // Replace element\n        numbers.set(1, 25);  // Changes 20 to 25\n        \n        // Check if empty\n        System.out.println(numbers.isEmpty());     // false\n        \n        // Clear all\n        numbers.clear();\n        System.out.println(numbers.size());        // 0\n    }\n}",
+            "keyNotes": [
+              "contains() checks element existence",
+              "indexOf() returns element position (-1 if not found)",
+              "set(index, value) replaces element",
+              "clear() removes all elements",
+              "isEmpty() checks if list has no elements"
+            ]
+          }
+        },
+        {
+          "title": "MCQ: ArrayList vs Array",
+          "type": "mcq",
+          "duration": "5 min",
+          "hideSidebar": true,
+          "content": {
+            "problem": "Understanding ArrayList Benefits",
+            "question": "What is the main advantage of ArrayList over arrays?",
+            "hint": "Think about what happens when you need more space.",
+            "commonDoubts": "Arrays have fixed size determined at creation. If you need to add more elements than the size allows, you must create a new larger array and copy elements. ArrayList handles this automatically, resizing internally when needed.",
+            "options": [
+              "Faster access",
+              "Dynamic size (can grow/shrink)",
+              "Uses less memory",
+              "Stores primitive types"
+            ],
+            "correctAnswer": 1,
+            "explanation": "ArrayList's main advantage is dynamic sizing. It automatically grows when you add elements beyond capacity and shrinks when elements are removed, unlike arrays which have fixed size."
+          }
+        },
+        {
+          "title": "Coding Task: List Operations",
+          "type": "coding",
+          "duration": "20 min",
+          "hideSidebar": true,
+          "content": {
+            "problem": "ArrayList Manipulation",
+            "description": "Create an ArrayList, add 5 integers, remove the element at index 2, and print the final list.",
+            "inputFormat": "5 integers (one per line)",
+            "outputFormat": "Each remaining element on a new line",
+            "sampleInput": "10\n20\n30\n40\n50",
+            "sampleOutput": "10\n20\n40\n50",
+            "constraints": "Remove element at index 2 after adding all elements",
+            "starterCode": "import java.util.ArrayList;\nimport java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        ArrayList<Integer> list = new ArrayList<>();\n        \n        // Add 5 integers\n        \n        // Remove element at index 2\n        \n        // Print remaining elements\n        \n    }\n}",
+            "solution": "import java.util.ArrayList;\nimport java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        ArrayList<Integer> list = new ArrayList<>();\n        \n        for (int i = 0; i < 5; i++) {\n            list.add(sc.nextInt());\n        }\n        \n        list.remove(2);\n        \n        for (int num : list) {\n            System.out.println(num);\n        }\n    }\n}",
+            "testCases": [
+              {
+                "input": "10\n20\n30\n40\n50",
+                "output": "10\n20\n40\n50"
+              },
+              {
+                "input": "5\n10\n15\n20\n25",
+                "output": "5\n10\n20\n25"
+              }
+            ]
+          }
+        },
+        {
+          "title": "Module 13 Test",
+          "type": "test",
+          "duration": "15 min",
+          "hideSidebar": true,
+          "content": {
+            "questions": [
+              {
+                "question": "What package contains ArrayList?",
+                "options": [
+                  "java.io",
+                  "java.util",
+                  "java.lang",
+                  "java.awt"
+                ],
+                "correctAnswer": 1
+              },
+              {
+                "question": "Which method adds an element to ArrayList?",
+                "options": [
+                  "insert()",
+                  "append()",
+                  "add()",
+                  "put()"
+                ],
+                "correctAnswer": 2
+              },
+              {
+                "question": "How do you get ArrayList size?",
+                "options": [
+                  "length",
+                  "length()",
+                  "size",
+                  "size()"
+                ],
+                "correctAnswer": 3
+              },
+              {
+                "question": "What does indexOf() return if element not found?",
+                "options": [
+                  "0",
+                  "-1",
+                  "null",
+                  "Exception"
+                ],
+                "correctAnswer": 1
+              },
+              {
+                "question": "Can ArrayList store primitive int directly?",
+                "options": [
+                  "Yes, directly",
+                  "No, use Integer wrapper",
+                  "Only with casting",
+                  "Only in Java 8+"
+                ],
+                "correctAnswer": 1
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "title": "Algorithmic Problem Solving",
+      "lessons": [
+        {
+          "title": "Problem-Solving Approach",
+          "type": "concept",
+          "duration": "15 min",
+          "content": {
+            "explanation": "Effective problem-solving follows a structured approach: understand the problem, identify inputs/outputs, plan the algorithm, implement the solution, test with examples, and optimize if needed. Start by reading carefully and identifying what's given and what's required. Break complex problems into smaller sub-problems. Choose appropriate data structures and algorithms. Write pseudocode before actual code. Test with sample inputs and edge cases. Understanding this methodology is essential because coding interviews and real projects require systematic problem-solving. It transforms vague problems into clear, actionable solutions.",
+            "realWorldAnalogy": "Problem-solving is like cooking a new recipe. First, read and understand what dish you're making (problem). Identify ingredients needed (inputs) and what the final dish looks like (output). Plan the steps (algorithm). Execute the recipe (implementation). Taste and adjust (testing). Improve technique for next time (optimization). Just as chefs don't randomly throw ingredients together, programmers follow systematic approaches to solve problems.",
+            "syntaxExample": "// Problem: Find the sum of all even numbers from 1 to n\n// Understand: Need to add only even numbers up to n\n// Input: integer n\n// Output: sum of even numbers\n// Plan: Loop from 2 to n, step by 2, accumulate sum\n\npublic class ProblemSolving {\n    public static void main(String[] args) {\n        int n = 10;\n        \n        // Implementation\n        int sum = 0;\n        for (int i = 2; i <= n; i += 2) {\n            sum += i;\n        }\n        \n        System.out.println(\"Sum of even numbers: \" + sum);\n        // Test: 2+4+6+8+10 = 30 ✓\n    }\n}",
+            "keyNotes": [
+              "Understand problem before coding",
+              "Identify inputs, outputs, and constraints",
+              "Break complex problems into smaller parts",
+              "Write pseudocode to plan solution",
+              "Test with multiple test cases including edge cases"
+            ]
+          }
+        },
+        {
+          "title": "Common Patterns",
+          "type": "concept",
+          "duration": "12 min",
+          "content": {
+            "explanation": "Many problems follow common patterns: two-pointer technique for arrays, sliding window for subarrays, frequency counting with maps, sorting for ordering, binary search for efficient lookup, and greedy algorithms for optimization. Recognizing patterns helps you apply proven solutions to new problems. For example, palindrome checking uses two pointers from ends moving inward. Finding duplicates uses frequency counting. Maximum subarray sum uses sliding window or Kadane's algorithm. Understanding these patterns builds your problem-solving toolkit, enabling faster solutions to unfamiliar problems.",
+            "realWorldAnalogy": "Problem patterns are like chess openings. Experienced chess players recognize board positions and know proven responses. Similarly, programmers recognize problem patterns and apply known techniques. Just as 'King's Pawn Opening' is a pattern in chess, 'Two Pointer Technique' is a pattern in programming. Learning patterns doesn't mean memorizing solutions - it means recognizing situations where specific approaches work well.",
+            "syntaxExample": "// Pattern: Two Pointer Technique\n// Problem: Check if string is palindrome\npublic class Patterns {\n    public static boolean isPalindrome(String s) {\n        int left = 0;\n        int right = s.length() - 1;\n        \n        while (left < right) {\n            if (s.charAt(left) != s.charAt(right)) {\n                return false;\n            }\n            left++;\n            right--;\n        }\n        return true;\n    }\n    \n    public static void main(String[] args) {\n        System.out.println(isPalindrome(\"racecar\"));  // true\n        System.out.println(isPalindrome(\"hello\"));    // false\n    }\n}",
+            "keyNotes": [
+              "Two pointers: process array/string from both ends",
+              "Sliding window: process fixed-size subarrays",
+              "Frequency counting: track element occurrences",
+              "Sorting: arrange data for efficient processing",
+              "Recognizing patterns speeds up problem-solving"
+            ]
+          }
+        },
+        {
+          "title": "MCQ: Algorithm Selection",
+          "type": "mcq",
+          "duration": "5 min",
+          "hideSidebar": true,
+          "content": {
+            "problem": "Choosing the Right Approach",
+            "question": "Which pattern is best for finding maximum sum of k consecutive elements?",
+            "hint": "Think about processing fixed-size groups of adjacent elements.",
+            "commonDoubts": "Sliding window pattern is perfect for problems involving subarrays or substrings of fixed size. Instead of recalculating the sum for each window from scratch, slide the window by removing the leftmost element and adding the next element.",
+            "options": [
+              "Two pointers",
+              "Sliding window",
+              "Binary search",
+              "Recursion"
+            ],
+            "correctAnswer": 1,
+            "explanation": "Sliding window is ideal for problems involving consecutive elements of fixed size. It efficiently processes overlapping subarrays by maintaining a window that slides across the array."
+          }
+        },
+        {
+          "title": "Coding Task: Prime Number Check",
+          "type": "coding",
+          "duration": "20 min",
+          "hideSidebar": true,
+          "content": {
+            "problem": "Determine if Number is Prime",
+            "description": "Check if a given number is prime (divisible only by 1 and itself). Print YES if prime, NO otherwise.",
+            "inputFormat": "One integer n",
+            "outputFormat": "YES or NO",
+            "sampleInput": "17",
+            "sampleOutput": "YES",
+            "constraints": "2 <= n <= 10000, optimize to check divisors only up to sqrt(n)",
+            "starterCode": "import java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        \n        // Check if n is prime\n        \n    }\n}",
+            "solution": "import java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        \n        boolean isPrime = true;\n        \n        if (n < 2) {\n            isPrime = false;\n        } else {\n            for (int i = 2; i * i <= n; i++) {\n                if (n % i == 0) {\n                    isPrime = false;\n                    break;\n                }\n            }\n        }\n        \n        System.out.println(isPrime ? \"YES\" : \"NO\");\n    }\n}",
+            "testCases": [
+              {
+                "input": "17",
+                "output": "YES"
+              },
+              {
+                "input": "20",
+                "output": "NO"
+              },
+              {
+                "input": "2",
+                "output": "YES"
+              }
+            ]
+          }
+        },
+        {
+          "title": "Module 14 Test",
+          "type": "test",
+          "duration": "15 min",
+          "hideSidebar": true,
+          "content": {
+            "questions": [
+              {
+                "question": "What should you do first when solving a problem?",
+                "options": [
+                  "Start coding immediately",
+                  "Understand the problem thoroughly",
+                  "Optimize the solution",
+                  "Test with examples"
+                ],
+                "correctAnswer": 1
+              },
+              {
+                "question": "What is the two-pointer technique used for?",
+                "options": [
+                  "Sorting arrays",
+                  "Processing from both ends of array/string",
+                  "Counting elements",
+                  "Finding maximum"
+                ],
+                "correctAnswer": 1
+              },
+              {
+                "question": "What makes a number prime?",
+                "options": [
+                  "Divisible by 2",
+                  "Odd number",
+                  "Divisible only by 1 and itself",
+                  "Greater than 10"
+                ],
+                "correctAnswer": 2
+              },
+              {
+                "question": "What is pseudocode?",
+                "options": [
+                  "Fake code that doesn't work",
+                  "Plan written in plain language before actual coding",
+                  "Encrypted code",
+                  "Code with errors"
+                ],
+                "correctAnswer": 1
+              },
+              {
+                "question": "Why test with edge cases?",
+                "options": [
+                  "It's optional",
+                  "To find errors at problem boundaries",
+                  "To slow down the program",
+                  "Only for complex problems"
+                ],
+                "correctAnswer": 1
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
