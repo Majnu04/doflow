@@ -140,7 +140,7 @@ const Navbar: React.FC = () => {
                 const active = isActive(link.path);
                 return (
                   <a
-                    key={link.path}
+                    key={link.name}
                     href={`/#${link.path}`}
                     className={`
                       relative flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200

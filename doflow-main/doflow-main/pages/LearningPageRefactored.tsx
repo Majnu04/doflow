@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useRef } from 'react';
+import React, { useEffect, useState, useCallback, useRef, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState, AppDispatch } from '../src/store';
 import { recordLessonCompletion } from '../src/store/slices/gamificationSlice';
@@ -18,7 +18,10 @@ import { executeCode } from '../services/codeExecutionService';
 import AITutor from '../src/components/AITutor';
 import PremiumContentLock from '../src/components/PremiumContentLock';
 import MilestoneBadge from '../src/components/MilestoneBadge';
-import RichTextRenderer from '../src/components/learning/RichTextRenderer';
+import MarkdownRenderer from '../src/components/learning/MarkdownRenderer';
+import type { Heading } from '../src/components/learning/MarkdownRenderer';
+import TableOfContents from '../src/components/learning/TableOfContents';
+import ReadingProgress from '../src/components/learning/ReadingProgress';
 import LearningSidebar from '../src/components/learning/LearningSidebar';
 import AIFloatingPanel from '../src/components/learning/AIFloatingPanel';
 import {
@@ -27,7 +30,7 @@ import {
   useMinimumLoadingTime
 } from '../src/components/Skeleton';
 import {
-  fadeIn, slideUp, slideDown, slideInLeft, scaleIn, popIn, staggerContainer
+  fadeIn, slideUp, slideDown, slideInLeft, slideInRight, scaleIn, popIn, staggerContainer
 } from '../src/styles/motion';
 
 interface LearningPageProps {
@@ -360,6 +363,36 @@ const LearningPage: React.FC<LearningPageProps> = ({ courseId }) => {
   const lessonContent = currentLesson ? getLessonContent(currentLesson) : null;
   const isCurrentLessonLocked = currentLesson ? isLessonLocked(currentLesson) : false;
 
+  const extractHeadingsFromHtml = useCallback((html: string): Heading[] => {
+    const result: Heading[] = [];
+    const regex = /<h([23])(?:\s[^>]*)?>(.*?)<\/h[23]>/gi;
+    let match;
+    const usedIds = new Set<string>();
+    while ((match = regex.exec(html)) !== null) {
+      const level = parseInt(match[1]) as 2 | 3;
+      const text = match[2].replace(/<[^>]*>/g, '').trim();
+      if (!text) continue;
+      let id = text.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
+      if (!id) id = `h-${result.length}`;
+      if (usedIds.has(id)) {
+        let suffix = 2;
+        while (usedIds.has(`${id}-${suffix}`)) suffix++;
+        id = `${id}-${suffix}`;
+      }
+      usedIds.add(id);
+      result.push({ id, text, level });
+    }
+    return result;
+  }, []);
+
+  const headings = useMemo(() => {
+    const content = lessonContent?.content;
+    if (content?.explanation && typeof content.explanation === 'string') {
+      return extractHeadingsFromHtml(content.explanation);
+    }
+    return [];
+  }, [lessonContent, extractHeadingsFromHtml]);
+
   useEffect(() => {
     if (isCurrentLessonLocked && courseId) {
       api.post('/analytics/event', {
@@ -533,149 +566,135 @@ const LearningPage: React.FC<LearningPageProps> = ({ courseId }) => {
       }
     };
 
+    const hasToc = headings.length > 0;
+
     return (
       <motion.div
         variants={staggerContainer}
         initial="hidden"
         animate="visible"
-        className="max-w-4xl mx-auto space-y-6"
+        className="max-w-none"
       >
-        {/* Hero Header */}
-        <motion.div variants={slideUp} className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[var(--page-accent)]/10 via-[var(--page-accent-secondary)]/5 to-transparent border border-[var(--page-border)]">
-          <div className="relative p-6 sm:p-8">
-            <div className="flex items-start gap-4">
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[var(--page-accent)] to-[var(--page-accent-secondary)] flex items-center justify-center shadow-lg flex-shrink-0">
-                <FaBook className="text-white text-lg" />
+        <div className={`flex gap-8 ${hasToc ? 'lg:flex-row flex-col' : ''}`}>
+          {/* Main content */}
+          <div className={`${hasToc ? 'lg:w-[70%] min-w-0' : 'max-w-4xl mx-auto'} space-y-6`}>
+            {/* Hero Header */}
+            <motion.div variants={slideUp} className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[var(--page-accent)]/10 via-[var(--page-accent-secondary)]/5 to-transparent border border-[var(--page-border)]">
+              <div className="relative p-6 sm:p-8">
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[var(--page-accent)] to-[var(--page-accent-secondary)] flex items-center justify-center shadow-lg flex-shrink-0">
+                    <FaBook className="text-white text-lg" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <span className="text-xs font-semibold text-[var(--page-accent)] uppercase tracking-wider">Concept Lesson</span>
+                    <h1 className="text-xl sm:text-2xl font-bold text-[var(--page-text)] mt-1 leading-tight">{currentLesson?.title}</h1>
+                  </div>
+                </div>
+                {content.explanation && (
+                  <div className="mt-4">
+                    <MarkdownRenderer content={content.explanation} />
+                  </div>
+                )}
               </div>
-              <div className="flex-1 min-w-0">
-                <span className="text-xs font-semibold text-[var(--page-accent)] uppercase tracking-wider">Concept Lesson</span>
-                <h1 className="text-xl sm:text-2xl font-bold text-[var(--page-text)] mt-1 leading-tight">{currentLesson?.title}</h1>
-              </div>
-            </div>
-            {content.explanation && (
-              <div className="mt-4 text-[var(--page-text-muted)] leading-relaxed text-sm sm:text-base">
-                <RichTextRenderer content={content.explanation} />
-              </div>
+            </motion.div>
+
+            {/* Real-World Analogy */}
+            {content.analogy && (
+              <motion.div variants={slideUp} className="relative rounded-2xl border border-amber-200/60 dark:border-amber-800/30 overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-r from-amber-50/80 to-orange-50/80 dark:from-amber-900/10 dark:to-orange-900/10" />
+                <div className="relative p-6 sm:p-8">
+                  <div className="flex items-start gap-4">
+                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-md flex-shrink-0">
+                      <FaLightbulb className="text-white text-lg" />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="text-lg font-bold text-amber-900 dark:text-amber-200 mb-3">Real-World Analogy</h3>
+                      <div className="bg-white/60 dark:bg-amber-900/20 backdrop-blur-sm rounded-xl p-5 border border-amber-200/60 dark:border-amber-700/30">
+                        <h4 className="font-semibold text-amber-800 dark:text-amber-300 mb-2">{content.analogy.title}</h4>
+                        <p className="text-amber-900 dark:text-amber-100 leading-relaxed text-sm">{content.analogy.description}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+
+            {/* Syntax / Code Example */}
+            {content.syntax && (
+              <motion.div variants={slideUp} className="rounded-2xl border border-[var(--page-border)] overflow-hidden">
+                <div className="p-5 sm:p-6">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-lg font-bold text-[var(--page-text)] flex items-center gap-3">
+                      <div className="w-9 h-9 rounded-xl bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
+                        <FaCode className="text-green-600 dark:text-green-400" />
+                      </div>
+                      {content.syntax.title || 'Syntax'}
+                    </h3>
+                    <button
+                      onClick={copyCode}
+                      className="px-3 py-1.5 bg-[var(--page-section)] hover:bg-[var(--page-border)] text-[var(--page-text-muted)] rounded-lg text-xs font-medium transition-all flex items-center gap-1.5"
+                    >
+                      {copiedCode ? (
+                        <><FaCheck className="text-green-500" /> Copied!</>
+                      ) : (
+                        <><svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg> Copy</>
+                      )}
+                    </button>
+                  </div>
+                  <div className="relative rounded-xl overflow-hidden border border-gray-700">
+                    <div className="flex items-center justify-between px-4 py-2.5 bg-gray-800/80 border-b border-gray-700">
+                      <div className="flex items-center gap-2">
+                        <div className="flex gap-1.5">
+                          <div className="w-2.5 h-2.5 rounded-full bg-red-500" />
+                          <div className="w-2.5 h-2.5 rounded-full bg-yellow-500" />
+                          <div className="w-2.5 h-2.5 rounded-full bg-green-500" />
+                        </div>
+                        <span className="text-xs text-gray-400 ml-2 font-mono">main.py</span>
+                      </div>
+                      <span className="text-[10px] text-gray-500 font-mono">{programmingLanguage}</span>
+                    </div>
+                    <pre className="p-5 bg-gray-900 text-sm text-gray-100 font-mono leading-relaxed overflow-x-auto">{content.syntax.code}</pre>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+
+            {/* Key Takeaways */}
+            {content.keyNotes && content.keyNotes.length > 0 && (
+              <motion.div variants={slideUp} className="rounded-2xl border border-[var(--page-border)] bg-[var(--page-section)]/50 p-6 sm:p-8">
+                <h3 className="text-lg font-bold text-[var(--page-text)] mb-5 flex items-center gap-2">
+                  <FaCheckDouble className="text-[var(--page-accent)]" />
+                  Key Takeaways
+                </h3>
+                <div className="grid gap-3">
+                  {content.keyNotes.map((note: string, i: number) => (
+                    <motion.div
+                      key={i}
+                      variants={slideInLeft}
+                      className="flex items-start gap-3 p-4 bg-[var(--page-card)] rounded-xl border border-[var(--page-border)] hover:border-[var(--page-accent)]/20 transition-colors"
+                    >
+                      <div className="w-6 h-6 rounded-full bg-gradient-to-br from-[var(--page-accent)] to-[var(--page-accent-secondary)] flex items-center justify-center flex-shrink-0 mt-0.5 text-white text-xs font-bold">
+                        {i + 1}
+                      </div>
+                      <p className="text-[var(--page-text)] leading-relaxed text-sm flex-1">{note}</p>
+                    </motion.div>
+                  ))}
+                </div>
+              </motion.div>
             )}
           </div>
-        </motion.div>
 
-        {/* Real-World Analogy */}
-        {content.analogy && (
-          <motion.div variants={slideUp} className="relative rounded-2xl border border-amber-200/60 dark:border-amber-800/30 overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-r from-amber-50/80 to-orange-50/80 dark:from-amber-900/10 dark:to-orange-900/10" />
-            <div className="relative p-6 sm:p-8">
-              <div className="flex items-start gap-4">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-md flex-shrink-0">
-                  <FaLightbulb className="text-white text-lg" />
-                </div>
-                <div className="flex-1">
-                  <h3 className="text-lg font-bold text-amber-900 dark:text-amber-200 mb-3">Real-World Analogy</h3>
-                  <div className="bg-white/60 dark:bg-amber-900/20 backdrop-blur-sm rounded-xl p-5 border border-amber-200/60 dark:border-amber-700/30">
-                    <h4 className="font-semibold text-amber-800 dark:text-amber-300 mb-2">{content.analogy.title}</h4>
-                    <p className="text-amber-900 dark:text-amber-100 leading-relaxed text-sm">{content.analogy.description}</p>
-                  </div>
+          {/* TOC sidebar */}
+          {hasToc && (
+            <motion.div variants={fadeIn} className="lg:w-[30%] min-w-0 order-first lg:order-last">
+              <div className="lg:sticky lg:top-24 space-y-4">
+                <div className="p-5 rounded-2xl border border-[var(--page-border)] bg-[var(--page-card)]">
+                  <TableOfContents headings={headings} />
                 </div>
               </div>
-            </div>
-          </motion.div>
-        )}
-
-        {/* Syntax / Code Example */}
-        {content.syntax && (
-          <motion.div variants={slideUp} className="rounded-2xl border border-[var(--page-border)] overflow-hidden">
-            <div className="p-5 sm:p-6">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-bold text-[var(--page-text)] flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-xl bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
-                    <FaCode className="text-green-600 dark:text-green-400" />
-                  </div>
-                  {content.syntax.title || 'Syntax'}
-                </h3>
-                <button
-                  onClick={copyCode}
-                  className="px-3 py-1.5 bg-[var(--page-section)] hover:bg-[var(--page-border)] text-[var(--page-text-muted)] rounded-lg text-xs font-medium transition-all flex items-center gap-1.5"
-                >
-                  {copiedCode ? (
-                    <><FaCheck className="text-green-500" /> Copied!</>
-                  ) : (
-                    <><svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg> Copy</>
-                  )}
-                </button>
-              </div>
-              <div className="relative rounded-xl overflow-hidden border border-gray-700">
-                <div className="flex items-center justify-between px-4 py-2.5 bg-gray-800/80 border-b border-gray-700">
-                  <div className="flex items-center gap-2">
-                    <div className="flex gap-1.5">
-                      <div className="w-2.5 h-2.5 rounded-full bg-red-500" />
-                      <div className="w-2.5 h-2.5 rounded-full bg-yellow-500" />
-                      <div className="w-2.5 h-2.5 rounded-full bg-green-500" />
-                    </div>
-                    <span className="text-xs text-gray-400 ml-2 font-mono">main.py</span>
-                  </div>
-                  <span className="text-[10px] text-gray-500 font-mono">{programmingLanguage}</span>
-                </div>
-                <pre className="p-5 bg-gray-900 text-sm text-gray-100 font-mono leading-relaxed overflow-x-auto">{content.syntax.code}</pre>
-              </div>
-            </div>
-          </motion.div>
-        )}
-
-        {/* Key Takeaways */}
-        {content.keyNotes && content.keyNotes.length > 0 && (
-          <motion.div variants={slideUp} className="rounded-2xl border border-[var(--page-border)] bg-[var(--page-section)]/50 p-6 sm:p-8">
-            <h3 className="text-lg font-bold text-[var(--page-text)] mb-5 flex items-center gap-2">
-              <FaCheckDouble className="text-[var(--page-accent)]" />
-              Key Takeaways
-            </h3>
-            <div className="grid gap-3">
-              {content.keyNotes.map((note: string, i: number) => (
-                <motion.div
-                  key={i}
-                  variants={slideInLeft}
-                  className="flex items-start gap-3 p-4 bg-[var(--page-card)] rounded-xl border border-[var(--page-border)] hover:border-[var(--page-accent)]/20 transition-colors"
-                >
-                  <div className="w-6 h-6 rounded-full bg-gradient-to-br from-[var(--page-accent)] to-[var(--page-accent-secondary)] flex items-center justify-center flex-shrink-0 mt-0.5 text-white text-xs font-bold">
-                    {i + 1}
-                  </div>
-                  <p className="text-[var(--page-text)] leading-relaxed text-sm flex-1">{note}</p>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-        )}
-
-        {/* Navigation Footer */}
-        <motion.div variants={fadeIn} className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3 pt-2 pb-8">
-          <button
-            onClick={() => navigateLesson('prev')}
-            disabled={currentModuleIndex === 0 && currentLessonIndex === 0}
-            className="px-5 py-2.5 text-[var(--page-text-muted)] hover:text-[var(--page-text)] bg-[var(--page-card)] border border-[var(--page-border)] disabled:opacity-30 disabled:cursor-not-allowed rounded-xl flex items-center justify-center gap-2 font-medium transition-all hover:shadow-sm"
-          >
-            <FaChevronLeft className="text-xs" /> Previous
-          </button>
-
-          {!isLessonCompleted(currentLesson?._id) ? (
-            <button
-              onClick={() => markLessonComplete()}
-              className="px-8 py-3 bg-gradient-to-r from-[var(--page-accent)] to-[var(--page-accent-secondary)] text-white rounded-xl font-semibold shadow-lg shadow-[var(--page-accent)]/20 hover:shadow-xl hover:shadow-[var(--page-accent)]/30 transition-all flex items-center justify-center gap-2"
-            >
-              <FaCheck className="text-sm" />
-              Mark as Complete
-            </button>
-          ) : (
-            <div className="px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-xl flex items-center justify-center gap-2 font-semibold shadow-md">
-              <FaCheck className="text-lg" /> Completed
-            </div>
+            </motion.div>
           )}
-
-          <button
-            onClick={() => navigateLesson('next')}
-            className="px-5 py-2.5 text-[var(--page-text-muted)] hover:text-[var(--page-text)] bg-[var(--page-card)] border border-[var(--page-border)] rounded-xl flex items-center justify-center gap-2 font-medium transition-all hover:shadow-sm"
-          >
-            Next <FaChevronRight className="text-xs" />
-          </button>
-        </motion.div>
+        </div>
       </motion.div>
     );
   };
@@ -791,7 +810,9 @@ const LearningPage: React.FC<LearningPageProps> = ({ courseId }) => {
                     {mcqCorrect ? 'Correct! Well done.' : `Incorrect. The correct answer is ${content.correctAnswer}.`}
                   </p>
                   {content.explanation && (
-                    <p className="text-[var(--page-text-muted)] text-sm mt-2">{content.explanation}</p>
+                    <div className="mt-2">
+                      <MarkdownRenderer content={content.explanation} />
+                    </div>
                   )}
                 </motion.div>
               )}
@@ -1538,6 +1559,7 @@ const LearningPage: React.FC<LearningPageProps> = ({ courseId }) => {
 
   return (
     <div className="min-h-screen" style={{ background: 'var(--page-bg)' }}>
+      {currentLesson && !isFocusMode && <ReadingProgress />}
       {renderSidebar()}
 
       {/* Mobile Nav */}
@@ -1678,8 +1700,8 @@ const LearningPage: React.FC<LearningPageProps> = ({ courseId }) => {
                       )}
                     </div>
                     {currentLesson.description && (
-                      <div className="text-[var(--page-text-muted)] text-sm leading-relaxed">
-                        <RichTextRenderer content={currentLesson.description} />
+                      <div className="text-sm">
+                        <MarkdownRenderer content={currentLesson.description} />
                       </div>
                     )}
                   </div>
@@ -1694,6 +1716,46 @@ const LearningPage: React.FC<LearningPageProps> = ({ courseId }) => {
                 {(lessonType === 'test' || lessonType === 'moduleTest') && renderModuleTest()}
                 {lessonType === 'completion' && renderCompletionScreen()}
               </div>
+
+              {/* Shared Navigation Footer */}
+              {currentLesson && lessonType !== 'completion' && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="px-4 sm:px-6 lg:p-8 pt-0 pb-4 sm:pb-6 lg:pb-8"
+                >
+                  <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3 pt-2">
+                    <button
+                      onClick={() => navigateLesson('prev')}
+                      disabled={currentModuleIndex === 0 && currentLessonIndex === 0}
+                      className="px-5 py-2.5 text-[var(--page-text-muted)] hover:text-[var(--page-text)] bg-[var(--page-section)] border border-[var(--page-border)] disabled:opacity-30 disabled:cursor-not-allowed rounded-xl flex items-center justify-center gap-2 font-medium transition-all hover:shadow-sm text-sm"
+                    >
+                      <FaChevronLeft className="text-xs" /> Previous
+                    </button>
+
+                    {!isLessonCompleted(currentLesson?._id) ? (
+                      <button
+                        onClick={() => markLessonComplete()}
+                        className="px-8 py-3 bg-gradient-to-r from-[var(--page-accent)] to-[var(--page-accent-secondary)] text-white rounded-xl font-semibold shadow-lg shadow-[var(--page-accent)]/20 hover:shadow-xl hover:shadow-[var(--page-accent)]/30 transition-all flex items-center justify-center gap-2 text-sm"
+                      >
+                        <FaCheck className="text-sm" />
+                        Mark as Complete
+                      </button>
+                    ) : (
+                      <div className="px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-xl flex items-center justify-center gap-2 font-semibold shadow-md text-sm">
+                        <FaCheck className="text-lg" /> Completed
+                      </div>
+                    )}
+
+                    <button
+                      onClick={() => navigateLesson('next')}
+                      className="px-5 py-2.5 text-[var(--page-text-muted)] hover:text-[var(--page-text)] bg-[var(--page-section)] border border-[var(--page-border)] rounded-xl flex items-center justify-center gap-2 font-medium transition-all hover:shadow-sm text-sm"
+                    >
+                      Next <FaChevronRight className="text-xs" />
+                    </button>
+                  </div>
+                </motion.div>
+              )}
             </motion.div>
           )}
         </div>

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import MarkdownRenderer from '../../src/components/learning/MarkdownRenderer';
 import {
   FiPlus,
   FiEdit,
@@ -918,7 +919,9 @@ const ManageDSACoursePage: React.FC<ManageDSACoursePageProps> = ({ initialMode =
                                     </div>
                                   </div>
                                   {lesson.description && (
-                                    <p className="text-sm text-light-textSecondary">{lesson.description}</p>
+                                    <div className="text-sm text-light-textSecondary">
+                                      <MarkdownRenderer content={lesson.description} />
+                                    </div>
                                   )}
                                 </div>
                               ))}
