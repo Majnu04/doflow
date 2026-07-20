@@ -1,6 +1,9 @@
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
-dotenv.config({ path: '../.env' });
+import path from 'path';
+import { fileURLToPath } from 'url';
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
 const MONGO_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/elite-academy';
 
@@ -44,12 +47,12 @@ async function removeInstructorName() {
       console.log(`  Email: ${instructor.email}`);
       console.log(`  Role: ${instructor.role}`);
       
-      // Update if name contains "Chiru"
-      if (instructor.name && instructor.name.toLowerCase().includes('chiru')) {
-        console.log(`  ⚠️ Found "Chiru" in name - updating to "DoFlow Academy"`);
+      // Update if name contains "Chiranjeevi" or "Reddy" (Polamreddy Chiranjeevi Reddy)
+      if (instructor.name && (instructor.name.toLowerCase().includes('chiran') || instructor.name.toLowerCase().includes('reddy'))) {
+        console.log(`  ⚠️ Found "Chiranjeevi/Reddy" in name - updating to "Doflow Instructor"`);
         await db.collection('users').updateOne(
           { _id: instructor._id },
-          { $set: { name: 'DoFlow Academy' } }
+          { $set: { name: 'Doflow Instructor' } }
         );
         console.log('  ✅ Updated successfully');
       }

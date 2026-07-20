@@ -20,6 +20,13 @@ export default {
       },
     },
     extend: {
+      spacing: {
+        '4.5': '1.125rem',
+        '18': '4.5rem',
+        '88': '22rem',
+        '120': '30rem',
+        '128': '32rem',
+      },
       colors: {
         light: {
           bg: '#FDFBF8',
@@ -31,12 +38,13 @@ export default {
           border: '#E5DDD2',
         },
         dark: {
-          bg: '#111111',
-          card: '#1A1A1A',
-          cardAlt: '#222222',
+          bg: '#0F0E12',
+          card: '#18171C',
+          cardAlt: '#201F25',
           text: '#EDEDEF',
-          muted: '#8B8A91',
-          border: '#2A2A2A',
+          textSecondary: '#9C9CA5',
+          muted: '#6B6B74',
+          border: '#2A2930',
         },
         brand: {
           primary: '#E06438',
@@ -56,6 +64,12 @@ export default {
         },
         shadow: {
           soft: 'rgba(47, 44, 40, 0.08)',
+        },
+        surface: {
+          DEFAULT: '#FDFBF8',
+          alt: '#F6F0E8',
+          dark: '#0F0E12',
+          'dark-alt': '#18171C',
         },
       },
       fontFamily: {
@@ -87,6 +101,11 @@ export default {
         'card': '0 1px 3px rgba(32, 29, 25, 0.04), 0 4px 12px rgba(32, 29, 25, 0.06)',
         'card-hover': '0 4px 12px rgba(32, 29, 25, 0.06), 0 12px 32px rgba(32, 29, 25, 0.1)',
         'elevated': '0 8px 24px rgba(32, 29, 25, 0.08), 0 24px 48px rgba(32, 29, 25, 0.08)',
+        'dark-xs': '0 1px 2px rgba(0, 0, 0, 0.3)',
+        'dark-sm': '0 2px 8px rgba(0, 0, 0, 0.35)',
+        'dark-md': '0 4px 16px rgba(0, 0, 0, 0.4)',
+        'dark-lg': '0 8px 32px rgba(0, 0, 0, 0.45)',
+        'dark-xl': '0 16px 48px rgba(0, 0, 0, 0.5)',
       },
       borderRadius: {
         '4xl': '2rem',

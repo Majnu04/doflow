@@ -58,7 +58,7 @@ const AboutPage: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-light-bg text-light-text">
+    <div className="min-h-screen bg-light-bg text-light-text dark:bg-dark-bg dark:text-dark-text">
       {/* Hero */}
       <section className="relative pt-28 pb-20 overflow-hidden">
         <div className="absolute inset-0 -z-10 bg-hero-gradient" />

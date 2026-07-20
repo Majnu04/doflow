@@ -18,9 +18,9 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
 
     const inputClasses = `
       w-full ${sizeClasses[inputSize]} ${icon ? 'pl-11' : ''}
-      bg-light-card
-      border ${error ? 'border-red-400 focus:border-red-500 focus:ring-red-500/15' : 'border-border-subtle focus:border-brand-primary focus:ring-brand-primary/15'}
-      rounded-xl text-light-text placeholder-light-textMuted/60
+      bg-light-card dark:bg-dark-card
+      border ${error ? 'border-red-400 focus:border-red-500 focus:ring-red-500/15' : 'border-border-subtle dark:border-dark-border focus:border-brand-primary focus:ring-brand-primary/15'}
+      rounded-xl text-light-text dark:text-dark-text placeholder-light-textMuted/60 dark:placeholder-dark-muted/60
       focus:ring-4 focus:shadow-[0_0_0_3px_rgba(224,100,56,0.1)]
       transition-all duration-200 ease-smooth
       ${className}
@@ -29,13 +29,13 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
     return (
       <div className="w-full">
         {label && (
-          <label className="block text-sm font-semibold text-light-text mb-1.5 tracking-wide">
+          <label className="block text-sm font-semibold text-light-text dark:text-dark-text mb-1.5 tracking-wide">
             {label}
           </label>
         )}
         <div className="relative">
           {icon && (
-            <div className="absolute left-3.5 top-1/2 transform -translate-y-1/2 text-light-textMuted pointer-events-none">
+            <div className="absolute left-3.5 top-1/2 transform -translate-y-1/2 text-light-textMuted dark:text-dark-muted pointer-events-none">
               {icon}
             </div>
           )}
@@ -54,7 +54,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           </p>
         )}
         {helperText && !error && (
-          <p className="mt-1.5 text-xs text-light-textMuted">{helperText}</p>
+          <p className="mt-1.5 text-xs text-light-textMuted dark:text-dark-muted">{helperText}</p>
         )}
       </div>
     );

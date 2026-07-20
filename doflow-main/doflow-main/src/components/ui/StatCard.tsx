@@ -42,8 +42,8 @@ const StatCard: React.FC<StatCardProps> = ({
           <span className={`
             inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full
             ${isPositive
-              ? 'text-emerald-600 bg-emerald-50'
-              : 'text-rose-600 bg-rose-50'
+              ? 'text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-500/10'
+              : 'text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-500/10'
             }
           `}>
             <svg
@@ -60,10 +60,10 @@ const StatCard: React.FC<StatCardProps> = ({
         )}
       </div>
       <div>
-        <p className="text-2xl font-bold text-light-text tracking-tight">{value}</p>
-        <p className="text-xs text-light-textMuted mt-0.5">{title}</p>
+        <p className="text-2xl font-bold text-light-text dark:text-dark-text tracking-tight">{value}</p>
+        <p className="text-xs text-light-textMuted dark:text-dark-muted mt-0.5">{title}</p>
         {change !== undefined && (
-          <p className="text-[10px] text-light-textMuted/60 mt-1">{changeLabel}</p>
+          <p className="text-[10px] text-light-textMuted/60 dark:text-dark-muted/60 mt-1">{changeLabel}</p>
         )}
       </div>
     </div>

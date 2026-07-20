@@ -81,13 +81,13 @@ const WishlistPage: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen pt-24 pb-12 px-4 flex items-center justify-center">
+      <div className="min-h-screen pt-24 pb-12 px-4 flex items-center justify-center bg-light-bg dark:bg-dark-bg">
         <div className="text-center">
           <svg className="animate-spin h-12 w-12 mx-auto mb-4 text-brand-accent" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
           </svg>
-          <p className="text-lg text-gray-300">Loading wishlist...</p>
+          <p className="text-lg text-light-textMuted dark:text-dark-muted">Loading wishlist...</p>
         </div>
       </div>
     );
@@ -95,13 +95,13 @@ const WishlistPage: React.FC = () => {
 
   if (items.length === 0) {
     return (
-      <div className="min-h-screen pt-24 pb-12 px-4">
+      <div className="min-h-screen pt-24 pb-12 px-4 bg-light-bg dark:bg-dark-bg">
         <div className="max-w-7xl mx-auto">
           <Card variant="subtle" className="text-center py-20">
             <div className="max-w-md mx-auto">
-              <FiHeart className="w-24 h-24 mx-auto mb-6 text-gray-500" />
+              <FiHeart className="w-24 h-24 mx-auto mb-6 text-light-textSecondary dark:text-dark-textSecondary" />
               <h2 className="text-3xl font-bold mb-4">Your wishlist is empty</h2>
-              <p className="text-gray-400 mb-8">
+              <p className="text-light-textMuted dark:text-dark-muted mb-8">
                 Save courses you're interested in and come back to them later!
               </p>
               <Button
@@ -120,7 +120,7 @@ const WishlistPage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen pt-24 pb-12 px-4">
+    <div className="min-h-screen pt-24 pb-12 px-4 bg-light-bg dark:bg-dark-bg">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
@@ -128,7 +128,7 @@ const WishlistPage: React.FC = () => {
             <h1 className="text-4xl font-display font-bold gradient-text mb-2">
               My Wishlist
             </h1>
-            <p className="text-gray-400">{items.length} course{items.length !== 1 ? 's' : ''} saved</p>
+            <p className="text-light-textMuted dark:text-dark-muted">{items.length} course{items.length !== 1 ? 's' : ''} saved</p>
           </div>
           {items.length > 0 && (
             <Button
@@ -156,7 +156,7 @@ const WishlistPage: React.FC = () => {
                   />
                   <button
                     onClick={() => handleRemoveFromWishlist(course._id)}
-                    className="absolute top-3 right-3 p-2 bg-red-500 hover:bg-red-600 rounded-full shadow-neon transition-all duration-300"
+                    className="absolute top-3 right-3 p-2 bg-red-500 hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700 rounded-full shadow-neon transition-all duration-300"
                   >
                     <FiHeart className="w-5 h-5 text-white fill-current" />
                   </button>
@@ -174,11 +174,11 @@ const WishlistPage: React.FC = () => {
                     <a href={`/#/course/${course._id}`}>{course.title}</a>
                   </h3>
                   
-                  <p className="text-gray-400 text-sm mb-3 line-clamp-2">
+                  <p className="text-light-textMuted dark:text-dark-muted text-sm mb-3 line-clamp-2">
                     {course.description}
                   </p>
 
-                  <div className="flex items-center gap-2 text-sm text-gray-400 mb-4">
+                  <div className="flex items-center gap-2 text-sm text-light-textMuted dark:text-dark-muted mb-4">
                     <span>{typeof course.instructor === 'object' ? course.instructor?.name : course.instructor}</span>
                     <span>•</span>
                     <Badge variant="primary">{course.level}</Badge>
@@ -190,7 +190,7 @@ const WishlistPage: React.FC = () => {
                         <span className="text-2xl font-bold text-elite-gold">
                           ₹{course.discountPrice}
                         </span>
-                        <span className="text-sm text-gray-500 line-through">
+                        <span className="text-sm text-light-textSecondary dark:text-dark-textSecondary line-through">
                           ₹{course.price}
                         </span>
                       </div>

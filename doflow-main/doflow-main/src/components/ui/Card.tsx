@@ -18,12 +18,12 @@ const Card: React.FC<CardProps> = ({
   padding = 'md',
 }) => {
   const variants = {
-    default: 'bg-light-card border border-border-subtle shadow-card',
-    bordered: 'bg-light-card border-2 border-brand-primary/20 shadow-xs',
-    subtle: 'bg-light-cardAlt border border-border-subtle/60',
-    glass: 'bg-white/80 border border-white/50 backdrop-blur-xl shadow-lg inner-glow',
-    elevated: 'bg-light-card border border-border-subtle shadow-elevated',
-    interactive: 'bg-light-card border border-border-subtle shadow-card cursor-pointer',
+    default: 'bg-light-card border border-border-subtle shadow-card dark:bg-dark-card dark:border-dark-border dark:shadow-none',
+    bordered: 'bg-light-card border-2 border-brand-primary/20 shadow-xs dark:bg-dark-card dark:border-dark-border dark:shadow-none',
+    subtle: 'bg-light-cardAlt border border-border-subtle/60 dark:bg-dark-card dark:border-dark-border/60',
+    glass: 'bg-white/80 border border-white/50 backdrop-blur-xl shadow-lg inner-glow dark:bg-dark-card/80 dark:border-white/5 dark:shadow-none',
+    elevated: 'bg-light-card border border-border-subtle shadow-elevated dark:bg-dark-card dark:border-dark-border dark:shadow-none',
+    interactive: 'bg-light-card border border-border-subtle shadow-card cursor-pointer dark:bg-dark-card dark:border-dark-border dark:shadow-none',
   } as const;
 
   const paddings = {
@@ -34,18 +34,18 @@ const Card: React.FC<CardProps> = ({
   };
 
   const hoverStyles = hover
-    ? 'hover:-translate-y-0.5 hover:shadow-card-hover hover:border-brand-primary/30 transition-all duration-350 ease-expo cursor-pointer'
+    ? 'hover:-translate-y-0.5 hover:shadow-card-hover hover:border-brand-primary/30 transition-all duration-[220ms] ease-[cubic-bezier(0.33,1,0.68,1)] cursor-pointer'
     : '';
 
   const interactiveStyles = variant === 'interactive'
-    ? 'hover:-translate-y-0.5 hover:shadow-card-hover hover:border-brand-primary/30 active:translate-y-0 transition-all duration-350 ease-expo cursor-pointer'
+    ? 'hover:-translate-y-0.5 hover:shadow-card-hover hover:border-brand-primary/30 active:translate-y-0 transition-all duration-[220ms] ease-[cubic-bezier(0.33,1,0.68,1)] cursor-pointer'
     : '';
 
   return (
     <div
       className={`
         ${variants[variant]}
-        rounded-2xl
+        rounded-xl
         ${paddings[padding]}
         ${variant === 'interactive' ? interactiveStyles : hoverStyles}
         ${className}

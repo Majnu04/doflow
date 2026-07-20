@@ -29,16 +29,16 @@ const AdminDashboardSkeleton: React.FC = () => (
   <div className="animate-pulse space-y-6">
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
       {[...Array(4)].map((_, i) => (
-        <div key={i} className="bg-light-card border border-border-subtle rounded-2xl p-5">
+        <div key={i} className="bg-light-card dark:bg-dark-card border border-border-subtle dark:border-dark-border rounded-2xl p-5">
           <div className="flex items-start justify-between mb-3">
-            <div className="w-10 h-10 rounded-xl bg-light-cardAlt" />
+            <div className="w-10 h-10 rounded-xl bg-light-cardAlt dark:bg-dark-cardAlt" />
           </div>
-          <div className="h-8 bg-light-cardAlt rounded-lg w-1/2 mb-1" />
-          <div className="h-3 bg-light-cardAlt rounded-lg w-2/3" />
+          <div className="h-8 bg-light-cardAlt dark:bg-dark-cardAlt rounded-lg w-1/2 mb-1" />
+          <div className="h-3 bg-light-cardAlt dark:bg-dark-cardAlt rounded-lg w-2/3" />
         </div>
       ))}
     </div>
-    <div className="bg-light-card border border-border-subtle rounded-2xl p-6 h-80" />
+    <div className="bg-light-card dark:bg-dark-card border border-border-subtle dark:border-dark-border rounded-2xl p-6 h-80" />
   </div>
 );
 
@@ -60,14 +60,14 @@ const CourseOutlineGenerator: React.FC = () => {
   };
 
   return (
-    <div className="bg-light-card border border-border-subtle rounded-2xl p-6 shadow-card">
+    <div className="bg-light-card dark:bg-dark-card border border-border-subtle dark:border-dark-border rounded-2xl p-6 shadow-card">
       <div className="flex items-center gap-3 mb-4">
         <div className="p-2 bg-brand-primary/10 rounded-xl">
           <FiCode className="w-5 h-5 text-brand-primary" />
         </div>
         <div>
-          <h3 className="text-base font-bold text-light-text">Course Outline Generator</h3>
-          <p className="text-xs text-light-textMuted">Powered by AI</p>
+          <h3 className="text-base font-bold text-light-text dark:text-dark-text">Course Outline Generator</h3>
+          <p className="text-xs text-light-textMuted dark:text-dark-muted">Powered by AI</p>
         </div>
       </div>
       <div className="flex flex-col sm:flex-row gap-3 mb-4">
@@ -76,7 +76,7 @@ const CourseOutlineGenerator: React.FC = () => {
           value={topic}
           onChange={(e) => setTopic(e.target.value)}
           placeholder="Enter course topic (e.g., React for Beginners)"
-          className="flex-grow px-4 py-2.5 bg-light-cardAlt/60 border border-border-subtle/40 rounded-xl text-sm text-light-text placeholder:text-light-textMuted/60 focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary transition-all"
+          className="flex-grow px-4 py-2.5 bg-light-cardAlt/60 dark:bg-dark-cardAlt/60 border border-border-subtle/40 dark:border-dark-border/40 rounded-xl text-sm text-light-text dark:text-dark-text placeholder:text-light-textMuted/60 dark:placeholder:text-dark-muted/60 focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary transition-all"
         />
         <Button
           variant="primary"
@@ -88,15 +88,15 @@ const CourseOutlineGenerator: React.FC = () => {
           Generate
         </Button>
       </div>
-      {error && <p className="text-red-500 text-xs mb-3">{error}</p>}
+      {error && <p className="text-red-500 dark:text-red-400 text-xs mb-3">{error}</p>}
       {outline && (
-        <div className="p-4 bg-light-cardAlt/60 rounded-xl border border-border-subtle/40 max-h-80 overflow-y-auto">
-          <h4 className="text-base font-bold text-light-text mb-1">{outline.courseTitle}</h4>
-          <p className="text-sm text-light-textSecondary mb-4">{outline.courseDescription}</p>
+        <div className="p-4 bg-light-cardAlt/60 dark:bg-dark-cardAlt/60 rounded-xl border border-border-subtle/40 dark:border-dark-border/40 max-h-80 overflow-y-auto">
+          <h4 className="text-base font-bold text-light-text dark:text-dark-text mb-1">{outline.courseTitle}</h4>
+          <p className="text-sm text-light-textSecondary dark:text-dark-textSecondary mb-4">{outline.courseDescription}</p>
           {outline.modules.map((module: any, index: number) => (
             <div key={index} className="mb-3">
-              <h5 className="text-sm font-bold text-light-text mb-1">Module {index + 1}: {module.moduleTitle}</h5>
-              <ul className="list-disc list-inside ml-4 text-sm text-light-textSecondary space-y-0.5">
+              <h5 className="text-sm font-bold text-light-text dark:text-dark-text mb-1">Module {index + 1}: {module.moduleTitle}</h5>
+              <ul className="list-disc list-inside ml-4 text-sm text-light-textSecondary dark:text-dark-textSecondary space-y-0.5">
                 {module.lessons.map((lesson: string, lessonIndex: number) => (
                   <li key={lessonIndex}>{lesson}</li>
                 ))}
@@ -158,7 +158,7 @@ const AdminDashboard: React.FC = () => {
 
   if (status === 'loading' || status === 'idle') {
     return (
-      <div className="min-h-screen bg-light-bg text-light-text pt-24 pb-12 px-4 sm:px-6 lg:px-8">
+      <div className="min-h-screen bg-light-bg dark:bg-dark-bg text-light-text dark:text-dark-text pt-24 pb-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <h1 className="text-2xl font-bold mb-6">Admin Dashboard</h1>
           <AdminDashboardSkeleton />
@@ -169,7 +169,7 @@ const AdminDashboard: React.FC = () => {
 
   if (status === 'failed') {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-light-bg pt-24 px-4">
+      <div className="min-h-screen flex items-center justify-center bg-light-bg dark:bg-dark-bg pt-24 px-4">
         <ErrorState message={error || 'Failed to load dashboard data.'} onRetry={() => dispatch(getAdminDashboardData())} />
       </div>
     );
@@ -177,7 +177,7 @@ const AdminDashboard: React.FC = () => {
 
   if (!data || !data.stats) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-light-bg pt-24 px-4">
+      <div className="min-h-screen flex items-center justify-center bg-light-bg dark:bg-dark-bg pt-24 px-4">
         <EmptyState title="No Data" message="Could not retrieve dashboard data." />
       </div>
     );
@@ -186,13 +186,13 @@ const AdminDashboard: React.FC = () => {
   const { stats, recentUsers, recentCourses } = data;
 
   return (
-    <div className="min-h-screen bg-light-bg text-light-text pt-24 pb-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-light-bg dark:bg-dark-bg text-light-text dark:text-dark-text pt-24 pb-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 animate-fade-in">
           <div>
             <h1 className="text-2xl font-bold">Admin Dashboard</h1>
-            <p className="text-sm text-light-textSecondary">Platform performance overview</p>
+            <p className="text-sm text-light-textSecondary dark:text-dark-textSecondary">Platform performance overview</p>
           </div>
           <Button
             variant="primary"
@@ -210,37 +210,37 @@ const AdminDashboard: React.FC = () => {
             title="Total Revenue"
             value={formatCurrency(stats?.totalRevenue || 0)}
             icon={<FiDollarSign className="w-5 h-5" />}
-            accent="bg-emerald-50 text-emerald-600"
+            accent="bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
             change={12}
           />
           <StatCard
             title="Total Users"
             value={formatCount(stats?.totalUsers || 0)}
             icon={<FiUsers className="w-5 h-5" />}
-            accent="bg-sky-50 text-sky-600"
+            accent="bg-sky-50 dark:bg-sky-500/10 text-sky-600 dark:text-sky-400"
             change={8}
           />
           <StatCard
             title="Total Courses"
             value={formatCount(stats?.totalCourses || 0)}
             icon={<FiBookOpen className="w-5 h-5" />}
-            accent="bg-violet-50 text-violet-600"
+            accent="bg-violet-50 dark:bg-violet-500/10 text-violet-600 dark:text-violet-400"
           />
           <StatCard
             title="Total Enrollments"
             value={formatCount(stats?.totalEnrollments || 0)}
             icon={<FiBarChart2 className="w-5 h-5" />}
-            accent="bg-amber-50 text-amber-600"
+            accent="bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400"
             change={15}
           />
         </div>
 
         {/* Revenue Analytics */}
-        <div className="bg-light-card border border-border-subtle rounded-2xl p-6 mb-6 shadow-card">
+        <div className="bg-light-card dark:bg-dark-card border border-border-subtle dark:border-dark-border rounded-2xl p-6 mb-6 shadow-card">
           <div className="flex flex-wrap gap-3 items-start justify-between mb-5">
             <div>
               <h3 className="text-base font-bold">Revenue Analytics</h3>
-              <p className="text-xs text-light-textMuted mt-0.5">
+              <p className="text-xs text-light-textMuted dark:text-dark-muted mt-0.5">
                 {selectedMonthLabel} · {selectedYear} · {selectedCourseLabel}
               </p>
             </div>
@@ -248,7 +248,7 @@ const AdminDashboard: React.FC = () => {
               <select
                 value={selectedYear}
                 onChange={(e) => setSelectedYear(e.target.value)}
-                className="px-3 py-1.5 bg-light-cardAlt/60 border border-border-subtle/40 rounded-lg text-xs text-light-text focus:ring-2 focus:ring-brand-primary/20"
+                className="px-3 py-1.5 bg-light-cardAlt/60 dark:bg-dark-cardAlt/60 border border-border-subtle/40 dark:border-dark-border/40 rounded-lg text-xs text-light-text dark:text-dark-text focus:ring-2 focus:ring-brand-primary/20"
               >
                 {yearOptions.map((year) => (
                   <option key={year} value={year}>{year}</option>
@@ -257,7 +257,7 @@ const AdminDashboard: React.FC = () => {
               <select
                 value={selectedMonth}
                 onChange={(e) => setSelectedMonth(e.target.value)}
-                className="px-3 py-1.5 bg-light-cardAlt/60 border border-border-subtle/40 rounded-lg text-xs text-light-text focus:ring-2 focus:ring-brand-primary/20"
+                className="px-3 py-1.5 bg-light-cardAlt/60 dark:bg-dark-cardAlt/60 border border-border-subtle/40 dark:border-dark-border/40 rounded-lg text-xs text-light-text dark:text-dark-text focus:ring-2 focus:ring-brand-primary/20"
               >
                 {MONTH_FILTER_OPTIONS.map((option) => (
                   <option key={option.value} value={option.value}>{option.label}</option>
@@ -266,7 +266,7 @@ const AdminDashboard: React.FC = () => {
               <select
                 value={selectedCourse}
                 onChange={(e) => setSelectedCourse(e.target.value)}
-                className="px-3 py-1.5 bg-light-cardAlt/60 border border-border-subtle/40 rounded-lg text-xs text-light-text focus:ring-2 focus:ring-brand-primary/20"
+                className="px-3 py-1.5 bg-light-cardAlt/60 dark:bg-dark-cardAlt/60 border border-border-subtle/40 dark:border-dark-border/40 rounded-lg text-xs text-light-text dark:text-dark-text focus:ring-2 focus:ring-brand-primary/20"
               >
                 <option value="all">All Courses</option>
                 {courseSelectOptions.map((course: any) => (
@@ -280,7 +280,7 @@ const AdminDashboard: React.FC = () => {
           </div>
 
           {analyticsLoading && (
-            <div className="animate-pulse h-64 w-full rounded-xl bg-light-cardAlt" />
+            <div className="animate-pulse h-64 w-full rounded-xl bg-light-cardAlt dark:bg-dark-cardAlt" />
           )}
 
           {!analyticsLoading && revenueError && (
@@ -291,16 +291,16 @@ const AdminDashboard: React.FC = () => {
             <>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-5">
                 <div className="p-4 rounded-xl bg-brand-primary/5 border border-brand-primary/10">
-                  <p className="text-[10px] text-light-textMuted uppercase tracking-wide mb-1">Revenue</p>
+                  <p className="text-[10px] text-light-textMuted dark:text-dark-muted uppercase tracking-wide mb-1">Revenue</p>
                   <p className="text-xl font-bold text-brand-primary">{formatCurrency(revenueAnalytics.summary.totalRevenue)}</p>
                 </div>
-                <div className="p-4 rounded-xl bg-emerald-50/60 border border-emerald-100/60">
-                  <p className="text-[10px] text-light-textMuted uppercase tracking-wide mb-1">Enrollments</p>
-                  <p className="text-xl font-bold text-emerald-600">{formatCount(revenueAnalytics.summary.totalEnrollments)}</p>
+                <div className="p-4 rounded-xl bg-emerald-50/60 dark:bg-emerald-500/10 border border-emerald-100/60 dark:border-emerald-500/20">
+                  <p className="text-[10px] text-light-textMuted dark:text-dark-muted uppercase tracking-wide mb-1">Enrollments</p>
+                  <p className="text-xl font-bold text-emerald-600 dark:text-emerald-400">{formatCount(revenueAnalytics.summary.totalEnrollments)}</p>
                 </div>
-                <div className="p-4 rounded-xl bg-amber-50/60 border border-amber-100/60">
-                  <p className="text-[10px] text-light-textMuted uppercase tracking-wide mb-1">Avg. Order Value</p>
-                  <p className="text-xl font-bold text-amber-600">{formatCurrency(revenueAnalytics.summary.averageOrderValue)}</p>
+                <div className="p-4 rounded-xl bg-amber-50/60 dark:bg-amber-500/10 border border-amber-100/60 dark:border-amber-500/20">
+                  <p className="text-[10px] text-light-textMuted dark:text-dark-muted uppercase tracking-wide mb-1">Avg. Order Value</p>
+                  <p className="text-xl font-bold text-amber-600 dark:text-amber-400">{formatCurrency(revenueAnalytics.summary.averageOrderValue)}</p>
                 </div>
               </div>
 
@@ -331,24 +331,24 @@ const AdminDashboard: React.FC = () => {
                     </AreaChart>
                   </ResponsiveContainer>
                 </div>
-                <div className="bg-light-cardAlt/60 border border-border-subtle/40 rounded-xl p-4">
+                <div className="bg-light-cardAlt/60 dark:bg-dark-cardAlt/60 border border-border-subtle/40 dark:border-dark-border/40 rounded-xl p-4">
                   <h4 className="text-sm font-bold mb-3">Revenue by Course</h4>
                   <div className="max-h-64 overflow-y-auto pr-1 space-y-2">
                     {revenueAnalytics.courseRevenue.length > 0 ? (
                       revenueAnalytics.courseRevenue.map((course: any) => (
                         <div
                           key={`${course.courseId || course.courseTitle}`}
-                          className="flex items-center justify-between py-2.5 border-b border-border-subtle/30 last:border-b-0"
+                          className="flex items-center justify-between py-2.5 border-b border-border-subtle/30 dark:border-dark-border/30 last:border-b-0"
                         >
                           <div className="min-w-0">
-                            <p className="text-xs font-semibold text-light-text truncate">{course.courseTitle}</p>
-                            <p className="text-[10px] text-light-textMuted">{formatCount(course.enrollments)} enrollments</p>
+                            <p className="text-xs font-semibold text-light-text dark:text-dark-text truncate">{course.courseTitle}</p>
+                            <p className="text-[10px] text-light-textMuted dark:text-dark-muted">{formatCount(course.enrollments)} enrollments</p>
                           </div>
                           <span className="text-xs font-bold text-brand-primary ml-2 flex-shrink-0">{formatCurrency(course.revenue)}</span>
                         </div>
                       ))
                     ) : (
-                      <p className="text-xs text-light-textMuted py-4 text-center">No revenue recorded for this period.</p>
+                      <p className="text-xs text-light-textMuted dark:text-dark-muted py-4 text-center">No revenue recorded for this period.</p>
                     )}
                   </div>
                 </div>
@@ -359,7 +359,7 @@ const AdminDashboard: React.FC = () => {
 
         {/* Recent Users & Courses */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-6">
-          <div className="bg-light-card border border-border-subtle rounded-2xl p-5 shadow-card">
+          <div className="bg-light-card dark:bg-dark-card border border-border-subtle dark:border-dark-border rounded-2xl p-5 shadow-card">
             <h3 className="text-base font-bold mb-4">Recent Users</h3>
             <div className="space-y-3">
               {recentUsers.slice(0, 5).map((u) => (
@@ -371,8 +371,8 @@ const AdminDashboard: React.FC = () => {
                       className="w-9 h-9 rounded-full flex-shrink-0"
                     />
                     <div className="min-w-0">
-                      <p className="text-sm font-semibold text-light-text truncate">{u.name}</p>
-                      <p className="text-xs text-light-textMuted truncate">{u.email}</p>
+                      <p className="text-sm font-semibold text-light-text dark:text-dark-text truncate">{u.name}</p>
+                      <p className="text-xs text-light-textMuted dark:text-dark-muted truncate">{u.email}</p>
                     </div>
                   </div>
                   <a href={`#/admin/users/${u._id}`} className="text-xs text-brand-primary hover:text-brand-primaryHover font-medium flex-shrink-0 ml-2">
@@ -383,7 +383,7 @@ const AdminDashboard: React.FC = () => {
             </div>
           </div>
 
-          <div className="bg-light-card border border-border-subtle rounded-2xl p-5 shadow-card">
+          <div className="bg-light-card dark:bg-dark-card border border-border-subtle dark:border-dark-border rounded-2xl p-5 shadow-card">
             <h3 className="text-base font-bold mb-4">Recently Added Courses</h3>
             <div className="space-y-3">
               {recentCourses.slice(0, 5).map((course) => (
@@ -395,8 +395,8 @@ const AdminDashboard: React.FC = () => {
                       className="w-14 h-9 rounded-lg object-cover flex-shrink-0"
                     />
                     <div className="min-w-0">
-                      <p className="text-sm font-semibold truncate text-light-text">{course.title}</p>
-                      <p className="text-xs text-light-textMuted">{formatCurrency(course.price)}</p>
+                      <p className="text-sm font-semibold truncate text-light-text dark:text-dark-text">{course.title}</p>
+                      <p className="text-xs text-light-textMuted dark:text-dark-muted">{formatCurrency(course.price)}</p>
                     </div>
                   </div>
                   <a href={`#/admin/courses/${course._id}`} className="text-xs text-brand-primary hover:text-brand-primaryHover font-medium flex-shrink-0 ml-2">
@@ -409,46 +409,46 @@ const AdminDashboard: React.FC = () => {
         </div>
 
         {/* DSA Workspace Settings */}
-        <div className="bg-light-card border border-border-subtle rounded-2xl p-6 mb-6 shadow-card">
+        <div className="bg-light-card dark:bg-dark-card border border-border-subtle dark:border-dark-border rounded-2xl p-6 mb-6 shadow-card">
           <div className="flex items-center gap-3 mb-5">
             <div className="p-2 bg-brand-primary/10 rounded-xl">
               <FiSettings className="w-5 h-5 text-brand-primary" />
             </div>
             <div>
               <h3 className="text-base font-bold">DSA Workspace Settings</h3>
-              <p className="text-xs text-light-textMuted">Configures the DSA problem listing page</p>
+              <p className="text-xs text-light-textMuted dark:text-dark-muted">Configures the DSA problem listing page</p>
             </div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <div>
-              <label className="block text-xs font-semibold text-light-text mb-1.5">Workspace Title</label>
+              <label className="block text-xs font-semibold text-light-text dark:text-dark-text mb-1.5">Workspace Title</label>
               <input
                 type="text"
                 value={wsTitle}
                 onChange={(e) => setWsTitle(e.target.value)}
                 placeholder="e.g. Top 50 DSA Problems for Product Companies"
-                className="w-full px-3 py-2 bg-light-cardAlt/60 border border-border-subtle/40 rounded-lg text-xs text-light-text placeholder:text-light-textMuted/60 focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary transition-all"
+                className="w-full px-3 py-2 bg-light-cardAlt/60 dark:bg-dark-cardAlt/60 border border-border-subtle/40 dark:border-dark-border/40 rounded-lg text-xs text-light-text dark:text-dark-text placeholder:text-light-textMuted/60 dark:placeholder:text-dark-muted/60 focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary transition-all"
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-light-text mb-1.5">Companies (comma-separated)</label>
+              <label className="block text-xs font-semibold text-light-text dark:text-dark-text mb-1.5">Companies (comma-separated)</label>
               <input
                 type="text"
                 value={wsCompanies}
                 onChange={(e) => setWsCompanies(e.target.value)}
                 placeholder="e.g. Google, Amazon, Microsoft, Meta"
-                className="w-full px-3 py-2 bg-light-cardAlt/60 border border-border-subtle/40 rounded-lg text-xs text-light-text placeholder:text-light-textMuted/60 focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary transition-all"
+                className="w-full px-3 py-2 bg-light-cardAlt/60 dark:bg-dark-cardAlt/60 border border-border-subtle/40 dark:border-dark-border/40 rounded-lg text-xs text-light-text dark:text-dark-text placeholder:text-light-textMuted/60 dark:placeholder:text-dark-muted/60 focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary transition-all"
               />
             </div>
           </div>
           <div className="mb-4">
-            <label className="block text-xs font-semibold text-light-text mb-1.5">Workspace Subtitle</label>
+            <label className="block text-xs font-semibold text-light-text dark:text-dark-text mb-1.5">Workspace Subtitle</label>
             <textarea
               value={wsSubtitle}
               onChange={(e) => setWsSubtitle(e.target.value)}
               placeholder="e.g. Master data structures and algorithms..."
               rows={2}
-              className="w-full px-3 py-2 bg-light-cardAlt/60 border border-border-subtle/40 rounded-lg text-xs text-light-text placeholder:text-light-textMuted/60 focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary transition-all resize-none"
+              className="w-full px-3 py-2 bg-light-cardAlt/60 dark:bg-dark-cardAlt/60 border border-border-subtle/40 dark:border-dark-border/40 rounded-lg text-xs text-light-text dark:text-dark-text placeholder:text-light-textMuted/60 dark:placeholder:text-dark-muted/60 focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary transition-all resize-none"
             />
           </div>
           <div className="flex items-center gap-2">

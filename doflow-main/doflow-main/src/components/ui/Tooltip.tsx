@@ -53,7 +53,7 @@ const Tooltip: React.FC<TooltipProps> = ({
           absolute z-50 pointer-events-none
           ${positionClasses[position]}
           px-2.5 py-1.5 rounded-lg
-          bg-neutral-dusk text-white text-xs font-medium
+          bg-neutral-dusk dark:bg-neutral-dusk text-white text-xs font-medium
           shadow-lg
           whitespace-nowrap
           transition-all duration-200 ease-smooth
@@ -63,7 +63,7 @@ const Tooltip: React.FC<TooltipProps> = ({
         role="tooltip"
       >
         {content}
-        <div className={`absolute w-2 h-2 bg-neutral-dusk rotate-45 ${
+        <div className={`absolute w-2 h-2 bg-neutral-dusk dark:bg-neutral-dusk rotate-45 ${
           position === 'top' ? 'bottom-[-4px] left-1/2 -translate-x-1/2' :
           position === 'bottom' ? 'top-[-4px] left-1/2 -translate-x-1/2' :
           position === 'left' ? 'right-[-4px] top-1/2 -translate-y-1/2' :

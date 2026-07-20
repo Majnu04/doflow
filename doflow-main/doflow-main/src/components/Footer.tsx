@@ -33,7 +33,7 @@ const Footer: React.FC = () => {
   ];
 
   return (
-    <footer className="relative mt-24 bg-light-cardAlt/50 border-t border-border-subtle/60 overflow-hidden transition-colors duration-300">
+    <footer className="relative mt-24 bg-light-cardAlt/50 dark:bg-dark-cardAlt/50 border-t border-border-subtle/60 dark:border-dark-border/60 overflow-hidden transition-colors duration-300">
       <div className="absolute inset-0 pointer-events-none bg-soft-vignette opacity-50" />
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Main Footer Content */}
@@ -43,16 +43,16 @@ const Footer: React.FC = () => {
             <a href="/#/" className="flex items-center gap-3 mb-5 group">
               <img src="/logo.png" alt="DoFlow" className="h-10 w-auto object-contain" />
             </a>
-            <p className="text-light-textSecondary text-sm mb-5 leading-relaxed max-w-sm">
+            <p className="text-light-textSecondary dark:text-dark-textSecondary text-sm mb-5 leading-relaxed max-w-sm">
               Empowering learners worldwide with premium online courses. 
               Join thousands of students achieving their dreams through quality education.
             </p>
             <div className="space-y-2.5">
-              <div className="flex items-center gap-3 text-sm text-light-textSecondary hover:text-brand-primary transition-colors duration-200">
+              <div className="flex items-center gap-3 text-sm text-light-textSecondary dark:text-dark-textSecondary hover:text-brand-primary transition-colors duration-200">
                 <FiMail className="w-4 h-4 flex-shrink-0" />
                 <span>doflow004@gmail.com</span>
               </div>
-              <div className="flex items-center gap-3 text-sm text-light-textSecondary hover:text-brand-primary transition-colors duration-200">
+              <div className="flex items-center gap-3 text-sm text-light-textSecondary dark:text-dark-textSecondary hover:text-brand-primary transition-colors duration-200">
                 <FiPhone className="w-4 h-4 flex-shrink-0" />
                 <span>+91 7893804498</span>
               </div>
@@ -61,7 +61,7 @@ const Footer: React.FC = () => {
 
           {/* Quick Links */}
           <div>
-            <h4 className="text-sm font-bold text-light-text mb-4 uppercase tracking-wider">
+            <h4 className="text-sm font-bold text-light-text dark:text-dark-text mb-4 uppercase tracking-wider">
               Quick Links
             </h4>
             <ul className="space-y-2.5">
@@ -69,7 +69,7 @@ const Footer: React.FC = () => {
                 <li key={link.path}>
                   <a
                     href={`/#${link.path}`}
-                    className="text-sm text-light-textSecondary hover:text-brand-primary inline-flex items-center gap-1 transition-colors duration-200 group"
+                    className="text-sm text-light-textSecondary dark:text-dark-textSecondary hover:text-brand-primary inline-flex items-center gap-1 transition-colors duration-200 group"
                   >
                     {link.name}
                     <FiArrowUpRight className="w-3 h-3 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200" />
@@ -81,7 +81,7 @@ const Footer: React.FC = () => {
 
           {/* Support */}
           <div>
-            <h4 className="text-sm font-bold text-light-text mb-4 uppercase tracking-wider">
+            <h4 className="text-sm font-bold text-light-text dark:text-dark-text mb-4 uppercase tracking-wider">
               Support
             </h4>
             <ul className="space-y-2.5">
@@ -89,7 +89,7 @@ const Footer: React.FC = () => {
                 <li key={link.path}>
                   <a
                     href={`/#${link.path}`}
-                    className="text-sm text-light-textSecondary hover:text-brand-primary inline-flex items-center gap-1 transition-colors duration-200 group"
+                    className="text-sm text-light-textSecondary dark:text-dark-textSecondary hover:text-brand-primary inline-flex items-center gap-1 transition-colors duration-200 group"
                   >
                     {link.name}
                     <FiArrowUpRight className="w-3 h-3 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200" />
@@ -101,7 +101,7 @@ const Footer: React.FC = () => {
 
           {/* Categories */}
           <div>
-            <h4 className="text-sm font-bold text-light-text mb-4 uppercase tracking-wider">
+            <h4 className="text-sm font-bold text-light-text dark:text-dark-text mb-4 uppercase tracking-wider">
               Popular Categories
             </h4>
             <ul className="space-y-2.5">
@@ -109,7 +109,7 @@ const Footer: React.FC = () => {
                 <li key={category.name}>
                   <a
                     href={`/#${category.path}`}
-                    className="text-sm text-light-textSecondary hover:text-brand-primary inline-flex items-center gap-1 transition-colors duration-200 group"
+                    className="text-sm text-light-textSecondary dark:text-dark-textSecondary hover:text-brand-primary inline-flex items-center gap-1 transition-colors duration-200 group"
                   >
                     {category.name}
                     <FiArrowUpRight className="w-3 h-3 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200" />
@@ -121,9 +121,9 @@ const Footer: React.FC = () => {
         </div>
 
         {/* Bottom Bar */}
-        <div className="py-6 border-t border-border-subtle/50">
+        <div className="py-6 border-t border-border-subtle/50 dark:border-dark-border/50">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <p className="text-light-textMuted text-xs">
+            <p className="text-light-textMuted dark:text-dark-muted text-xs">
               &copy; {currentYear} DoFlow Academy. All rights reserved.
             </p>
 
@@ -135,7 +135,7 @@ const Footer: React.FC = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={social.label}
-                  className="w-8 h-8 rounded-lg hover:bg-light-card flex items-center justify-center text-light-textMuted hover:text-brand-primary transition-all duration-200"
+                  className="w-8 h-8 rounded-lg hover:bg-light-card dark:hover:bg-dark-card flex items-center justify-center text-light-textMuted dark:text-dark-muted hover:text-brand-primary transition-all duration-200"
                 >
                   {social.icon}
                 </a>

@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getCourses } from '../src/store/slices/coursesSlice';
 import { getStudentDashboardData } from '../src/store/slices/dashboardSlice';
 import { AppDispatch, RootState } from '../src/store';
-import { FaStar, FaUsers, FaClock, FaCheckCircle } from 'react-icons/fa';
+import { FiStar, FiUsers, FiClock, FiCheckCircle } from 'react-icons/fi';
 import { CourseGridSkeleton, EmptyState, ErrorState } from '../src/components/common/StateIndicators';
 import { Button } from '../src/components/ui';
 
@@ -97,7 +97,7 @@ const CoursesPage: React.FC = () => {
           <a
             key={course._id}
             href={courseLink}
-            className={`bg-light-card border border-border-subtle rounded-2xl p-5 hover:border-brand-primary hover:shadow-lg transition-all duration-300 ${course.isDSA ? 'border-brand-primary shadow-md' : ''}`}
+            className={`bg-light-card dark:bg-dark-card border border-border-subtle dark:border-dark-border rounded-xl p-5 hover:border-brand-primary dark:hover:border-brand-primary hover:shadow-lg transition-all duration-300 ${course.isDSA ? 'border-brand-primary shadow-md' : ''}`}
           >
             <div className="relative">
               <img
@@ -115,20 +115,20 @@ const CoursesPage: React.FC = () => {
               )}
             </div>
 
-            <h3 className="text-lg font-bold mb-2 line-clamp-2 text-light-text">{course.title}</h3>
-            <p className="text-light-textSecondary text-sm mb-4 line-clamp-2">{course.shortDescription}</p>
+            <h3 className="text-lg font-bold mb-2 line-clamp-2 text-light-text dark:text-dark-text">{course.title}</h3>
+            <p className="text-light-textSecondary dark:text-dark-textSecondary text-sm mb-4 line-clamp-2">{course.shortDescription}</p>
 
-            <div className="flex items-center gap-4 text-xs text-light-textMuted mb-4">
+            <div className="flex items-center gap-4 text-xs text-light-textMuted dark:text-dark-muted mb-4">
               <div className="flex items-center gap-1">
-                <FaStar className="text-brand-accent" />
+                <FiStar className="text-brand-accent" />
                 <span>{Number(ratingValue).toFixed(1)}</span>
               </div>
               <div className="flex items-center gap-1">
-                <FaUsers />
+                <FiUsers />
                 <span>{enrollmentValue.toLocaleString()}</span>
               </div>
               <div className="flex items-center gap-1">
-                <FaClock />
+                <FiClock />
                 <span>{durationLabel}</span>
               </div>
             </div>
@@ -137,12 +137,12 @@ const CoursesPage: React.FC = () => {
               <div>
                 {enrolledCourseIds.has(course._id) ? (
                   <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-emerald-500">
-                    <FaCheckCircle /> Enrolled
+                    <FiCheckCircle /> Enrolled
                   </span>
                 ) : discountPrice ? (
                   <>
                     <span className="text-xl font-semibold text-brand-primary">₹{discountPrice}</span>
-                    <span className="text-light-textMuted line-through ml-2">₹{priceLabel}</span>
+                    <span className="text-light-textMuted dark:text-dark-muted line-through ml-2">₹{priceLabel}</span>
                   </>
                 ) : priceLabel > 0 ? (
                   <span className="text-xl font-semibold text-brand-primary">₹{priceLabel}</span>
@@ -158,27 +158,27 @@ const CoursesPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-light-bg text-light-text pt-32 pb-16 px-4">
+    <div className="min-h-screen bg-light-bg dark:bg-dark-bg text-light-text dark:text-dark-text pt-32 pb-16 px-4">
       <div className="max-w-7xl mx-auto">
         <div className="mb-10 text-center">
-          <h1 className="text-4xl md:text-5xl font-display font-semibold text-light-text mb-3">Explore Our Courses</h1>
-          <p className="text-light-textSecondary text-lg max-w-2xl mx-auto">Discover your next learning adventure from our curated collection of expert-led courses.</p>
+          <h1 className="text-4xl md:text-5xl font-display font-semibold text-light-text dark:text-dark-text mb-3">Explore Our Courses</h1>
+          <p className="text-light-textSecondary dark:text-dark-textSecondary text-lg max-w-2xl mx-auto">Discover your next learning adventure from our curated collection of expert-led courses.</p>
         </div>
 
         {/* Filters */}
-        <div className="mb-8 p-5 bg-light-card border border-border-subtle rounded-2xl grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+        <div className="mb-8 p-5 bg-light-card dark:bg-dark-card border border-border-subtle dark:border-dark-border rounded-2xl grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
           <input
             type="text"
             placeholder="Search courses..."
             value={filters.search}
             onChange={(e) => setFilters({ ...filters, search: e.target.value })}
-            className="px-4 py-2.5 bg-light-bg border border-border-subtle rounded-xl focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/10 focus:outline-none transition"
+            className="px-4 py-2.5 bg-light-bg dark:bg-dark-card border border-border-subtle dark:border-dark-border rounded-xl text-light-text dark:text-dark-text placeholder-light-textMuted dark:placeholder-dark-muted/60 focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/10 focus:outline-none transition"
           />
 
           <select
             value={filters.category}
             onChange={(e) => setFilters({ ...filters, category: e.target.value })}
-            className="px-4 py-2.5 bg-light-bg border border-border-subtle rounded-xl focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/10 focus:outline-none transition"
+            className="px-4 py-2.5 bg-light-bg dark:bg-dark-card border border-border-subtle dark:border-dark-border rounded-xl text-light-text dark:text-dark-text focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/10 focus:outline-none transition"
           >
             <option value="">All Categories</option>
             {categories.map(cat => (
@@ -189,7 +189,7 @@ const CoursesPage: React.FC = () => {
           <select
             value={filters.level}
             onChange={(e) => setFilters({ ...filters, level: e.target.value })}
-            className="px-4 py-2.5 bg-light-bg border border-border-subtle rounded-xl focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/10 focus:outline-none transition"
+            className="px-4 py-2.5 bg-light-bg dark:bg-dark-card border border-border-subtle dark:border-dark-border rounded-xl text-light-text dark:text-dark-text focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/10 focus:outline-none transition"
           >
             <option value="">All Levels</option>
             {levels.map(level => (
@@ -200,7 +200,7 @@ const CoursesPage: React.FC = () => {
           <select
             value={filters.sort}
             onChange={(e) => setFilters({ ...filters, sort: e.target.value })}
-            className="px-4 py-2.5 bg-light-bg border border-border-subtle rounded-xl focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/10 focus:outline-none transition"
+            className="px-4 py-2.5 bg-light-bg dark:bg-dark-card border border-border-subtle dark:border-dark-border rounded-xl text-light-text dark:text-dark-text focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/10 focus:outline-none transition"
           >
             <option value="newest">Newest</option>
             <option value="popular">Most Popular</option>

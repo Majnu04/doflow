@@ -72,7 +72,7 @@ const PricingPage: React.FC = () => {
   const [isAnnual, setIsAnnual] = useState(false);
 
   return (
-    <div className="min-h-screen bg-light-bg text-light-text">
+    <div className="min-h-screen bg-light-bg dark:bg-dark-bg text-light-text dark:text-dark-text">
       {/* Hero */}
       <section className="relative pt-28 pb-16 overflow-hidden">
         <div className="absolute inset-0 -z-10 bg-hero-gradient" />
@@ -83,18 +83,18 @@ const PricingPage: React.FC = () => {
             Simple, transparent
             <span className="block gradient-text">pricing</span>
           </h1>
-          <p className="text-fluid-base text-light-textSecondary max-w-xl mx-auto leading-relaxed mb-8">
+          <p className="text-fluid-base text-light-textSecondary dark:text-dark-textSecondary max-w-xl mx-auto leading-relaxed mb-8">
             Start free, upgrade when you're ready. No hidden fees, no surprises.
           </p>
           <div className="flex items-center justify-center gap-3 text-sm">
-            <span className={!isAnnual ? 'text-light-text font-semibold' : 'text-light-textMuted'}>Monthly</span>
+            <span className={!isAnnual ? 'text-light-text dark:text-dark-text font-semibold' : 'text-light-textMuted dark:text-dark-muted'}>Monthly</span>
             <button
               onClick={() => setIsAnnual(!isAnnual)}
-              className={`relative w-12 h-6 rounded-full transition-colors ${isAnnual ? 'bg-brand-primary' : 'bg-border-subtle'}`}
+              className={`relative w-12 h-6 rounded-full transition-colors ${isAnnual ? 'bg-brand-primary' : 'bg-border-subtle dark:bg-dark-border'}`}
             >
-              <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-transform ${isAnnual ? 'left-7' : 'left-1'}`} />
+              <div className={`absolute top-1 w-4 h-4 bg-light-card dark:bg-dark-card rounded-full transition-transform ${isAnnual ? 'left-7' : 'left-1'}`} />
             </button>
-            <span className={isAnnual ? 'text-light-text font-semibold' : 'text-light-textMuted'}>
+            <span className={isAnnual ? 'text-light-text dark:text-dark-text font-semibold' : 'text-light-textMuted dark:text-dark-muted'}>
               Annual
               <Badge variant="success" size="xs" className="ml-1.5">Save 20%</Badge>
             </span>
@@ -126,17 +126,17 @@ const PricingPage: React.FC = () => {
                   )}
 
                   <div className="mb-6">
-                    <h3 className="text-lg font-bold text-light-text mb-1">{plan.name}</h3>
-                    <p className="text-xs text-light-textSecondary mb-4">{plan.description}</p>
+                    <h3 className="text-lg font-bold text-light-text dark:text-dark-text mb-1">{plan.name}</h3>
+                    <p className="text-xs text-light-textSecondary dark:text-dark-textSecondary mb-4">{plan.description}</p>
                     <div className="flex items-baseline gap-1">
-                      <span className="text-3xl font-bold text-light-text">
+                      <span className="text-3xl font-bold text-light-text dark:text-dark-text">
                         {plan.price === 0 ? 'Free' : `₹${displayPrice}`}
                       </span>
                       {plan.period && (
-                        <span className="text-sm text-light-textMuted">
+                        <span className="text-sm text-light-textMuted dark:text-dark-muted">
                           {plan.period}
                           {isAnnual && plan.price > 0 && (
-                            <span className="text-[10px] text-emerald-500 ml-1">billed annually</span>
+                            <span className="text-[10px] text-emerald-500 dark:text-emerald-400 ml-1">billed annually</span>
                           )}
                         </span>
                       )}
@@ -146,8 +146,8 @@ const PricingPage: React.FC = () => {
                   <ul className="space-y-2.5 mb-6">
                     {plan.features.map((feature, i) => (
                       <li key={i} className="flex items-center gap-2.5">
-                        <FiCheck className={`w-3.5 h-3.5 flex-shrink-0 ${feature.included ? 'text-emerald-500' : 'text-light-textMuted/40'}`} />
-                        <span className={`text-xs ${feature.included ? 'text-light-textSecondary' : 'text-light-textMuted/50 line-through'}`}>
+                        <FiCheck className={`w-3.5 h-3.5 flex-shrink-0 ${feature.included ? 'text-emerald-500 dark:text-emerald-400' : 'text-light-textMuted/40 dark:text-dark-muted/40'}`} />
+                        <span className={`text-xs ${feature.included ? 'text-light-textSecondary dark:text-dark-textSecondary' : 'text-light-textMuted/50 dark:text-dark-muted/50 line-through'}`}>
                           {feature.text}
                         </span>
                       </li>
@@ -172,11 +172,11 @@ const PricingPage: React.FC = () => {
       </section>
 
       {/* Feature Comparison */}
-      <section className="py-16 bg-light-cardAlt/30">
+      <section className="py-16 bg-light-cardAlt/30 dark:bg-dark-cardAlt/30">
         <div className="max-w-4xl mx-auto px-4">
           <div className="text-center mb-10">
             <h2 className="text-2xl font-bold mb-2">What's included</h2>
-            <p className="text-sm text-light-textSecondary">Every plan comes with these core features</p>
+            <p className="text-sm text-light-textSecondary dark:text-dark-textSecondary">Every plan comes with these core features</p>
           </div>
           <div className="grid md:grid-cols-3 gap-4">
             {[
@@ -191,8 +191,8 @@ const PricingPage: React.FC = () => {
                 <div className="w-10 h-10 bg-brand-primary/10 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:bg-brand-primary/15 transition-colors">
                   <div className="text-brand-primary">{feature.icon}</div>
                 </div>
-                <h4 className="text-xs font-bold text-light-text mb-1">{feature.title}</h4>
-                <p className="text-[11px] text-light-textSecondary">{feature.desc}</p>
+                <h4 className="text-xs font-bold text-light-text dark:text-dark-text mb-1">{feature.title}</h4>
+                <p className="text-[11px] text-light-textSecondary dark:text-dark-textSecondary">{feature.desc}</p>
               </div>
             ))}
           </div>
@@ -204,16 +204,16 @@ const PricingPage: React.FC = () => {
         <div className="max-w-3xl mx-auto px-4">
           <div className="text-center mb-10">
             <h2 className="text-2xl font-bold mb-2">Frequently Asked Questions</h2>
-            <p className="text-sm text-light-textSecondary">Everything you need to know about our pricing</p>
+            <p className="text-sm text-light-textSecondary dark:text-dark-textSecondary">Everything you need to know about our pricing</p>
           </div>
           <div className="space-y-3">
             {FAQS.map((faq, i) => (
               <details key={i} className="premium-card group" open={i === 0}>
-                <summary className="flex items-center justify-between cursor-pointer p-5 text-sm font-bold text-light-text">
+                <summary className="flex items-center justify-between cursor-pointer p-5 text-sm font-bold text-light-text dark:text-dark-text">
                   {faq.q}
-                  <FiArrowRight className="w-4 h-4 text-light-textMuted transform group-open:rotate-90 transition-transform" />
+                  <FiArrowRight className="w-4 h-4 text-light-textMuted dark:text-dark-muted transform group-open:rotate-90 transition-transform" />
                 </summary>
-                <div className="px-5 pb-5 text-xs text-light-textSecondary leading-relaxed">
+                <div className="px-5 pb-5 text-xs text-light-textSecondary dark:text-dark-textSecondary leading-relaxed">
                   {faq.a}
                 </div>
               </details>

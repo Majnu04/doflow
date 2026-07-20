@@ -245,7 +245,7 @@ const App: React.FC = () => {
             />
             {!hideHeaderFooter && <Navbar />}
             <Suspense fallback={<LoadingFallback />}>
-                <main className={hideHeaderFooter ? '' : 'min-h-[calc(100vh-80px)]'}>
+                <main className={hideHeaderFooter ? '' : 'min-h-[calc(100vh-80px)] pb-[72px] md:pb-0'}>
                      {renderRoute()}
                 </main>
             </Suspense>

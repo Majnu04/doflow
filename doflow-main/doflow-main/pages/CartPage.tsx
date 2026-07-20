@@ -66,13 +66,13 @@ const CartPage: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen pt-24 pb-12 px-4 flex items-center justify-center">
+      <div className="min-h-screen pt-24 pb-12 px-4 flex items-center justify-center bg-light-bg dark:bg-dark-bg">
         <div className="text-center">
           <svg className="animate-spin h-12 w-12 mx-auto mb-4 text-brand-accent" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
           </svg>
-          <p className="text-lg text-gray-300">Loading cart...</p>
+          <p className="text-lg text-light-textMuted dark:text-dark-muted">Loading cart...</p>
         </div>
       </div>
     );
@@ -80,13 +80,13 @@ const CartPage: React.FC = () => {
 
   if (items.length === 0) {
     return (
-      <div className="min-h-screen pt-24 pb-12 px-4">
+      <div className="min-h-screen pt-24 pb-12 px-4 bg-light-bg dark:bg-dark-bg">
         <div className="max-w-7xl mx-auto">
           <Card variant="glass" className="text-center py-20">
             <div className="max-w-md mx-auto">
-              <FiShoppingBag className="w-24 h-24 mx-auto mb-6 text-gray-500" />
+              <FiShoppingBag className="w-24 h-24 mx-auto mb-6 text-light-textSecondary dark:text-dark-textSecondary" />
               <h2 className="text-3xl font-bold mb-4">Your cart is empty</h2>
-              <p className="text-gray-400 mb-8">
+              <p className="text-light-textMuted dark:text-dark-muted mb-8">
                 Looks like you haven't added any courses yet. Start exploring our amazing courses!
               </p>
               <Button
@@ -105,7 +105,7 @@ const CartPage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen pt-24 pb-12 px-4">
+    <div className="min-h-screen pt-24 pb-12 px-4 bg-light-bg dark:bg-dark-bg">
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Cart Items */}
         <div className="lg:col-span-2">
@@ -116,10 +116,10 @@ const CartPage: React.FC = () => {
                   <h3 className="text-xl font-semibold mb-1">
                     <a href={`/#/course/${course._id}`}>{course.title}</a>
                   </h3>
-                  <p className="text-gray-400 text-sm mb-3 line-clamp-2">
+                  <p className="text-light-textMuted dark:text-dark-muted text-sm mb-3 line-clamp-2">
                     {course.description}
                   </p>
-                  <div className="flex items-center gap-2 text-sm text-gray-400">
+                  <div className="flex items-center gap-2 text-sm text-light-textMuted dark:text-dark-muted">
                     <span>By {typeof course.instructor === 'object' ? course.instructor?.name : course.instructor}</span>
                     <span>•</span>
                     <span>{course.level}</span>
@@ -129,7 +129,7 @@ const CartPage: React.FC = () => {
                 <div className="flex flex-col items-end justify-between">
                   <button
                     onClick={() => handleRemoveFromCart(course._id)}
-                    className="p-2 text-gray-400 hover:text-red-400 transition-colors"
+                    className="p-2 text-light-textMuted dark:text-dark-muted hover:text-red-400 transition-colors"
                   >
                     <FiTrash2 className="w-5 h-5" />
                   </button>
@@ -140,7 +140,7 @@ const CartPage: React.FC = () => {
                         <div className="text-2xl font-bold text-elite-gold">
                           ₹{course.discountPrice}
                         </div>
-                        <div className="text-sm text-gray-500 line-through">
+                        <div className="text-sm text-light-textSecondary dark:text-dark-textSecondary line-through">
                           ₹{course.price}
                         </div>
                       </>
@@ -171,13 +171,13 @@ const CartPage: React.FC = () => {
             <h3 className="text-2xl font-bold mb-6">Order Summary</h3>
             
             <div className="space-y-4 mb-6">
-              <div className="flex justify-between text-gray-300">
+              <div className="flex justify-between text-light-textMuted dark:text-dark-muted">
                 <span>Original Price:</span>
                 <span>₹{originalTotal}</span>
               </div>
               
               {savings > 0 && (
-                <div className="flex justify-between text-green-400">
+                <div className="flex justify-between text-emerald-500 dark:text-emerald-400">
                   <span>Discount:</span>
                   <span>-₹{savings}</span>
                 </div>
@@ -217,7 +217,7 @@ const CartPage: React.FC = () => {
             </Button>
 
             <div className="mt-6 p-4 bg-elite-purple/10 border border-elite-purple/20 rounded-lg">
-              <p className="text-sm text-gray-300">
+              <p className="text-sm text-light-textMuted dark:text-dark-muted">
                 💡 <strong>Pro Tip:</strong> Courses are updated regularly with new content at no extra cost!
               </p>
             </div>

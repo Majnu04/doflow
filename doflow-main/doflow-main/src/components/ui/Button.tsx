@@ -22,14 +22,14 @@ const Button: React.FC<ButtonProps> = ({
   fullWidth = false,
   ...props
 }) => {
-  const baseStyles = 'relative inline-flex items-center justify-center gap-2 font-semibold tracking-tight rounded-xl transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/40 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed select-none';
+  const baseStyles = 'relative inline-flex items-center justify-center gap-2 font-semibold tracking-tight rounded-lg transition-all duration-[220ms] ease-[cubic-bezier(0.33,1,0.68,1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/40 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed select-none';
 
   const variants = {
     primary: 'bg-brand-primary text-white shadow-brand hover:bg-brand-primaryHover hover:shadow-brand-lg hover:-translate-y-0.5 active:translate-y-0 active:shadow-brand',
     secondary: 'bg-brand-accentSoft text-brand-primary hover:bg-brand-accent/20 shadow-xs hover:shadow-sm',
     gold: 'bg-brand-accent text-white shadow-lg shadow-brand-accent/30 hover:brightness-110 hover:-translate-y-0.5 active:translate-y-0',
-    outline: 'border border-border-subtle text-light-text hover:border-brand-primary hover:text-brand-primary hover:bg-brand-primary/5 hover:shadow-sm',
-    ghost: 'text-light-textMuted bg-transparent hover:bg-light-cardAlt hover:text-light-text',
+    outline: 'border border-border-subtle text-light-text hover:border-brand-primary hover:text-brand-primary hover:bg-brand-primary/5 hover:shadow-sm dark:border-dark-border dark:text-dark-text dark:hover:border-brand-primary dark:hover:text-brand-primary dark:hover:bg-brand-primary/5',
+    ghost: 'text-light-textMuted bg-transparent hover:bg-light-cardAlt hover:text-light-text dark:text-dark-muted dark:hover:bg-dark-card dark:hover:text-dark-text',
     soft: 'bg-brand-primary/10 text-brand-primary hover:bg-brand-primary/15 hover:shadow-sm',
     danger: 'bg-red-500 text-white shadow-lg shadow-red-500/25 hover:bg-red-600 hover:-translate-y-0.5 active:translate-y-0',
     success: 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/25 hover:bg-emerald-600 hover:-translate-y-0.5 active:translate-y-0',

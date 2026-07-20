@@ -18,14 +18,14 @@ const Badge: React.FC<BadgeProps> = ({
   dot = false,
 }) => {
   const variants: Record<BadgeVariant, string> = {
-    primary: 'bg-brand-primary/10 text-brand-primary border border-brand-primary/15',
-    secondary: 'bg-light-cardAlt text-light-textSecondary border border-border-subtle',
-    success: 'bg-emerald-50 text-emerald-700 border border-emerald-200/60',
-    warning: 'bg-amber-50 text-amber-700 border border-amber-200/60',
-    error: 'bg-rose-50 text-rose-700 border border-rose-200/60',
-    gold: 'bg-brand-highlight text-brand-primary border border-brand-primary/10',
-    info: 'bg-sky-50 text-sky-700 border border-sky-200/60',
-    neutral: 'bg-gray-100 text-gray-600 border border-gray-200/60',
+    primary: 'bg-brand-primary/10 text-brand-primary border border-brand-primary/15 dark:bg-brand-primary/20 dark:text-brand-primary dark:border-brand-primary/20',
+    secondary: 'bg-light-cardAlt text-light-textSecondary border border-border-subtle dark:bg-dark-cardAlt dark:text-dark-textSecondary dark:border-dark-border',
+    success: 'bg-emerald-50 text-emerald-700 border border-emerald-200/60 dark:bg-emerald-500/15 dark:text-emerald-400 dark:border-emerald-500/20',
+    warning: 'bg-amber-50 text-amber-700 border border-amber-200/60 dark:bg-amber-500/15 dark:text-amber-400 dark:border-amber-500/20',
+    error: 'bg-rose-50 text-rose-700 border border-rose-200/60 dark:bg-rose-500/15 dark:text-rose-400 dark:border-rose-500/20',
+    gold: 'bg-brand-highlight text-brand-primary border border-brand-primary/10 dark:bg-brand-accent/20 dark:text-brand-accent dark:border-brand-accent/20',
+    info: 'bg-sky-50 text-sky-700 border border-sky-200/60 dark:bg-sky-500/15 dark:text-sky-400 dark:border-sky-500/20',
+    neutral: 'bg-gray-100 text-gray-600 border border-gray-200/60 dark:bg-dark-card dark:text-dark-muted dark:border-dark-border',
   };
 
   const sizes = {
@@ -37,13 +37,13 @@ const Badge: React.FC<BadgeProps> = ({
 
   const dotColors: Record<BadgeVariant, string> = {
     primary: 'bg-brand-primary',
-    secondary: 'bg-light-textMuted',
+    secondary: 'bg-light-textMuted dark:bg-dark-muted',
     success: 'bg-emerald-500',
     warning: 'bg-amber-500',
     error: 'bg-rose-500',
     gold: 'bg-brand-accent',
     info: 'bg-sky-500',
-    neutral: 'bg-gray-400',
+    neutral: 'bg-gray-400 dark:bg-dark-muted',
   };
 
   return (

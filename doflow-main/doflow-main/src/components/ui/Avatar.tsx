@@ -61,7 +61,7 @@ const Avatar: React.FC<AvatarProps> = ({
         <img
           src={src}
           alt={name}
-          className={`${sizes[size]} rounded-full object-cover ${showRing ? `ring-white ${ringSizes[size]}` : ''}`}
+          className={`${sizes[size]} rounded-full object-cover ${showRing ? `ring-white dark:ring-dark-card ${ringSizes[size]}` : ''}`}
         />
       ) : (
         <div
@@ -71,7 +71,7 @@ const Avatar: React.FC<AvatarProps> = ({
             bg-gradient-to-br ${getGradient(name)}
             flex items-center justify-center
             text-white font-semibold
-            ${showRing ? `ring-white ${ringSizes[size]}` : ''}
+            ${showRing ? `ring-white dark:ring-dark-card ${ringSizes[size]}` : ''}
           `}
         >
           {getInitials(name)}
@@ -81,7 +81,7 @@ const Avatar: React.FC<AvatarProps> = ({
         <span
           className={`
             absolute bottom-0 right-0
-            w-3 h-3 rounded-full border-2 border-light-card
+            w-3 h-3 rounded-full border-2 border-light-card dark:border-dark-card
             ${online ? 'bg-emerald-400' : 'bg-gray-300'}
           `}
         />

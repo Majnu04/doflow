@@ -23,7 +23,7 @@ const FEATURED_POSTS = [
     date: 'Jan 8, 2025',
     readTime: '8 min read',
     featured: true,
-    gradient: 'from-sky-500/10 to-indigo-500/5',
+    gradient: 'from-sky-500/10 to-indigo-500/5 dark:from-brand-primary/5 dark:to-brand-accent/10',
   },
   {
     id: '3',
@@ -60,7 +60,7 @@ const CATEGORY_ICONS: Record<string, React.ReactNode> = {
 
 const BlogPage: React.FC = () => {
   return (
-    <div className="min-h-screen bg-light-bg text-light-text">
+    <div className="min-h-screen bg-light-bg dark:bg-dark-bg text-light-text dark:text-dark-text">
       {/* Hero */}
       <section className="relative pt-28 pb-16 overflow-hidden">
         <div className="absolute inset-0 -z-10 bg-hero-gradient" />
@@ -71,15 +71,15 @@ const BlogPage: React.FC = () => {
             Insights for
             <span className="block gradient-text">modern builders</span>
           </h1>
-          <p className="text-fluid-base text-light-textSecondary max-w-xl mx-auto leading-relaxed mb-8">
+          <p className="text-fluid-base text-light-textSecondary dark:text-dark-textSecondary max-w-xl mx-auto leading-relaxed mb-8">
             Tutorials, career advice, and engineering deep-dives from the DoFlow team.
           </p>
           <div className="max-w-md mx-auto relative">
-            <FiSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-light-textMuted" />
+            <FiSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-light-textMuted dark:text-dark-muted" />
             <input
               type="text"
               placeholder="Search articles..."
-              className="w-full pl-10 pr-4 py-3 bg-light-card border border-border-subtle rounded-xl text-sm text-light-text placeholder:text-light-textMuted/60 focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary transition-all"
+              className="w-full pl-10 pr-4 py-3 bg-light-card dark:bg-dark-card border border-border-subtle dark:border-dark-border rounded-xl text-sm text-light-text dark:text-dark-text placeholder:text-light-textMuted/60 dark:placeholder:text-dark-muted/60 focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary transition-all"
             />
           </div>
         </div>
@@ -96,22 +96,22 @@ const BlogPage: React.FC = () => {
               <button key={post.id} className={`premium-card p-5 text-left group bg-gradient-to-br ${post.gradient}`}>
                 <div className="flex items-center gap-2 mb-3">
                   <Badge variant="primary" size="xs" dot>{post.category}</Badge>
-                  <span className="text-[10px] text-light-textMuted flex items-center gap-1">
+                  <span className="text-[10px] text-light-textMuted dark:text-dark-muted flex items-center gap-1">
                     <FiClock className="w-3 h-3" /> {post.readTime}
                   </span>
                 </div>
-                <h3 className="text-sm font-bold text-light-text mb-2 group-hover:text-brand-primary transition-colors line-clamp-2">
+                <h3 className="text-sm font-bold text-light-text dark:text-dark-text mb-2 group-hover:text-brand-primary transition-colors line-clamp-2">
                   {post.title}
                 </h3>
-                <p className="text-xs text-light-textSecondary line-clamp-3 mb-4">
+                <p className="text-xs text-light-textSecondary dark:text-dark-textSecondary line-clamp-3 mb-4">
                   {post.excerpt}
                 </p>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <FiUser className="w-3 h-3 text-light-textMuted" />
-                    <span className="text-[10px] text-light-textMuted">{post.author}</span>
+                    <FiUser className="w-3 h-3 text-light-textMuted dark:text-dark-muted" />
+                    <span className="text-[10px] text-light-textMuted dark:text-dark-muted">{post.author}</span>
                   </div>
-                  <span className="text-[10px] text-light-textMuted flex items-center gap-1">
+                  <span className="text-[10px] text-light-textMuted dark:text-dark-muted flex items-center gap-1">
                     <FiCalendar className="w-3 h-3" /> {post.date}
                   </span>
                 </div>
@@ -122,7 +122,7 @@ const BlogPage: React.FC = () => {
       </section>
 
       {/* Upcoming / Coming Soon */}
-      <section className="py-12 bg-light-cardAlt/30">
+      <section className="py-12 bg-light-cardAlt/30 dark:bg-dark-cardAlt/30">
         <div className="max-w-6xl mx-auto px-4">
           <div className="flex items-center justify-between mb-8">
             <h2 className="text-xl font-bold">Coming Soon</h2>
@@ -135,8 +135,8 @@ const BlogPage: React.FC = () => {
                   <div className="text-brand-primary/60">{CATEGORY_ICONS[post.category] || <FiTag className="w-4 h-4" />}</div>
                   <Badge variant="secondary" size="xs">{post.category}</Badge>
                 </div>
-                <h4 className="text-xs font-bold text-light-text mb-1">{post.title}</h4>
-                <div className="flex items-center justify-between text-[10px] text-light-textMuted">
+                <h4 className="text-xs font-bold text-light-text dark:text-dark-text mb-1">{post.title}</h4>
+                <div className="flex items-center justify-between text-[10px] text-light-textMuted dark:text-dark-muted">
                   <span className="flex items-center gap-1"><FiClock className="w-3 h-3" /> {post.readTime}</span>
                   <span>{post.date}</span>
                 </div>
@@ -152,18 +152,18 @@ const BlogPage: React.FC = () => {
           <Card hover={false} variant="elevated" className="text-center p-10 bg-gradient-to-br from-brand-primary/5 to-transparent">
             <FiBook className="w-10 h-10 text-brand-primary mx-auto mb-4" />
             <h2 className="text-xl font-bold mb-2">Stay in the loop</h2>
-            <p className="text-sm text-light-textSecondary mb-6 max-w-md mx-auto">
+            <p className="text-sm text-light-textSecondary dark:text-dark-textSecondary mb-6 max-w-md mx-auto">
               Get notified when we publish new articles, tutorials, and career guides.
             </p>
             <div className="flex gap-2 max-w-sm mx-auto">
               <input
                 type="email"
                 placeholder="your@email.com"
-                className="flex-1 px-4 py-2.5 bg-light-cardAlt border border-border-subtle rounded-xl text-sm text-light-text placeholder:text-light-textMuted/60 focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary transition-all"
+                className="flex-1 px-4 py-2.5 bg-light-cardAlt dark:bg-dark-cardAlt border border-border-subtle dark:border-dark-border rounded-xl text-sm text-light-text dark:text-dark-text placeholder:text-light-textMuted/60 dark:placeholder:text-dark-muted/60 focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary transition-all"
               />
               <Button variant="primary" size="md">Subscribe</Button>
             </div>
-            <p className="text-[10px] text-light-textMuted mt-3">No spam. Unsubscribe anytime.</p>
+            <p className="text-[10px] text-light-textMuted dark:text-dark-muted mt-3">No spam. Unsubscribe anytime.</p>
           </Card>
         </div>
       </section>

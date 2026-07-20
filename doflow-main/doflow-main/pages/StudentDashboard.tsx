@@ -37,9 +37,9 @@ const StudentDashboard: React.FC = () => {
 
   if (!user) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-light-bg">
+      <div className="min-h-screen flex items-center justify-center bg-light-bg dark:bg-dark-bg">
         <div className="text-center p-8">
-          <h2 className="text-2xl font-bold mb-4 text-light-text">Please login to access your dashboard</h2>
+          <h2 className="text-2xl font-bold mb-4 text-light-text dark:text-dark-text">Please login to access your dashboard</h2>
           <a href="#/auth" className="inline-block bg-brand-primary text-white font-bold py-2 px-6 rounded-lg hover:bg-brand-primaryHover transition">
             Login
           </a>
@@ -49,7 +49,7 @@ const StudentDashboard: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-light-bg text-light-text pt-24 pb-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-light-bg dark:bg-dark-bg text-light-text dark:text-dark-text pt-24 pb-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         {/* Welcome Header */}
         <div className="mb-8 animate-fade-in">
@@ -59,7 +59,7 @@ const StudentDashboard: React.FC = () => {
               <h1 className="text-2xl sm:text-3xl font-bold">
                 Welcome back, {user.name.split(' ')[0]}!
               </h1>
-              <p className="text-light-textSecondary text-sm">
+              <p className="text-light-textSecondary dark:text-dark-textSecondary text-sm">
                 Let's continue your learning journey today.
               </p>
             </div>
@@ -69,8 +69,8 @@ const StudentDashboard: React.FC = () => {
         {/* Stats Row */}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 mb-8 stagger-children">
           {status === 'failed' ? (
-            <div className="col-span-full bg-red-50 border border-red-200 rounded-2xl p-4 text-center">
-              <p className="text-sm text-red-600 font-medium mb-2">{error || 'Failed to load dashboard data'}</p>
+            <div className="col-span-full bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/30 rounded-2xl p-4 text-center">
+              <p className="text-sm text-red-600 dark:text-red-400 font-medium mb-2">{error || 'Failed to load dashboard data'}</p>
               <Button variant="outline" size="sm" onClick={() => dispatch(getStudentDashboardData())}>
                 Retry
               </Button>
@@ -81,33 +81,33 @@ const StudentDashboard: React.FC = () => {
                 title="Enrolled Courses"
                 value={stats.totalCourses}
                 icon={<FiBookOpen className="w-5 h-5" />}
-                accent="bg-sky-50 text-sky-600"
+                accent="bg-brand-primary/10 text-brand-primary"
               />
               <StatCard
                 title="In Progress"
                 value={stats.inProgressCourses}
                 icon={<FiTrendingUp className="w-5 h-5" />}
-                accent="bg-amber-50 text-amber-600"
+                accent="bg-brand-accent/10 text-brand-accent"
                 change={stats.inProgressCourses > 0 ? 12 : undefined}
               />
               <StatCard
                 title="Completed"
                 value={stats.completedCourses}
                 icon={<FiTarget className="w-5 h-5" />}
-                accent="bg-emerald-50 text-emerald-600"
+                accent="bg-emerald-500/10 text-emerald-500"
                 change={stats.completedCourses > 0 ? 8 : undefined}
               />
               <StatCard
                 title="Certificates"
                 value={stats.certificatesEarned}
                 icon={<FiAward className="w-5 h-5" />}
-                accent="bg-violet-50 text-violet-600"
+                accent="bg-brand-accent/10 text-brand-accent"
               />
               <StatCard
                 title="Hours Learned"
                 value={stats.totalHoursLearned}
                 icon={<FiClock className="w-5 h-5" />}
-                accent="bg-cyan-50 text-cyan-600"
+                accent="bg-brand-primary/10 text-brand-primary"
               />
             </>
           )}
@@ -130,28 +130,28 @@ const StudentDashboard: React.FC = () => {
               {status === 'loading' || status === 'idle' ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {[1, 2].map(i => (
-                    <div key={i} className="bg-light-card border border-border-subtle rounded-2xl overflow-hidden animate-pulse">
-                      <div className="h-32 bg-light-cardAlt" />
+                    <div key={i} className="bg-light-card dark:bg-dark-card border border-border-subtle dark:border-dark-border rounded-2xl overflow-hidden animate-pulse">
+                      <div className="h-32 bg-light-cardAlt dark:bg-dark-cardAlt" />
                       <div className="p-4 space-y-2">
-                        <div className="h-5 bg-light-cardAlt rounded-lg w-3/4" />
-                        <div className="h-3 bg-light-cardAlt rounded-lg w-1/2" />
-                        <div className="h-1.5 bg-light-cardAlt rounded-full w-full" />
+                        <div className="h-5 bg-light-cardAlt dark:bg-dark-cardAlt rounded-lg w-3/4" />
+                        <div className="h-3 bg-light-cardAlt dark:bg-dark-cardAlt rounded-lg w-1/2" />
+                        <div className="h-1.5 bg-light-cardAlt dark:bg-dark-cardAlt rounded-full w-full" />
                       </div>
                     </div>
                   ))}
                 </div>
               ) : status === 'failed' ? (
-                <div className="bg-red-50 border border-red-200 rounded-2xl p-8 text-center">
-                  <p className="text-sm text-red-600 font-medium mb-3">{error || 'Unable to load your courses'}</p>
+                <div className="bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/30 rounded-2xl p-8 text-center">
+                  <p className="text-sm text-red-600 dark:text-red-400 font-medium mb-3">{error || 'Unable to load your courses'}</p>
                   <Button variant="outline" size="sm" onClick={() => dispatch(getStudentDashboardData())}>
                     Retry
                   </Button>
                 </div>
               ) : continueLearning.length === 0 ? (
-                <div className="bg-light-card border border-border-subtle rounded-2xl p-8 text-center">
+                <div className="bg-light-card dark:bg-dark-card border border-border-subtle dark:border-dark-border rounded-2xl p-8 text-center">
                   <FiStar className="w-10 h-10 text-brand-primary/40 mx-auto mb-3" />
-                  <p className="text-sm font-medium text-light-text mb-1">Ready to start learning?</p>
-                  <p className="text-xs text-light-textMuted mb-4">Pick up where you left off or explore new courses.</p>
+                  <p className="text-sm font-medium text-light-text dark:text-dark-text mb-1">Ready to start learning?</p>
+                  <p className="text-xs text-light-textMuted dark:text-dark-muted mb-4">Pick up where you left off or explore new courses.</p>
                   <Button variant="primary" size="sm" onClick={() => window.location.hash = '/courses'}>
                     Browse Courses
                   </Button>
@@ -169,7 +169,7 @@ const StudentDashboard: React.FC = () => {
                       <a
                         key={enrollment._id}
                         href={courseLink}
-                        className="premium-card group"
+                        className="premium-card group dark:hover:border-brand-primary"
                       >
                         <div className="relative h-32 overflow-hidden">
                           <img
@@ -186,11 +186,11 @@ const StudentDashboard: React.FC = () => {
                           </div>
                         </div>
                         <div className="p-4">
-                          <h3 className="text-sm font-bold text-light-text mb-2 line-clamp-1 group-hover:text-brand-primary transition-colors">
+                          <h3 className="text-sm font-bold text-light-text dark:text-dark-text mb-2 line-clamp-1 group-hover:text-brand-primary transition-colors">
                             {course?.title}
                           </h3>
                           <div className="flex items-center justify-between mb-2">
-                            <span className="text-[10px] text-light-textMuted">Progress</span>
+                            <span className="text-[10px] text-light-textMuted dark:text-dark-muted">Progress</span>
                             <span className="text-[10px] font-bold text-brand-primary">{enrollment.progress}%</span>
                           </div>
                           <ProgressBar value={enrollment.progress} size="xs" animated />
@@ -239,7 +239,7 @@ const StudentDashboard: React.FC = () => {
                       <a
                         key={enrollment._id}
                         href={courseLink}
-                        className="premium-card group"
+                        className="premium-card group dark:hover:border-brand-primary"
                       >
                         <div className="relative h-40 overflow-hidden">
                           <img
@@ -257,21 +257,21 @@ const StudentDashboard: React.FC = () => {
                           </div>
                         </div>
                         <div className="p-4">
-                          <h3 className="text-sm font-bold text-light-text mb-2 line-clamp-2 group-hover:text-brand-primary transition-colors">
+                          <h3 className="text-sm font-bold text-light-text dark:text-dark-text mb-2 line-clamp-2 group-hover:text-brand-primary transition-colors">
                             {course?.title}
                           </h3>
                           <div className="mb-3">
                             <div className="flex items-center justify-between mb-1">
-                              <span className="text-[10px] text-light-textMuted">Progress</span>
+                              <span className="text-[10px] text-light-textMuted dark:text-dark-muted">Progress</span>
                               <span className="text-[10px] font-bold text-brand-primary">{enrollment.progress}%</span>
                             </div>
                             <ProgressBar value={enrollment.progress} size="xs" animated />
                           </div>
-                          <div className="flex items-center justify-between pt-3 border-t border-border-subtle/40">
-                            <span className="text-xs font-medium text-light-text">
+                          <div className="flex items-center justify-between pt-3 border-t border-border-subtle/40 dark:border-dark-border/40">
+                            <span className="text-xs font-medium text-light-text dark:text-dark-text">
                               {isDsa ? 'Open Workspace' : enrollment.progress === 0 ? 'Start Learning' : 'Continue'}
                             </span>
-                            <FiChevronRight className="w-4 h-4 text-light-textMuted group-hover:text-brand-primary transition-colors" />
+                            <FiChevronRight className="w-4 h-4 text-light-textMuted dark:text-dark-muted group-hover:text-brand-primary transition-colors" />
                           </div>
                         </div>
                       </a>
@@ -299,28 +299,28 @@ const StudentDashboard: React.FC = () => {
 
         {/* Quick Actions */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 stagger-children">
-          <a href="#/wishlist" className="premium-card group p-5 text-center">
-            <div className="p-3 bg-rose-50 rounded-2xl w-fit mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
-              <FiHeart className="w-6 h-6 text-rose-500" />
+          <a href="#/wishlist" className="premium-card group p-5 text-center dark:hover:border-brand-primary">
+            <div className="p-3 bg-brand-primary/10 rounded-2xl w-fit mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
+              <FiHeart className="w-6 h-6 text-brand-primary" />
             </div>
             <h3 className="text-sm font-bold mb-1">My Wishlist</h3>
-            <p className="text-xs text-light-textMuted">Courses you're interested in</p>
+            <p className="text-xs text-light-textMuted dark:text-dark-muted">Courses you're interested in</p>
           </a>
 
-          <a href="#/certificates" className="premium-card group p-5 text-center">
-            <div className="p-3 bg-violet-50 rounded-2xl w-fit mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
-              <FiAward className="w-6 h-6 text-violet-500" />
+          <a href="#/certificates" className="premium-card group p-5 text-center dark:hover:border-brand-primary">
+            <div className="p-3 bg-brand-accent/10 rounded-2xl w-fit mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
+              <FiAward className="w-6 h-6 text-brand-accent" />
             </div>
             <h3 className="text-sm font-bold mb-1">My Certificates</h3>
-            <p className="text-xs text-light-textMuted">View and share achievements</p>
+            <p className="text-xs text-light-textMuted dark:text-dark-muted">View and share achievements</p>
           </a>
 
-          <a href="#/courses" className="premium-card group p-5 text-center">
-            <div className="p-3 bg-sky-50 rounded-2xl w-fit mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
-              <FiBook className="w-6 h-6 text-sky-500" />
+          <a href="#/courses" className="premium-card group p-5 text-center dark:hover:border-brand-primary">
+            <div className="p-3 bg-brand-primary/10 rounded-2xl w-fit mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
+              <FiBook className="w-6 h-6 text-brand-primary" />
             </div>
             <h3 className="text-sm font-bold mb-1">Browse Courses</h3>
-            <p className="text-xs text-light-textMuted">Explore more to learn</p>
+            <p className="text-xs text-light-textMuted dark:text-dark-muted">Explore more to learn</p>
           </a>
         </div>
       </div>

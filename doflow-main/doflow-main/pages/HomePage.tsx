@@ -97,7 +97,7 @@ const HomePage: React.FC = () => {
   const heroCourse = featuredCourses[0];
 
   return (
-    <div className="min-h-screen bg-light-bg text-light-text transition-colors duration-300">
+    <div className="min-h-screen bg-light-bg text-light-text dark:bg-dark-bg dark:text-dark-text transition-colors duration-300">
       {/* Hero Section */}
       <section className="relative overflow-hidden pt-28 pb-20 md:pt-32 md:pb-28">
         <div className="absolute inset-0 -z-10 bg-hero-gradient" />
@@ -108,11 +108,11 @@ const HomePage: React.FC = () => {
               <span className="pill">
                 <FiZap className="w-3.5 h-3.5" /> Learning reinvented for builders
               </span>
-              <h1 className="heading-hero font-display text-light-text">
+              <h1 className="heading-hero font-display text-light-text dark:text-dark-text">
                 Master modern skills
                 <span className="block gradient-text">with confidence</span>
               </h1>
-              <p className="text-fluid-base text-light-textSecondary max-w-xl leading-relaxed">
+              <p className="text-fluid-base text-light-textSecondary dark:text-dark-textSecondary max-w-xl leading-relaxed">
                 Handcrafted courses, immersive coding labs, and AI-powered mentorship — all in a single learning platform designed to keep you focused, inspired, and job-ready.
               </p>
 
@@ -148,8 +148,8 @@ const HomePage: React.FC = () => {
                     <div className="text-brand-primary text-lg mb-1.5">
                       {stat.icon}
                     </div>
-                    <p className="text-xl font-bold text-light-text">{stat.displayValue}</p>
-                    <p className="text-[10px] text-light-textMuted">{stat.label}</p>
+                    <p className="text-xl font-bold text-light-text dark:text-dark-text">{stat.displayValue}</p>
+                    <p className="text-[10px] text-light-textMuted dark:text-dark-muted">{stat.label}</p>
                   </Card>
                 ))}
               </div>
@@ -160,8 +160,8 @@ const HomePage: React.FC = () => {
               <Card variant="glass" hover={false} className="relative overflow-hidden p-6 md:p-7 border-0 shadow-elevated">
                 <div className="flex items-center justify-between mb-5">
                   <div>
-                    <p className="text-[10px] uppercase tracking-[0.25em] text-light-textMuted mb-1">Spotlight</p>
-                    <h3 className="text-lg font-bold text-light-text">
+                    <p className="text-[10px] uppercase tracking-[0.25em] text-light-textMuted dark:text-dark-muted mb-1">Spotlight</p>
+                    <h3 className="text-lg font-bold text-light-text dark:text-dark-text">
                       {heroCourse?.title || 'Immersive Fullstack Cohort'}
                     </h3>
                   </div>
@@ -174,18 +174,18 @@ const HomePage: React.FC = () => {
                     <div className="w-full h-full bg-gradient-to-br from-brand-primary/20 via-brand-accent/15 to-transparent" />
                   )}
                 </div>
-                <div className="flex flex-wrap gap-5 text-xs text-light-textMuted">
+                <div className="flex flex-wrap gap-5 text-xs text-light-textMuted dark:text-dark-muted">
                   <div>
                     <p className="text-[10px] uppercase tracking-wide mb-0.5">Mentor</p>
-                    <p className="font-semibold text-light-text">{typeof heroCourse?.instructor === 'string' ? heroCourse?.instructor : heroCourse?.instructor?.name || 'DoFlow Team'}</p>
+                    <p className="font-semibold text-light-text dark:text-dark-text">{typeof heroCourse?.instructor === 'string' ? heroCourse?.instructor : heroCourse?.instructor?.name || 'DoFlow Team'}</p>
                   </div>
                   <div>
                     <p className="text-[10px] uppercase tracking-wide mb-0.5">Duration</p>
-                    <p className="font-semibold text-light-text">{heroCourse?.estimatedDuration || '8 weeks'}</p>
+                    <p className="font-semibold text-light-text dark:text-dark-text">{heroCourse?.estimatedDuration || '8 weeks'}</p>
                   </div>
                   <div>
                     <p className="text-[10px] uppercase tracking-wide mb-0.5">Rating</p>
-                    <p className="font-semibold text-light-text flex items-center gap-1">
+                    <p className="font-semibold text-light-text dark:text-dark-text flex items-center gap-1">
                       <FiStar className="text-brand-accent w-3 h-3" /> {heroCourse?.averageRating?.toFixed(1) || '4.9'}
                     </p>
                   </div>
@@ -204,7 +204,7 @@ const HomePage: React.FC = () => {
             <h2 className="text-2xl md:text-4xl font-bold mb-3">
               Learn Smarter, Not Harder
             </h2>
-            <p className="text-sm text-light-textSecondary max-w-lg mx-auto">
+            <p className="text-sm text-light-textSecondary dark:text-dark-textSecondary max-w-lg mx-auto">
               Everything you need to succeed in your learning journey
             </p>
           </div>
@@ -220,10 +220,10 @@ const HomePage: React.FC = () => {
                     {feature.icon}
                   </div>
                 </div>
-                <h3 className="text-sm font-bold text-light-text mb-1.5">
+                <h3 className="text-sm font-bold text-light-text dark:text-dark-text mb-1.5">
                   {feature.title}
                 </h3>
-                <p className="text-xs text-light-textSecondary leading-relaxed">
+                <p className="text-xs text-light-textSecondary dark:text-dark-textSecondary leading-relaxed">
                   {feature.description}
                 </p>
               </div>
@@ -233,14 +233,14 @@ const HomePage: React.FC = () => {
       </section>
 
       {/* Categories Section */}
-      <section className="py-16 md:py-20 bg-light-cardAlt/30">
+      <section className="py-16 md:py-20 bg-light-cardAlt/30 dark:bg-dark-cardAlt/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <span className="pill mb-4 inline-flex">Popular Categories</span>
             <h2 className="text-2xl md:text-4xl font-bold mb-3">
               Explore by Category
             </h2>
-            <p className="text-sm text-light-textSecondary max-w-lg mx-auto">
+            <p className="text-sm text-light-textSecondary dark:text-dark-textSecondary max-w-lg mx-auto">
               Find the perfect course for your goals
             </p>
           </div>
@@ -255,10 +255,10 @@ const HomePage: React.FC = () => {
                 <div className="flex items-center justify-center mb-2.5 text-brand-primary group-hover:text-brand-primaryHover transition-colors duration-300">
                   {category.icon}
                 </div>
-                <h3 className="text-xs font-bold text-light-text mb-0.5">
+                <h3 className="text-xs font-bold text-light-text dark:text-dark-text mb-0.5">
                   {category.name}
                 </h3>
-                <p className="text-[10px] text-light-textMuted">
+                <p className="text-[10px] text-light-textMuted dark:text-dark-muted">
                   {category.count} Courses
                 </p>
               </button>
@@ -333,15 +333,15 @@ const HomePage: React.FC = () => {
                   </div>
 
                   <div className="p-4">
-                    <h3 className="text-sm font-bold text-light-text mb-1.5 line-clamp-2 group-hover:text-brand-primary transition-colors">
+                    <h3 className="text-sm font-bold text-light-text dark:text-dark-text mb-1.5 line-clamp-2 group-hover:text-brand-primary transition-colors">
                       {course.title}
                     </h3>
-                    <p className="text-xs text-light-textSecondary mb-3">by {typeof course.instructor === 'string' ? course.instructor : course.instructor?.name || 'DoFlow Academy'}</p>
+                    <p className="text-xs text-light-textSecondary dark:text-dark-textSecondary mb-3">by {typeof course.instructor === 'string' ? course.instructor : course.instructor?.name || 'DoFlow Academy'}</p>
 
-                    <div className="flex items-center gap-3 mb-3 text-[10px] text-light-textMuted">
+                    <div className="flex items-center gap-3 mb-3 text-[10px] text-light-textMuted dark:text-dark-muted">
                       <div className="flex items-center gap-1">
                         <FiStar className="text-brand-accent w-3 h-3" />
-                        <span className="font-semibold text-light-text">{course.averageRating?.toFixed(1) || 'N/A'}</span>
+                        <span className="font-semibold text-light-text dark:text-dark-text">{course.averageRating?.toFixed(1) || 'N/A'}</span>
                       </div>
                       <div className="flex items-center gap-1">
                         <FiUsers className="w-3 h-3" />
@@ -355,7 +355,7 @@ const HomePage: React.FC = () => {
                       )}
                     </div>
 
-                    <div className="flex items-center justify-between pt-3 border-t border-border-subtle/40">
+                    <div className="flex items-center justify-between pt-3 border-t border-border-subtle/40 dark:border-dark-border/40">
                       <div>
                         {enrolledCourseIds.has(course._id) ? (
                           <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-emerald-500">
@@ -365,9 +365,9 @@ const HomePage: React.FC = () => {
                           <span className="text-lg font-bold text-emerald-500">Free</span>
                         ) : (
                           <div className="flex items-baseline gap-2">
-                            <span className="text-lg font-bold text-light-text">₹{course.price}</span>
+                            <span className="text-lg font-bold text-light-text dark:text-dark-text">₹{course.price}</span>
                             {course.discountPrice && course.discountPrice < course.price && (
-                              <span className="text-xs text-light-textMuted line-through">₹{course.discountPrice}</span>
+                              <span className="text-xs text-light-textMuted dark:text-dark-muted line-through">₹{course.discountPrice}</span>
                             )}
                           </div>
                         )}
