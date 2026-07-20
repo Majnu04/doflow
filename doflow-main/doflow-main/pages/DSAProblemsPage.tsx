@@ -441,8 +441,8 @@ const DSAProblemsPage: React.FC<{ courseId: string }> = ({ courseId }) => {
 
                 <div className="mt-3 grid grid-cols-2 gap-x-3 gap-y-2.5 pt-3 border-t border-border-subtle dark:border-dark-border">
                   <div className="flex items-center gap-2">
-                    <div className="w-7 h-7 rounded-lg bg-amber-50 dark:bg-amber-900/20 flex items-center justify-center flex-shrink-0">
-                      <FiZap className="w-3.5 h-3.5 text-amber-500" />
+                    <div className="w-7 h-7 rounded-lg bg-brand-primary/10 dark:bg-brand-primary/20 flex items-center justify-center flex-shrink-0">
+                      <FiZap className="w-3.5 h-3.5 text-brand-primary" />
                     </div>
                     <div className="min-w-0">
                       <p className="text-[8px] uppercase tracking-wider text-light-textMuted dark:text-dark-muted font-semibold">XP</p>
@@ -450,8 +450,8 @@ const DSAProblemsPage: React.FC<{ courseId: string }> = ({ courseId }) => {
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
-                    <div className="w-7 h-7 rounded-lg bg-emerald-50 dark:bg-emerald-900/20 flex items-center justify-center flex-shrink-0">
-                      <FiCalendar className="w-3.5 h-3.5 text-emerald-500" />
+                    <div className="w-7 h-7 rounded-lg bg-brand-accent/10 dark:bg-brand-accent/20 flex items-center justify-center flex-shrink-0">
+                      <FiCalendar className="w-3.5 h-3.5 text-brand-accent" />
                     </div>
                     <div className="min-w-0">
                       <p className="text-[8px] uppercase tracking-wider text-light-textMuted dark:text-dark-muted font-semibold">Streak</p>
@@ -468,8 +468,8 @@ const DSAProblemsPage: React.FC<{ courseId: string }> = ({ courseId }) => {
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
-                    <div className="w-7 h-7 rounded-lg bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center flex-shrink-0">
-                      <FiTarget className="w-3.5 h-3.5 text-blue-500" />
+                    <div className="w-7 h-7 rounded-lg bg-brand-primary/10 dark:bg-brand-primary/20 flex items-center justify-center flex-shrink-0">
+                      <FiTarget className="w-3.5 h-3.5 text-brand-primary" />
                     </div>
                     <div className="min-w-0">
                       <p className="text-[8px] uppercase tracking-wider text-light-textMuted dark:text-dark-muted font-semibold">Rate</p>
@@ -477,8 +477,8 @@ const DSAProblemsPage: React.FC<{ courseId: string }> = ({ courseId }) => {
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
-                    <div className="w-7 h-7 rounded-lg bg-purple-50 dark:bg-purple-900/20 flex items-center justify-center flex-shrink-0">
-                      <FiClock className="w-3.5 h-3.5 text-purple-500" />
+                    <div className="w-7 h-7 rounded-lg bg-brand-accent/10 dark:bg-brand-accent/20 flex items-center justify-center flex-shrink-0">
+                      <FiClock className="w-3.5 h-3.5 text-brand-accent" />
                     </div>
                     <div className="min-w-0">
                       <p className="text-[8px] uppercase tracking-wider text-light-textMuted dark:text-dark-muted font-semibold">Studied</p>
@@ -486,8 +486,8 @@ const DSAProblemsPage: React.FC<{ courseId: string }> = ({ courseId }) => {
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
-                    <div className="w-7 h-7 rounded-lg bg-rose-50 dark:bg-rose-900/20 flex items-center justify-center flex-shrink-0">
-                      <FiTrendingUp className="w-3.5 h-3.5 text-rose-500" />
+                    <div className="w-7 h-7 rounded-lg bg-brand-primary/10 dark:bg-brand-primary/20 flex items-center justify-center flex-shrink-0">
+                      <FiTrendingUp className="w-3.5 h-3.5 text-brand-primary" />
                     </div>
                     <div className="min-w-0">
                       <p className="text-[8px] uppercase tracking-wider text-light-textMuted dark:text-dark-muted font-semibold">Ready</p>
