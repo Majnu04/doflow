@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState, AppDispatch } from '../store';
 import { logout } from '../store/slices/authSlice';
@@ -23,11 +23,16 @@ import {
 } from 'react-icons/fi';
 import { Button } from './ui';
 import Avatar from './ui/Avatar';
+import RoadmapsMegaMenu from './RoadmapsMegaMenu';
 
 const Navbar: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const [isRoadmapsOpen, setIsRoadmapsOpen] = useState(false);
+  const [isMegaMenuHovering, setIsMegaMenuHovering] = useState(false);
   const userMenuRef = useRef<HTMLDivElement>(null);
+  const roadmapsNavRef = useRef<HTMLDivElement>(null);
+  const megaMenuCloseTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const { user, isAuthenticated } = useSelector((state: RootState) => state.auth);
   const { items: cartItems } = useSelector((state: RootState) => state.cart);
@@ -74,6 +79,11 @@ const Navbar: React.FC = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [isUserMenuOpen]);
 
+  useEffect(() => {
+    setIsRoadmapsOpen(false);
+    setIsMegaMenuHovering(false);
+  }, [currentRoute]);
+
   const handleToggleTheme = () => {
     toggleTheme();
     dispatch(setAppTheme(theme === 'light' ? 'dark' : 'light'));
@@ -94,6 +104,45 @@ const Navbar: React.FC = () => {
 
   const practicePath = dsaCourseId ? `/dsa/problems/${dsaCourseId}` : '/courses';
 
+  const handleRoadmapsMouseEnter = useCallback(() => {
+    if (megaMenuCloseTimeout.current) {
+      clearTimeout(megaMenuCloseTimeout.current);
+      megaMenuCloseTimeout.current = null;
+    }
+    setIsRoadmapsOpen(true);
+    setIsMegaMenuHovering(true);
+  }, []);
+
+  const handleRoadmapsMouseLeave = useCallback(() => {
+    megaMenuCloseTimeout.current = setTimeout(() => {
+      setIsRoadmapsOpen(false);
+      setIsMegaMenuHovering(false);
+    }, 120);
+  }, []);
+
+  const handleMegaMenuMouseEnter = useCallback(() => {
+    if (megaMenuCloseTimeout.current) {
+      clearTimeout(megaMenuCloseTimeout.current);
+      megaMenuCloseTimeout.current = null;
+    }
+    setIsMegaMenuHovering(true);
+  }, []);
+
+  const handleMegaMenuMouseLeave = useCallback(() => {
+    megaMenuCloseTimeout.current = setTimeout(() => {
+      setIsRoadmapsOpen(false);
+      setIsMegaMenuHovering(false);
+    }, 120);
+  }, []);
+
+  const closeMegaMenu = useCallback(() => {
+    setIsRoadmapsOpen(false);
+    setIsMegaMenuHovering(false);
+    if (megaMenuCloseTimeout.current) {
+      clearTimeout(megaMenuCloseTimeout.current);
+    }
+  }, []);
+
   const desktopNavLinks = [
     { name: 'Home', path: '/' },
     { name: 'Courses', path: '/courses' },
@@ -104,7 +153,7 @@ const Navbar: React.FC = () => {
     { name: 'Home', path: '/', icon: FiHome },
     { name: 'Courses', path: '/courses', icon: FiBookOpen },
     { name: 'Practice', path: practicePath, icon: FiCode },
-    { name: 'Roadmaps', path: '/courses', icon: FiTrendingUp },
+    { name: 'Roadmaps', path: '/roadmaps', icon: FiTrendingUp },
     {
       name: 'Profile',
       path: isAuthenticated ? '/profile' : '/auth',
@@ -119,14 +168,15 @@ const Navbar: React.FC = () => {
         className={`
           fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-expo
           ${isScrolled || isDsaRoute
-            ? 'bg-light-card/80 dark:bg-dark-card/80 backdrop-blur-xl shadow-card border-b border-border-subtle/40 dark:border-dark-border/40 py-2'
-            : 'bg-transparent dark:bg-transparent py-4'
+            ? 'bg-light-card/80 dark:bg-dark-card/80 backdrop-blur-xl shadow-card border-b border-border-subtle/40 dark:border-dark-border/40'
+            : 'bg-transparent dark:bg-transparent'
           }
         `}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-14">
-            {/* Logo */}
+          <div className="flex items-center justify-between h-[76px]">
+
+            {/* Left: Logo */}
             <a
               href="/#/"
               className="flex items-center gap-3 group flex-shrink-0"
@@ -134,8 +184,8 @@ const Navbar: React.FC = () => {
               <img src="/logo.png" alt="DoFlow" className="h-10 w-auto object-contain dark:brightness-110" />
             </a>
 
-            {/* Desktop Navigation Links */}
-            <div className="hidden md:flex items-center gap-1">
+            {/* Center: Navigation Links */}
+            <div className="hidden md:flex items-center gap-1 absolute left-1/2 -translate-x-1/2">
               {desktopNavLinks.map((link) => {
                 const active = isActive(link.path);
                 return (
@@ -143,7 +193,7 @@ const Navbar: React.FC = () => {
                     key={link.name}
                     href={`/#${link.path}`}
                     className={`
-                      relative flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200
+                      relative flex items-center gap-2 px-3.5 py-2 text-sm font-medium rounded-lg transition-all duration-200
                       ${active
                         ? 'text-brand-primary'
                         : 'text-light-textMuted dark:text-dark-textMuted hover:text-light-text dark:hover:text-dark-text hover:bg-light-cardAlt/60 dark:hover:bg-dark-cardAlt/60'
@@ -157,10 +207,60 @@ const Navbar: React.FC = () => {
                   </a>
                 );
               })}
+
+              {/* Roadmaps with Mega Menu Trigger */}
+              <div
+                ref={roadmapsNavRef}
+                onMouseEnter={handleRoadmapsMouseEnter}
+                onMouseLeave={handleRoadmapsMouseLeave}
+                className="relative"
+              >
+                <a
+                  href="/#/roadmaps"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    closeMegaMenu();
+                    window.location.hash = '/roadmaps';
+                  }}
+                  className={`
+                    relative flex items-center gap-2 px-3.5 py-2 text-sm font-medium rounded-lg transition-all duration-200
+                    ${isRoadmapsOpen
+                      ? 'text-brand-primary bg-brand-primary/5 dark:bg-brand-primary/10'
+                      : 'text-light-textMuted dark:text-dark-textMuted hover:text-light-text dark:hover:text-dark-text hover:bg-light-cardAlt/60 dark:hover:bg-dark-cardAlt/60'
+                    }
+                  `}
+                >
+                  <span>Roadmaps</span>
+                  <span className="inline-flex items-center px-1.5 py-0.5 rounded-full text-[8px] font-bold tracking-wider uppercase bg-gradient-to-r from-brand-primary to-brand-accent text-white shadow-sm">
+                    NEW
+                  </span>
+                  {isRoadmapsOpen && (
+                    <motion.span
+                      layoutId="roadmaps-underline"
+                      className="absolute bottom-0 left-1/2 -translate-x-1/2 w-4 h-0.5 bg-brand-primary rounded-full"
+                      transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                    />
+                  )}
+                </a>
+              </div>
+
+              {/* Community */}
+              <a
+                href="/#/about"
+                className={`
+                  relative flex items-center gap-2 px-3.5 py-2 text-sm font-medium rounded-lg transition-all duration-200
+                  ${isActive('/about')
+                    ? 'text-brand-primary'
+                    : 'text-light-textMuted dark:text-dark-textMuted hover:text-light-text dark:hover:text-dark-text hover:bg-light-cardAlt/60 dark:hover:bg-dark-cardAlt/60'
+                  }
+                `}
+              >
+                <span>Community</span>
+              </a>
             </div>
 
-            {/* Right Section */}
-            <div className="flex items-center gap-1.5">
+            {/* Right: Controls */}
+            <div className="flex items-center gap-2">
               {/* Theme Toggle */}
               <button
                 onClick={handleToggleTheme}
@@ -172,7 +272,7 @@ const Navbar: React.FC = () => {
 
               {isAuthenticated ? (
                 <>
-                  {/* Cart & Wishlist (Desktop) */}
+                  {/* Cart & Wishlist */}
                   <div className="hidden md:flex items-center gap-1">
                     <a
                       href="/#/wishlist"
@@ -278,6 +378,15 @@ const Navbar: React.FC = () => {
           </div>
         </div>
       </nav>
+
+      {/* Mega Menu - Desktop */}
+      <div
+        className="hidden md:block"
+        onMouseEnter={handleMegaMenuMouseEnter}
+        onMouseLeave={handleMegaMenuMouseLeave}
+      >
+        <RoadmapsMegaMenu isOpen={isRoadmapsOpen} onClose={closeMegaMenu} />
+      </div>
 
       {/* Mobile Bottom Navigation */}
       <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 h-[72px] bg-light-card/90 dark:bg-dark-card/90 backdrop-blur-xl border-t border-border-subtle/40 dark:border-dark-border/40">

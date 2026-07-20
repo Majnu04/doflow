@@ -45,7 +45,7 @@
     --glow-brand: 0 0 0 3px rgba(224, 100, 56, 0.15);
     --glow-brand-lg: 0 0 0 4px rgba(224, 100, 56, 0.2), 0 0 24px rgba(224, 100, 56, 0.15);
 
-    --nav-height: 64px;
+    --nav-height: 76px;
     --bottom-nav-height: 72px;
   }
 
@@ -599,6 +599,41 @@ html {
     .hover\:scale-105:active {
       transform: scale(0.98);
     }
+  }
+
+  /* ── Mega Menu Styles ── */
+  .mega-menu-item {
+    position: relative;
+  }
+
+  .mega-menu-item::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    background: var(--page-accent);
+    border-radius: 0 2px 2px 0;
+    transition: width 200ms var(--ease-out-expo);
+  }
+
+  .mega-menu-item:hover::before {
+    width: 2px;
+    height: 60%;
+  }
+
+  .mega-menu-container {
+    transform-origin: top center;
+  }
+
+  .company-logo {
+    user-select: none;
+  }
+
+  .company-logo:hover {
+    transform: translateY(-1px);
   }
 
   @media (max-width: 768px) {

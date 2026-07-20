@@ -35,6 +35,7 @@ const CertificatesPage = React.lazy(() => import('./pages/CertificatesPage'));
 const CertificateVerificationPage = React.lazy(() => import('./pages/CertificateVerificationPage'));
 const CheckoutPage = React.lazy(() => import('./pages/CheckoutPage'));
 const ForgotPasswordPage = React.lazy(() => import('./pages/ForgotPasswordPage'));
+const RoadmapsPage = React.lazy(() => import('./src/components/RoadmapsPage'));
 
 const LoadingFallback: React.FC = () => (
     <div className="min-h-screen flex items-center justify-center bg-light-bg dark:bg-dark-bg">
@@ -151,6 +152,8 @@ const App: React.FC = () => {
                 return <ForgotPasswordPage />;
             case '/courses':
                 return <CoursesPage />;
+            case '/roadmaps':
+                return <RoadmapsPage />;
             case '/about':
                 return <AboutPage />;
             case '/become-instructor':
@@ -245,7 +248,7 @@ const App: React.FC = () => {
             />
             {!hideHeaderFooter && <Navbar />}
             <Suspense fallback={<LoadingFallback />}>
-                <main className={hideHeaderFooter ? '' : 'min-h-[calc(100vh-80px)] pb-[72px] md:pb-0'}>
+                <main className={hideHeaderFooter ? '' : 'min-h-[calc(100vh-76px)] pb-[72px] md:pb-0'}>
                      {renderRoute()}
                 </main>
             </Suspense>

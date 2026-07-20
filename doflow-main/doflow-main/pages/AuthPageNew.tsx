@@ -4,6 +4,7 @@ import { login, register } from '../src/store/slices/authSlice';
 import { AppDispatch, RootState } from '../src/store';
 import toast from 'react-hot-toast';
 import { FiMail, FiLock, FiUser, FiArrowRight, FiEye, FiEyeOff, FiCheck } from 'react-icons/fi';
+import { FaGoogle, FaGithub, FaLinkedin } from 'react-icons/fa';
 import { Button, Input } from '../src/components/ui';
 
 const AuthPageNew: React.FC = () => {
@@ -390,16 +391,17 @@ const AuthPageNew: React.FC = () => {
             {/* Social Login */}
             <div className="grid grid-cols-3 gap-2.5">
               {[
-                { name: 'Google', icon: '🔍', color: 'hover:border-brand-primary' },
-                { name: 'GitHub', icon: '💻', color: 'hover:border-light-text' },
-                { name: 'LinkedIn', icon: '💼', color: 'hover:border-brand-primary' }
-              ].map((social) => (
+                { name: 'Google', Icon: FaGoogle, color: 'hover:border-brand-primary' },
+                { name: 'GitHub', Icon: FaGithub, color: 'hover:border-light-text' },
+                { name: 'LinkedIn', Icon: FaLinkedin, color: 'hover:border-brand-primary' }
+              ].map(({ name, Icon, color }) => (
                 <button
-                  key={social.name}
-                  className={`p-3 bg-light-cardAlt border border-light-border rounded-lg hover:bg-light-card ${social.color} transition-all`}
-                  title={social.name}
+                  key={name}
+                  className={`p-3 bg-light-cardAlt border border-light-border rounded-lg hover:bg-light-card ${color} transition-all`}
+                  title={name}
+                  aria-label={`Continue with ${name}`}
                 >
-                  <span className="text-2xl">{social.icon}</span>
+                  <Icon className="w-5 h-5 mx-auto text-light-textSecondary dark:text-dark-muted" />
                 </button>
               ))}
             </div>
