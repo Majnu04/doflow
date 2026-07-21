@@ -50,6 +50,9 @@ connectDB();
 
 const app = express();
 
+// Trust proxy (required for Render, Heroku, etc. so rate-limiter sees real IPs)
+app.set('trust proxy', 1);
+
 // CORS (placed before other middleware so every response inherits the headers)
 const allowedOrigins = [
   process.env.FRONTEND_URL,
