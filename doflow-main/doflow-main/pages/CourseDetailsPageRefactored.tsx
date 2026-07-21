@@ -8,6 +8,7 @@ import { addToWishlist, removeFromWishlist, getWishlist } from '../src/store/sli
 import { CourseDetailsSkeleton, ErrorState } from '../src/components/common/StateIndicators';
 import type { RootState, AppDispatch } from '../src/store';
 import { isDsaCourse } from '../src/utils/courseUtils';
+import api from '../src/utils/api';
 import {
   fadeIn, slideUp, slideDown, slideInLeft, slideInRight,
   scaleIn, popIn, staggerContainer
@@ -85,11 +86,8 @@ const CourseDetailsPage: React.FC<CourseDetailsPageProps> = ({ courseId }) => {
     if (courseId) dispatch(getCourse(courseId));
     if (user) {
       dispatch(getWishlist());
-      fetch('/api/payment/enrollments', {
-        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
-      })
-        .then(res => res.json())
-        .then(data => { setEnrollments(Array.isArray(data) ? data : []); setEnrollmentsLoading(false); })
+      api.get('/payment/enrollments')
+        .then(res => { setEnrollments(Array.isArray(res.data) ? res.data : []); setEnrollmentsLoading(false); })
         .catch(() => { setEnrollments([]); setEnrollmentsLoading(false); });
     } else {
       setEnrollmentsLoading(false);

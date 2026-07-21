@@ -25,17 +25,11 @@ const ForgotPasswordPage: React.FC = () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch('http://localhost:5000/api/auth/send-reset-otp', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email })
-      });
+      const { data } = await api.post('/auth/send-reset-otp', { email });
 
-      const data = await response.json();
-      
       if (data.success) {
         setShowOtpStep(true);
-        toast.success('🔒 Password reset OTP sent to your email!');
+        toast.success('Password reset OTP sent to your email!');
       } else {
         toast.error(data.message || 'Failed to send OTP');
       }
@@ -67,17 +61,11 @@ const ForgotPasswordPage: React.FC = () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch('http://localhost:5000/api/auth/verify-reset-otp', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, otp, newPassword })
-      });
+      const { data } = await api.post('/auth/verify-reset-otp', { email, otp, newPassword });
 
-      const data = await response.json();
-      
       if (data.success) {
         setResetSuccess(true);
-        toast.success('🎉 Password reset successful!');
+        toast.success('Password reset successful!');
         setTimeout(() => {
           window.location.hash = '/auth';
         }, 2000);
@@ -93,16 +81,10 @@ const ForgotPasswordPage: React.FC = () => {
 
   const handleResendOTP = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/auth/send-reset-otp', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email })
-      });
-
-      const data = await response.json();
+      const { data } = await api.post('/auth/send-reset-otp', { email });
 
       if (data.success) {
-        toast.success('✅ New OTP sent!');
+        toast.success('New OTP sent!');
         setOtp('');
       } else {
         toast.error(data.message || 'Failed to resend OTP');

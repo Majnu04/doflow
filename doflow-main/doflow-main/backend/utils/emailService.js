@@ -1,33 +1,40 @@
 import nodemailer from 'nodemailer';
 
-// Create transporter
-const createTransporter = () => {
-  // Check if email service is configured
+// Reuse a single transporter across all emails (avoids reconnecting SMTP each time)
+let transporter = null;
+
+const getTransporter = () => {
+  if (transporter) return transporter;
+
   if (!process.env.EMAIL_HOST || !process.env.EMAIL_USER || !process.env.EMAIL_PASSWORD) {
-    console.warn('⚠️ Email service not configured. Set EMAIL_HOST, EMAIL_USER, and EMAIL_PASSWORD in .env');
+    console.warn('Email service not configured. Set EMAIL_HOST, EMAIL_USER, and EMAIL_PASSWORD in .env');
     return null;
   }
 
-  return nodemailer.createTransport({
+  transporter = nodemailer.createTransport({
     host: process.env.EMAIL_HOST,
     port: process.env.EMAIL_PORT || 587,
-    secure: process.env.EMAIL_SECURE === 'true', // true for 465, false for other ports
+    secure: process.env.EMAIL_SECURE === 'true',
     auth: {
       user: process.env.EMAIL_USER,
       pass: process.env.EMAIL_PASSWORD,
     },
     tls: {
       rejectUnauthorized: false
-    }
+    },
+    pool: true,
+    maxConnections: 5,
+    maxMessages: 100
   });
+
+  return transporter;
 };
 
 // Send OTP for password reset
 export const sendPasswordResetOTP = async (email, name, otp) => {
-  const transporter = createTransporter();
+  const t = getTransporter();
   
-  if (!transporter) {
-    console.log('📧 Password reset OTP email would be sent to:', email, '(Email service not configured)');
+  if (!t) {
     return { success: false, message: 'Email service not configured' };
   }
 
@@ -143,7 +150,7 @@ export const sendPasswordResetOTP = async (email, name, otp) => {
   };
 
   try {
-    await transporter.sendMail(mailOptions);
+    await t.sendMail(mailOptions);
     console.log(`✅ Password reset OTP sent to: ${email}`);
     return { success: true, message: 'Password reset OTP sent successfully' };
   } catch (error) {
@@ -154,10 +161,9 @@ export const sendPasswordResetOTP = async (email, name, otp) => {
 
 // Send OTP for registration
 export const sendRegistrationOTP = async (email, name, otp) => {
-  const transporter = createTransporter();
+  const t = getTransporter();
   
-  if (!transporter) {
-    console.log('📧 OTP email would be sent to:', email, '(Email service not configured)');
+  if (!t) {
     return { success: false, message: 'Email service not configured' };
   }
 
@@ -261,7 +267,7 @@ export const sendRegistrationOTP = async (email, name, otp) => {
   };
 
   try {
-    await transporter.sendMail(mailOptions);
+    await t.sendMail(mailOptions);
     console.log(`✅ Registration OTP sent to: ${email}`);
     return { success: true, message: 'OTP sent successfully' };
   } catch (error) {
@@ -272,10 +278,9 @@ export const sendRegistrationOTP = async (email, name, otp) => {
 
 // Send upgrade reminder email
 export const sendUpgradeReminderEmail = async (email, name, course) => {
-  const transporter = createTransporter();
+  const t = getTransporter();
 
-  if (!transporter) {
-    console.log('📧 Upgrade reminder email would be sent to:', email, '(Email service not configured)');
+  if (!t) {
     return { success: false, message: 'Email service not configured' };
   }
 
@@ -329,7 +334,7 @@ export const sendUpgradeReminderEmail = async (email, name, course) => {
   };
 
   try {
-    await transporter.sendMail(mailOptions);
+    await t.sendMail(mailOptions);
     return { success: true, message: 'Upgrade reminder sent successfully' };
   } catch (error) {
     console.error('❌ Error sending upgrade reminder:', error);
@@ -339,10 +344,9 @@ export const sendUpgradeReminderEmail = async (email, name, course) => {
 
 // Send email verification
 export const sendVerificationEmail = async (email, name, verificationToken) => {
-  const transporter = createTransporter();
+  const t = getTransporter();
   
-  if (!transporter) {
-    console.log('📧 Email would be sent to:', email, '(Email service not configured)');
+  if (!t) {
     return { success: false, message: 'Email service not configured' };
   }
 
@@ -462,7 +466,7 @@ export const sendVerificationEmail = async (email, name, verificationToken) => {
   };
 
   try {
-    await transporter.sendMail(mailOptions);
+    await t.sendMail(mailOptions);
     console.log('✅ Verification email sent to:', email);
     return { success: true, message: 'Verification email sent' };
   } catch (error) {
@@ -473,10 +477,9 @@ export const sendVerificationEmail = async (email, name, verificationToken) => {
 
 // Send password reset email
 export const sendPasswordResetEmail = async (email, name, resetToken) => {
-  const transporter = createTransporter();
+  const t = getTransporter();
   
-  if (!transporter) {
-    console.log('📧 Password reset email would be sent to:', email, '(Email service not configured)');
+  if (!t) {
     return { success: false, message: 'Email service not configured' };
   }
 
@@ -604,7 +607,7 @@ export const sendPasswordResetEmail = async (email, name, resetToken) => {
   };
 
   try {
-    await transporter.sendMail(mailOptions);
+    await t.sendMail(mailOptions);
     console.log('✅ Password reset email sent to:', email);
     return { success: true, message: 'Password reset email sent' };
   } catch (error) {
@@ -615,9 +618,9 @@ export const sendPasswordResetEmail = async (email, name, resetToken) => {
 
 // Send welcome email after verification
 export const sendWelcomeEmail = async (email, name) => {
-  const transporter = createTransporter();
+  const t = getTransporter();
   
-  if (!transporter) {
+  if (!t) {
     return { success: false, message: 'Email service not configured' };
   }
 
@@ -731,7 +734,7 @@ export const sendWelcomeEmail = async (email, name) => {
   };
 
   try {
-    await transporter.sendMail(mailOptions);
+    await t.sendMail(mailOptions);
     console.log('✅ Welcome email sent to:', email);
     return { success: true };
   } catch (error) {

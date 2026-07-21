@@ -179,8 +179,10 @@ export const verifyOTP = async (req, res) => {
     // Delete pending registration
     await PendingRegistration.deleteOne({ email });
 
-    // Send welcome email
-    await sendWelcomeEmail(user.email, user.name);
+    // Send welcome email (fire-and-forget, don't block response)
+    sendWelcomeEmail(user.email, user.name).catch(err => 
+      console.error('Welcome email failed:', err)
+    );
 
     // Return user data and token
     res.status(201).json({
@@ -287,8 +289,10 @@ export const verifyEmail = async (req, res) => {
     user.emailVerificationExpire = undefined;
     await user.save();
 
-    // Send welcome email
-    await sendWelcomeEmail(user.email, user.name);
+    // Send welcome email (fire-and-forget, don't block response)
+    sendWelcomeEmail(user.email, user.name).catch(err => 
+      console.error('Welcome email failed:', err)
+    );
 
     res.json({
       success: true,

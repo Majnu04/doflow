@@ -6,6 +6,7 @@ import toast from 'react-hot-toast';
 import { FiMail, FiLock, FiUser, FiArrowRight, FiEye, FiEyeOff, FiCheck } from 'react-icons/fi';
 import { FaGoogle, FaGithub, FaLinkedin } from 'react-icons/fa';
 import { Button, Input } from '../src/components/ui';
+import api from '../src/utils/api';
 
 const AuthPageNew: React.FC = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -42,16 +43,10 @@ const AuthPageNew: React.FC = () => {
     }
 
     try {
-      const response = await fetch('http://localhost:5000/api/auth/send-otp', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
-      });
-
-      const data = await response.json();
+      const { data } = await api.post('/auth/send-otp', formData);
 
       if (data.success) {
-        toast.success('✅ OTP sent to your email!');
+        toast.success('OTP sent to your email!');
         setShowOtpStep(true);
       } else {
         toast.error(data.message || 'Failed to send OTP');
@@ -70,16 +65,10 @@ const AuthPageNew: React.FC = () => {
     }
 
     try {
-      const response = await fetch('http://localhost:5000/api/auth/verify-otp', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: formData.email, otp })
-      });
-
-      const data = await response.json();
+      const { data } = await api.post('/auth/verify-otp', { email: formData.email, otp });
 
       if (data.success) {
-        toast.success('🎉 Registration successful! Welcome to DoFlow!');
+        toast.success('Registration successful! Welcome to DoFlow!');
         
         // Store token and user data
         if (data.token) {
@@ -127,17 +116,11 @@ const AuthPageNew: React.FC = () => {
 
   const handleResendOTP = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/auth/send-otp', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
-      });
-
-      const data = await response.json();
+      const { data } = await api.post('/auth/send-otp', formData);
 
       if (data.success) {
-        toast.success('✅ New OTP sent!');
-        setOtp(''); // Clear previous OTP
+        toast.success('New OTP sent!');
+        setOtp('');
       } else {
         toast.error(data.message || 'Failed to resend OTP');
       }

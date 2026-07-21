@@ -9,6 +9,7 @@ import { CourseDetailsSkeleton, ErrorState } from '../src/components/common/Stat
 import { ProgressBar } from '../src/components/ui';
 import type { RootState, AppDispatch } from '../src/store';
 import { isDsaCourse } from '../src/utils/courseUtils';
+import api from '../src/utils/api';
 
 // MOCK DATA - Fallback only, will use backend data
 const mockCourse: Course = {
@@ -269,13 +270,9 @@ const CourseDetailsPage: React.FC<{ courseId: string }> = ({ courseId }) => {
             dispatch(getWishlist());
             
             // Fetch user enrollments
-            fetch('/api/payment/enrollments', {
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                }
-            })
-            .then(res => res.json())
-            .then(data => {
+            api.get('/payment/enrollments')
+            .then(res => {
+                const data = res.data;
                 setEnrollments(Array.isArray(data) ? data : []);
                 setEnrollmentsLoading(false);
             })

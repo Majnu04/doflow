@@ -5,6 +5,7 @@ import { updateProfile } from '../src/store/slices/authSlice';
 import { FiUser, FiMail, FiPhone, FiEdit2, FiSave, FiCamera, FiLock, FiEye, FiEyeOff, FiX } from 'react-icons/fi';
 import { Button, Input, Card } from '../src/components/ui';
 import { toast } from 'react-hot-toast';
+import api from '../src/utils/api';
 
 const ProfilePage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -55,18 +56,15 @@ const ProfilePage: React.FC = () => {
     }
 
     setPasswordLoading(true);
-    const promise = fetch('http://localhost:5000/api/auth/send-reset-otp', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: user.email })
-    }).then(res => res.json());
+    const promise = api.post('/auth/send-reset-otp', { email: user.email })
+      .then(res => res.data);
 
     toast.promise(promise, {
       loading: 'Sending OTP...',
       success: (data) => {
         if (data.success) {
           setShowOtpStep(true);
-          return '🔒 Password reset OTP sent to your email!';
+          return 'Password reset OTP sent to your email!';
         }
         throw new Error(data.message || 'Failed to send OTP');
       },
@@ -95,22 +93,19 @@ const ProfilePage: React.FC = () => {
     }
 
     setPasswordLoading(true);
-    const promise = fetch('http://localhost:5000/api/auth/verify-reset-otp', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
+    const promise = api.post('/auth/verify-reset-otp', {
         email: user?.email,
         otp: passwordData.otp,
         newPassword: passwordData.newPassword
       })
-    }).then(res => res.json());
+      .then(res => res.data);
 
     toast.promise(promise, {
       loading: 'Changing password...',
       success: (data) => {
         if (data.success) {
           closePasswordModal();
-          return '🎉 Password changed successfully!';
+          return 'Password changed successfully!';
         }
         throw new Error(data.message || 'Failed to change password');
       },

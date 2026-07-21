@@ -18,6 +18,7 @@ import {
 } from '../src/store/slices/problemEditorSlice';
 import { ErrorState, EmptyState } from '../src/components/common/StateIndicators';
 import { explainSolutionComplexity, reviewCode, explainTopic } from '../services/geminiService';
+import api from '../src/utils/api';
 import {
   setEditorFontSize,
   setEditorTheme,
@@ -186,13 +187,7 @@ const statusBadgeClass = (status?: string) => {
 };
 
 const generateMentorResponse = async (instructions: string, code?: string, language?: string): Promise<string> => {
-  const response = await fetch('/api/ai/mentor', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ instructions, code, language }),
-  });
-  if (!response.ok) throw new Error('AI service unavailable');
-  const data = await response.json();
+  const { data } = await api.post('/ai/mentor', { instructions, code, language });
   return data.response || 'No response generated.';
 };
 
