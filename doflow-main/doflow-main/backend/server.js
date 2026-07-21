@@ -61,9 +61,14 @@ const allowedOrigins = [
 
 const corsOptions = {
   origin: (origin, callback) => {
-    if (!origin || allowedOrigins.some((o) => o === origin)) {
-      return callback(null, true);
-    }
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.some((o) => o === origin)) return callback(null, true);
+    try {
+      const host = new URL(origin).hostname;
+      if (host === 'doflow.tech' || host === 'www.doflow.tech' || host.endsWith('.vercel.app')) {
+        return callback(null, true);
+      }
+    } catch {}
     console.error(`[CORS] Blocked origin: "${origin}" | Allowed: ${allowedOrigins.join(', ')}`);
     return callback(new Error('Not allowed by CORS'));
   },
