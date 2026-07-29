@@ -27,7 +27,8 @@ const logger = winston.createLogger({
       )
     }),
     // File transport for errors (production)
-    ...(process.env.NODE_ENV === 'production'
+    // File transports only in non-Heroku production (Heroku uses log drains)
+    ...(process.env.NODE_ENV === 'production' && !process.env.DYNO
       ? [
           new winston.transports.File({
             filename: 'logs/error.log',

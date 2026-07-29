@@ -56,14 +56,7 @@ export const upload = s3 && bucketName ? multer({
     fileSize: 500 * 1024 * 1024 // 500MB limit
   }
 }) : multer({
-  storage: multer.diskStorage({
-    destination: (req, file, cb) => {
-      cb(null, 'uploads/');
-    },
-    filename: (req, file, cb) => {
-      cb(null, `${Date.now()}-${file.originalname}`);
-    }
-  }),
+  storage: multer.memoryStorage(),
   fileFilter: fileFilter,
   limits: {
     fileSize: 500 * 1024 * 1024
