@@ -18,9 +18,10 @@ const connectDB = async () => {
 
   try {
     // Connection options with pooling limits
+    const poolSize = process.env.NODE_ENV === 'production' ? 50 : 10;
     const conn = await mongoose.connect(uri, { 
       serverSelectionTimeoutMS: 5000,
-      maxPoolSize: 10,
+      maxPoolSize: poolSize,
       minPoolSize: 2
     });
     console.log(`MongoDB Connected: ${conn.connection.host}`);

@@ -19,11 +19,7 @@ export const getCourses = async (req, res) => {
     }
 
     if (search) {
-      query.$or = [
-        { title: { $regex: search, $options: 'i' } },
-        { description: { $regex: search, $options: 'i' } },
-        { tags: { $regex: search, $options: 'i' } }
-      ];
+      query.$text = { $search: search };
     }
 
     let sortOption = { createdAt: -1 };

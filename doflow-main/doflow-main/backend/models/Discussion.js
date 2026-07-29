@@ -56,7 +56,7 @@ const discussionSchema = new mongoose.Schema({
 discussionSchema.index({ problem: 1, createdAt: -1 });
 
 // Index for user's discussions
-discussionSchema.index({ author: 1, createdAt: -1 });
+discussionSchema.index({ user: 1, createdAt: -1 });
 
 const Discussion = mongoose.model('Discussion', discussionSchema);
 

@@ -173,9 +173,16 @@ courseSchema.pre('save', function(next) {
   next();
 });
 
+// Full-text search index
+courseSchema.index({ title: 'text', description: 'text', tags: 'text' });
+
 // Catalog browsing indexes
 courseSchema.index({ isPublished: 1, category: 1, level: 1 });
 courseSchema.index({ isPublished: 1, isFeatured: 1 });
+courseSchema.index({ isPublished: 1, createdAt: -1 });
+courseSchema.index({ isPublished: 1, enrollmentCount: -1 });
+courseSchema.index({ isPublished: 1, 'ratings.average': -1 });
+courseSchema.index({ isPublished: 1, price: 1 });
 courseSchema.index({ category: 1 });
 courseSchema.index({ level: 1 });
 

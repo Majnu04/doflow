@@ -7,13 +7,13 @@ import Enrollment from '../models/Enrollment.js';
 // @access  Public
 export const getPlatformStats = async (req, res) => {
   try {
-    const totalStudents = await User.countDocuments({ role: 'student' });
-    const totalCourses = await Course.countDocuments();
-    const totalInstructors = await User.countDocuments({ role: 'instructor' });
-    
-    // Calculate completion rate
-    const totalEnrollments = await Enrollment.countDocuments();
-    const completedEnrollments = await Enrollment.countDocuments({ progress: 100 });
+    const [totalStudents, totalCourses, totalInstructors, totalEnrollments, completedEnrollments] = await Promise.all([
+      User.countDocuments({ role: 'student' }),
+      Course.countDocuments(),
+      User.countDocuments({ role: 'instructor' }),
+      Enrollment.countDocuments(),
+      Enrollment.countDocuments({ progress: 100 })
+    ]);
     const successRate = totalEnrollments > 0 
       ? Math.round((completedEnrollments / totalEnrollments) * 100) 
       : 0;
