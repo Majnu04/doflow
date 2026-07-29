@@ -43,7 +43,16 @@ dotenv.config({ path: join(__dirname, '.env') });
 logger.info('=== ENVIRONMENT CHECK ===');
 logger.info('RAZORPAY_KEY_ID: ' + (process.env.RAZORPAY_KEY_ID ? 'LOADED' : 'NOT FOUND'));
 logger.info('RAZORPAY_KEY_SECRET: ' + (process.env.RAZORPAY_KEY_SECRET ? 'LOADED' : 'NOT FOUND'));
+logger.info('JWT_SECRET: ' + (process.env.JWT_SECRET ? 'LOADED' : 'NOT FOUND'));
 logger.info('========================');
+
+// JWT_SECRET is required - the app cannot sign or verify tokens without it
+if (!process.env.JWT_SECRET) {
+  logger.error('JWT_SECRET is not set. Authentication will not work.');
+  if (process.env.NODE_ENV === 'production') {
+    process.exit(1);
+  }
+}
 
 // Connect to database (will be awaited before server starts)
 const dbPromise = connectDB();
