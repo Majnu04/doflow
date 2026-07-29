@@ -145,10 +145,6 @@ const courseSchema = new mongoose.Schema({
   lastUpdated: {
     type: Date,
     default: Date.now
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now
   }
 }, {
   timestamps: true

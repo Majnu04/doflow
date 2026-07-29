@@ -45,8 +45,8 @@ logger.info('RAZORPAY_KEY_ID: ' + (process.env.RAZORPAY_KEY_ID ? 'LOADED' : 'NOT
 logger.info('RAZORPAY_KEY_SECRET: ' + (process.env.RAZORPAY_KEY_SECRET ? 'LOADED' : 'NOT FOUND'));
 logger.info('========================');
 
-// Connect to database
-connectDB();
+// Connect to database (will be awaited before server starts)
+const dbPromise = connectDB();
 
 const app = express();
 
@@ -142,8 +142,14 @@ app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
-  logger.info(`Server running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
+// Wait for database connection before starting the server
+dbPromise.then(() => {
+  app.listen(PORT, () => {
+    logger.info(`Server running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
+  });
+}).catch((err) => {
+  logger.error('Failed to connect to database:', err?.message || err);
+  process.exit(1);
 });
 
 export default app;

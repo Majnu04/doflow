@@ -24,10 +24,6 @@ const analyticsEventSchema = new mongoose.Schema({
   metadata: {
     type: Object,
     default: {}
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now
   }
 }, {
   timestamps: true

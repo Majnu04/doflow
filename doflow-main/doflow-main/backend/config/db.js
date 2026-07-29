@@ -5,10 +5,14 @@ const connectDB = async () => {
   const uri = process.env.MONGODB_URI || process.env.MONGO_URI || process.env.DATABASE_URL;
 
   if (!uri) {
-    console.warn(
-      'MongoDB connection string not provided. Set MONGODB_URI in backend/.env to enable DB features.'
-    );
-    // Don't crash the whole app when no URI is provided; return so the server can still start for frontend/UI work.
+    const msg =
+      'MongoDB connection string not provided. Set MONGODB_URI in backend/.env or Heroku config vars.';
+    if (process.env.NODE_ENV === 'production') {
+      console.error(msg);
+      process.exit(1);
+    }
+    console.warn(msg);
+    // In development, allow server to start without DB for frontend/UI work.
     return;
   }
 
