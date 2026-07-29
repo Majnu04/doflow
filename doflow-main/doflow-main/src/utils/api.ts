@@ -3,7 +3,10 @@ import axios from 'axios';
 // Prefer a relative '/api' default so Vite's dev server proxy (configured in vite.config.ts)
 // can forward requests to the backend during development. If you need to target a
 // different backend in production, set VITE_API_URL in your environment.
-const API_URL = import.meta.env.VITE_API_URL || '/api';
+const RAW_API_URL = import.meta.env.VITE_API_URL || '/api';
+
+// Ensure the base URL always ends with '/api'
+const API_URL = RAW_API_URL.endsWith('/api') ? RAW_API_URL : `${RAW_API_URL.replace(/\/+$/, '')}/api`;
 
 // Helpful debug output while developing to verify which base URL is used.
 if (typeof window !== 'undefined') {
