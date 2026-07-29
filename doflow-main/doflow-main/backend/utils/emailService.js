@@ -1,6 +1,5 @@
 import nodemailer from 'nodemailer';
 
-// Reuse a single transporter across all emails (avoids reconnecting SMTP each time)
 let transporter = null;
 
 const getTransporter = () => {
@@ -9,6 +8,15 @@ const getTransporter = () => {
   if (!process.env.EMAIL_HOST || !process.env.EMAIL_USER || !process.env.EMAIL_PASSWORD) {
     console.warn('Email service not configured. Set EMAIL_HOST, EMAIL_USER, and EMAIL_PASSWORD in .env');
     return null;
+  }
+
+  const dkimOptions = {};
+  if (process.env.DKIM_DOMAIN && process.env.DKIM_KEY_SELECTOR && process.env.DKIM_PRIVATE_KEY) {
+    dkimOptions.dkim = {
+      domainName: process.env.DKIM_DOMAIN,
+      keySelector: process.env.DKIM_KEY_SELECTOR,
+      privateKey: process.env.DKIM_PRIVATE_KEY,
+    };
   }
 
   transporter = nodemailer.createTransport({
@@ -24,11 +32,24 @@ const getTransporter = () => {
     },
     pool: true,
     maxConnections: 5,
-    maxMessages: 100
+    maxMessages: 100,
+    ...dkimOptions,
   });
 
   return transporter;
 };
+
+const buildBaseMailOptions = (to, subject) => ({
+  from: `"${process.env.EMAIL_FROM_NAME || 'DoFlow Academy'}" <${process.env.EMAIL_USER}>`,
+  to,
+  subject,
+  headers: {
+    'List-Unsubscribe': `<mailto:${process.env.EMAIL_USER}?subject=unsubscribe>`,
+    'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
+    'X-Mailer': 'DoFlow',
+    'Precedence': 'bulk',
+  },
+});
 
 // Send OTP for password reset
 export const sendPasswordResetOTP = async (email, name, otp) => {
@@ -39,9 +60,7 @@ export const sendPasswordResetOTP = async (email, name, otp) => {
   }
 
   const mailOptions = {
-    from: `"${process.env.EMAIL_FROM_NAME || 'DoFlow Academy'}" <${process.env.EMAIL_USER}>`,
-    to: email,
-    subject: 'Password Reset Verification Code',
+    ...buildBaseMailOptions(email, 'Password Reset Verification Code'),
     html: `
       <!DOCTYPE html>
       <html lang="en">
